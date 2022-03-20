@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Tags on FIFCOM实验室</title>
+    <link>https://blog.fifcom.cn/tags/</link>
+    <description>Recent content in Tags on FIFCOM实验室</description>
+    <image>
+      <url>https://fifcom.cn/avatar/?transparent=1</url>
+      <link>https://fifcom.cn/avatar/?transparent=1</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 03 Jan 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>linux</title>
+      <link>https://blog.fifcom.cn/tags/linux/</link>
+      <pubDate>Mon, 03 Jan 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/tags/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>shell</title>
+      <link>https://blog.fifcom.cn/tags/shell/</link>
+      <pubDate>Mon, 03 Jan 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/tags/shell/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cdn</title>
+      <link>https://blog.fifcom.cn/tags/cdn/</link>
+      <pubDate>Sat, 27 Nov 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/tags/cdn/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cloud</title>
+      <link>https://blog.fifcom.cn/tags/cloud/</link>
+      <pubDate>Sat, 27 Nov 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/tags/cloud/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nginx</title>
+      <link>https://blog.fifcom.cn/tags/nginx/</link>
+      <pubDate>Sat, 27 Nov 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/tags/nginx/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>php</title>
+      <link>https://blog.fifcom.cn/tags/php/</link>
+      <pubDate>Sat, 27 Nov 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/tags/php/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>debian</title>
+      <link>https://blog.fifcom.cn/tags/debian/</link>
+      <pubDate>Tue, 06 Jul 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/tags/debian/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

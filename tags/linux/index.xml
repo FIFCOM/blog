@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>linux on FIFCOM实验室</title>
+    <link>https://blog.fifcom.cn/tags/linux/</link>
+    <description>Recent content in linux on FIFCOM实验室</description>
+    <image>
+      <url>https://fifcom.cn/avatar/?transparent=1</url>
+      <link>https://fifcom.cn/avatar/?transparent=1</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 03 Jan 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux Shell 语法(上)</title>
+      <link>https://blog.fifcom.cn/posts/linux-shell-manual-1/</link>
+      <pubDate>Mon, 03 Jan 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/linux-shell-manual-1/</guid>
+      <description>Hello World! #! /bin/bashecho &amp;#34;Hello World!&amp;#34; 第一行是注释，声明用bash作为此脚本的解释器。注释分为两种:
+# 单行注释:&amp;lt;&amp;lt;EOF多行注释EOF# 其中EOF可以替换为任意字符串 第二行的echo用于在控制台上输出内容并自动换行。准确的说，echo会输出传递给它的所有参数，以空格分隔。 &amp;quot;Hello World!&amp;quot; 是字符串，后面会详细介绍。
+保存后可以使用bash filename.sh运行，或者:
+chmod +x filename.sh # 赋予可执行权限./hw.sh # 作为可执行文件执行 变量  定义可变变量  v1=123v2=123.4v3=fifcomv4=&amp;#34;fifcom&amp;#34;v5=&amp;#39;fifcom&amp;#39;declare v6=fifcom# 变量默认为字符串，在使用时会根据需求自动转换类型# 注意：定义变量时等号的左右两边不可以有空格# 否则可能被解析器作为系统命令来执行 定义只读变量  readonly v1=&amp;#34;immut&amp;#34; # 定义只读变量v2=&amp;#34;mut&amp;#34;readonly v2 # 转换为只读变量declare -r v3=&amp;#34;immut&amp;#34; # 定义只读变量 使用变量  使用变量需要加上$或${}符号。 ${} 可以帮助解释器识别变量名
+v1=fifcomecho $v1 # 输出fifcomecho ${v1} # 输出fifcomecho ${v1}v1 # 输出fifcomv1 删除变量  用unset删除变量。只读变量不可删除。</description>
+    </item>
+    
+    <item>
+      <title>在Debian10上安装AdoptOpenJDK16</title>
+      <link>https://blog.fifcom.cn/posts/linux-install-jdk16-at-debian10/</link>
+      <pubDate>Tue, 06 Jul 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/linux-install-jdk16-at-debian10/</guid>
+      <description>首先卸载掉自带的openjdk
+apt-get remove openjdk*apt-get purge openjdk* 再配置一下源
+ 信任GnuPG公钥  wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add - 在/etc/apt/sources.list.d/AdoptOpenJDK.list里添加以下内容：  deb http://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/deb buster main (编辑器可以用vim : vi /etc/apt/sources.list.d/AdoptOpenJDK.list ,添加完成后输入 :wq! 退出)
+更新apt  sudo apt-get update 下载并安装 AdoptOpenJDK 16  sudo apt install adoptopenjdk-16-openj9 完成！
+ 参考 AdoptOpenJDK 镜像使用帮助
+ </description>
+    </item>
+    
+  </channel>
+</rss>

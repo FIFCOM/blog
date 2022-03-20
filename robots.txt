@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://blog.fifcom.cn/sitemap.xml

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>php on FIFCOM实验室</title>
+    <link>https://blog.fifcom.cn/tags/php/</link>
+    <description>Recent content in php on FIFCOM实验室</description>
+    <image>
+      <url>https://fifcom.cn/avatar/?transparent=1</url>
+      <link>https://fifcom.cn/avatar/?transparent=1</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 27 Nov 2021 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/php/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CF/YJS CDN下使用PHP获取客户端真实IP地址</title>
+      <link>https://blog.fifcom.cn/posts/cloud-cf-yjs-cdn-get-remote-addr/</link>
+      <pubDate>Sat, 27 Nov 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/cloud-cf-yjs-cdn-get-remote-addr/</guid>
+      <description>打印一下$_SERVER
+&amp;lt;?phpecho json_encode($_SERVER, JSON_UNESCAPED_UNICODE);?&amp;gt; 有这几项值得注意
+&amp;#34;HTTP_X_FORWARDED_FOR&amp;#34;:&amp;#34;[YOUR_IP]&amp;#34;,&amp;#34;HTTP_CF_IPCOUNTRY&amp;#34;:&amp;#34;[YOUR_COUNTRY]&amp;#34;,&amp;#34;HTTP_CF_CONNECTING_IP&amp;#34;:&amp;#34;[YOUR_IP]&amp;#34;,&amp;#34;HTTP_CDN_LOOP&amp;#34;:&amp;#34;cloudflare&amp;#34;, 即 `$_SERVER[&amp;quot;HTTP_X_FORWARDED_FOR&amp;quot;]` 就是客户端的真实IP地址
+另外不支持IPv6的服务器也可以通过 $_SERVER[&amp;quot;HTTP_X_FORWARDED_FOR&amp;quot;] 来获取客户端的IPv6地址
+自动根据情况获取IP:
+$ip = isset($_SERVER[&amp;#39;HTTP_X_FORWARDED_FOR&amp;#39;]) &amp;amp;&amp;amp; $_SERVER[&amp;#39;HTTP_X_FORWARDED_FOR&amp;#39;] != &amp;#34;&amp;#34; ? $_SERVER[&amp;#39;HTTP_X_FORWARDED_FOR&amp;#39;] : $_SERVER[&amp;#39;REMOTE_ADDR&amp;#39;]; </description>
+    </item>
+    
+  </channel>
+</rss>

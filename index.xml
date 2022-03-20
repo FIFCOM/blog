@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>FIFCOM实验室</title>
+    <link>https://blog.fifcom.cn/</link>
+    <description>Recent content on FIFCOM实验室</description>
+    <image>
+      <url>https://fifcom.cn/avatar/?transparent=1</url>
+      <link>https://fifcom.cn/avatar/?transparent=1</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 03 Jan 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux Shell 语法(上)</title>
+      <link>https://blog.fifcom.cn/posts/linux-shell-manual-1/</link>
+      <pubDate>Mon, 03 Jan 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/linux-shell-manual-1/</guid>
+      <description>Hello World! #! /bin/bashecho &amp;#34;Hello World!&amp;#34; 第一行是注释，声明用bash作为此脚本的解释器。注释分为两种:
+# 单行注释:&amp;lt;&amp;lt;EOF多行注释EOF# 其中EOF可以替换为任意字符串 第二行的echo用于在控制台上输出内容并自动换行。准确的说，echo会输出传递给它的所有参数，以空格分隔。 &amp;quot;Hello World!&amp;quot; 是字符串，后面会详细介绍。
+保存后可以使用bash filename.sh运行，或者:
+chmod +x filename.sh # 赋予可执行权限./hw.sh # 作为可执行文件执行 变量  定义可变变量  v1=123v2=123.4v3=fifcomv4=&amp;#34;fifcom&amp;#34;v5=&amp;#39;fifcom&amp;#39;declare v6=fifcom# 变量默认为字符串，在使用时会根据需求自动转换类型# 注意：定义变量时等号的左右两边不可以有空格# 否则可能被解析器作为系统命令来执行 定义只读变量  readonly v1=&amp;#34;immut&amp;#34; # 定义只读变量v2=&amp;#34;mut&amp;#34;readonly v2 # 转换为只读变量declare -r v3=&amp;#34;immut&amp;#34; # 定义只读变量 使用变量  使用变量需要加上$或${}符号。 ${} 可以帮助解释器识别变量名
+v1=fifcomecho $v1 # 输出fifcomecho ${v1} # 输出fifcomecho ${v1}v1 # 输出fifcomv1 删除变量  用unset删除变量。只读变量不可删除。</description>
+    </item>
+    
+    <item>
+      <title>CF/YJS CDN下使用PHP获取客户端真实IP地址</title>
+      <link>https://blog.fifcom.cn/posts/cloud-cf-yjs-cdn-get-remote-addr/</link>
+      <pubDate>Sat, 27 Nov 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/cloud-cf-yjs-cdn-get-remote-addr/</guid>
+      <description>打印一下$_SERVER
+&amp;lt;?phpecho json_encode($_SERVER, JSON_UNESCAPED_UNICODE);?&amp;gt; 有这几项值得注意
+&amp;#34;HTTP_X_FORWARDED_FOR&amp;#34;:&amp;#34;[YOUR_IP]&amp;#34;,&amp;#34;HTTP_CF_IPCOUNTRY&amp;#34;:&amp;#34;[YOUR_COUNTRY]&amp;#34;,&amp;#34;HTTP_CF_CONNECTING_IP&amp;#34;:&amp;#34;[YOUR_IP]&amp;#34;,&amp;#34;HTTP_CDN_LOOP&amp;#34;:&amp;#34;cloudflare&amp;#34;, 即 `$_SERVER[&amp;quot;HTTP_X_FORWARDED_FOR&amp;quot;]` 就是客户端的真实IP地址
+另外不支持IPv6的服务器也可以通过 $_SERVER[&amp;quot;HTTP_X_FORWARDED_FOR&amp;quot;] 来获取客户端的IPv6地址
+自动根据情况获取IP:
+$ip = isset($_SERVER[&amp;#39;HTTP_X_FORWARDED_FOR&amp;#39;]) &amp;amp;&amp;amp; $_SERVER[&amp;#39;HTTP_X_FORWARDED_FOR&amp;#39;] != &amp;#34;&amp;#34; ? $_SERVER[&amp;#39;HTTP_X_FORWARDED_FOR&amp;#39;] : $_SERVER[&amp;#39;REMOTE_ADDR&amp;#39;]; </description>
+    </item>
+    
+    <item>
+      <title>nginx 反代解决CORS问题</title>
+      <link>https://blog.fifcom.cn/posts/cloud-nginx-reverse-proxy-allow-cors/</link>
+      <pubDate>Sat, 27 Nov 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/cloud-nginx-reverse-proxy-allow-cors/</guid>
+      <description>同源策略规定，浏览器的ajax只能访问跟它的HTML页面同源（相同域名或IP）的资源。
+使用ajax时容易遇到跨域问题
+就像这样
+最好的方法自然是修改服务端代码，如php里的
+header(&amp;#34;Access-Control-Allow-Origin: blog.fifcom.cn&amp;#34;); // 允许指定域名跨域header(&amp;#34;Access-Control-Allow-Origin: *&amp;#34;); // 允许任意域名跨域 不过有时候无法修改服务端代码，这时候就需要用 nginx 反代来解决了。编辑 nginx.conf 并添加：
+server {listen 443 ssl;# listen 80; # 如为http则监听80ssl on;ssl_certificate /path/pub.crt; #ssl证书ssl_certificate_key /path/pri.key;#ssl私钥ssl_protocols TLSv1 TLSv1.1 TLSv1.2;ssl_ciphers HIGH:!aNULL:!MD5;server_name example-proxy.fifcom.cn; #你的反代域名location / {proxy_pass https://example.fifcom.cn; # 被代理的域名(源站)proxy_http_version 1.1;# proxy_set_header Referer https://example.fifcom.cn; # 源站检测referer时需加上# 一些其他设置proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;proxy_set_header REMOTE-HOST $remote_addr;proxy_buffering off; proxy_cache off;proxy_set_header X-Forwarded-Proto $scheme;add_header X-Cache $upstream_cache_status;add_header Access-Control-Allow-Methods *; # 允许所有跨域方法add_header Access-Control-Max-Age 3600; # 缓存,否则会发送两次请求# add_header Access-Control-Allow-Credentials true; # 请求包含cookie时要开启add_header Access-Control-Allow-Origin $http_origin;# 允许客户端跨域,不用*是因为请求包含cookie时不支持允许所有add_header Access-Control-Allow-Headers $http_access_control_request_headers; # 自动配置允许的headerif ($request_method = OPTIONS){return 200;# 判断请求类型是否为预检命令}proxy_set_header Host example.</description>
+    </item>
+    
+    <item>
+      <title>在Debian10上安装AdoptOpenJDK16</title>
+      <link>https://blog.fifcom.cn/posts/linux-install-jdk16-at-debian10/</link>
+      <pubDate>Tue, 06 Jul 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/linux-install-jdk16-at-debian10/</guid>
+      <description>首先卸载掉自带的openjdk
+apt-get remove openjdk*apt-get purge openjdk* 再配置一下源
+ 信任GnuPG公钥  wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add - 在/etc/apt/sources.list.d/AdoptOpenJDK.list里添加以下内容：  deb http://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/deb buster main (编辑器可以用vim : vi /etc/apt/sources.list.d/AdoptOpenJDK.list ,添加完成后输入 :wq! 退出)
+更新apt  sudo apt-get update 下载并安装 AdoptOpenJDK 16  sudo apt install adoptopenjdk-16-openj9 完成！
+ 参考 AdoptOpenJDK 镜像使用帮助
+ </description>
+    </item>
+    
+  </channel>
+</rss>

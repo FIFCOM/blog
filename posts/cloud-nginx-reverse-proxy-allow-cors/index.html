@@ -1,0 +1,150 @@
+<!doctype html><html lang=en dir=auto>
+<head><meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<meta name=robots content="index, follow">
+<title>nginx 反代解决CORS问题 | FIFCOM实验室</title><meta name=keywords content="cloud,nginx">
+<meta name=description content="同源策略规定，浏览器的ajax只能访问跟它的HTML页面同源（相同域名或IP）的资源。
+使用ajax时容易遇到跨域问题
+就像这样
+最好的方法自然是修改服务端代码，如php里的
+header(&#34;Access-Control-Allow-Origin: blog.fifcom.cn&#34;); // 允许指定域名跨域header(&#34;Access-Control-Allow-Origin: *&#34;); // 允许任意域名跨域 不过有时候无法修改服务端代码，这时候就需要用 nginx 反代来解决了。编辑 nginx.conf 并添加：
+server {listen 443 ssl;# listen 80; # 如为http则监听80ssl on;ssl_certificate /path/pub.crt; #ssl证书ssl_certificate_key /path/pri.key;#ssl私钥ssl_protocols TLSv1 TLSv1.1 TLSv1.2;ssl_ciphers HIGH:!aNULL:!MD5;server_name example-proxy.fifcom.cn; #你的反代域名location / {proxy_pass https://example.fifcom.cn; # 被代理的域名(源站)proxy_http_version 1.1;# proxy_set_header Referer https://example.fifcom.cn; # 源站检测referer时需加上# 一些其他设置proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;proxy_set_header REMOTE-HOST $remote_addr;proxy_buffering off; proxy_cache off;proxy_set_header X-Forwarded-Proto $scheme;add_header X-Cache $upstream_cache_status;add_header Access-Control-Allow-Methods *; # 允许所有跨域方法add_header Access-Control-Max-Age 3600; # 缓存,否则会发送两次请求# add_header Access-Control-Allow-Credentials true; # 请求包含cookie时要开启add_header Access-Control-Allow-Origin $http_origin;# 允许客户端跨域,不用*是因为请求包含cookie时不支持允许所有add_header Access-Control-Allow-Headers $http_access_control_request_headers; # 自动配置允许的headerif ($request_method = OPTIONS){return 200;# 判断请求类型是否为预检命令}proxy_set_header Host example.">
+<meta name=author content="FIFCOM">
+<link rel=canonical href=https://blog.fifcom.cn/posts/cloud-nginx-reverse-proxy-allow-cors/>
+<meta name=google-site-verification content="XYZabc">
+<meta name=yandex-verification content="XYZabc">
+<meta name=msvalidate.01 content="XYZabc">
+<link crossorigin=anonymous href=/assets/css/stylesheet.min.c88963fe2d79462000fd0fb1b3737783c32855d340583e4523343f8735c787f0.css integrity="sha256-yIlj/i15RiAA/Q+xs3N3g8MoVdNAWD5FIzQ/hzXHh/A=" rel="preload stylesheet" as=style>
+<link rel=preload href="https://fifcom.cn/avatar/?transparent=1" as=image>
+<script defer crossorigin=anonymous src=/assets/js/highlight.min.4dcb3c4f38462f66c6b6137227726f5543cb934cca9788f041c087e374491df2.js integrity="sha256-Tcs8TzhGL2bGthNyJ3JvVUPLk0zKl4jwQcCH43RJHfI=" onload=hljs.initHighlightingOnLoad()></script>
+<link rel=icon href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=icon type=image/png sizes=16x16 href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
+<link rel=icon type=image/png sizes=32x32 href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
+<link rel=apple-touch-icon href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
+<link rel=mask-icon href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
+<meta name=theme-color content="#2e2e33">
+<meta name=msapplication-TileColor content="#2e2e33">
+<meta name=generator content="Hugo 0.93.2">
+<noscript>
+<style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(e,o,i,a,t,n,s){e.GoogleAnalyticsObject=t,e[t]=e[t]||function(){(e[t].q=e[t].q||[]).push(arguments)},e[t].l=1*new Date,n=o.createElement(i),s=o.getElementsByTagName(i)[0],n.async=1,n.src=a,s.parentNode.insertBefore(n,s)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-123-45","auto"),ga("send","pageview"))</script><meta property="og:title" content="nginx 反代解决CORS问题">
+<meta property="og:description" content="同源策略规定，浏览器的ajax只能访问跟它的HTML页面同源（相同域名或IP）的资源。
+使用ajax时容易遇到跨域问题
+就像这样
+最好的方法自然是修改服务端代码，如php里的
+header(&#34;Access-Control-Allow-Origin: blog.fifcom.cn&#34;); // 允许指定域名跨域header(&#34;Access-Control-Allow-Origin: *&#34;); // 允许任意域名跨域 不过有时候无法修改服务端代码，这时候就需要用 nginx 反代来解决了。编辑 nginx.conf 并添加：
+server {listen 443 ssl;# listen 80; # 如为http则监听80ssl on;ssl_certificate /path/pub.crt; #ssl证书ssl_certificate_key /path/pri.key;#ssl私钥ssl_protocols TLSv1 TLSv1.1 TLSv1.2;ssl_ciphers HIGH:!aNULL:!MD5;server_name example-proxy.fifcom.cn; #你的反代域名location / {proxy_pass https://example.fifcom.cn; # 被代理的域名(源站)proxy_http_version 1.1;# proxy_set_header Referer https://example.fifcom.cn; # 源站检测referer时需加上# 一些其他设置proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;proxy_set_header REMOTE-HOST $remote_addr;proxy_buffering off; proxy_cache off;proxy_set_header X-Forwarded-Proto $scheme;add_header X-Cache $upstream_cache_status;add_header Access-Control-Allow-Methods *; # 允许所有跨域方法add_header Access-Control-Max-Age 3600; # 缓存,否则会发送两次请求# add_header Access-Control-Allow-Credentials true; # 请求包含cookie时要开启add_header Access-Control-Allow-Origin $http_origin;# 允许客户端跨域,不用*是因为请求包含cookie时不支持允许所有add_header Access-Control-Allow-Headers $http_access_control_request_headers; # 自动配置允许的headerif ($request_method = OPTIONS){return 200;# 判断请求类型是否为预检命令}proxy_set_header Host example.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.fifcom.cn/posts/cloud-nginx-reverse-proxy-allow-cors/"><meta property="og:image" content="https://fifcom.cn/avatar/?transparent=1"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-11-27T00:00:00+08:00">
+<meta property="article:modified_time" content="2021-11-27T00:00:00+08:00"><meta property="og:site_name" content="FIFCOM实验室">
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://fifcom.cn/avatar/?transparent=1">
+<meta name=twitter:title content="nginx 反代解决CORS问题">
+<meta name=twitter:description content="同源策略规定，浏览器的ajax只能访问跟它的HTML页面同源（相同域名或IP）的资源。
+使用ajax时容易遇到跨域问题
+就像这样
+最好的方法自然是修改服务端代码，如php里的
+header(&#34;Access-Control-Allow-Origin: blog.fifcom.cn&#34;); // 允许指定域名跨域header(&#34;Access-Control-Allow-Origin: *&#34;); // 允许任意域名跨域 不过有时候无法修改服务端代码，这时候就需要用 nginx 反代来解决了。编辑 nginx.conf 并添加：
+server {listen 443 ssl;# listen 80; # 如为http则监听80ssl on;ssl_certificate /path/pub.crt; #ssl证书ssl_certificate_key /path/pri.key;#ssl私钥ssl_protocols TLSv1 TLSv1.1 TLSv1.2;ssl_ciphers HIGH:!aNULL:!MD5;server_name example-proxy.fifcom.cn; #你的反代域名location / {proxy_pass https://example.fifcom.cn; # 被代理的域名(源站)proxy_http_version 1.1;# proxy_set_header Referer https://example.fifcom.cn; # 源站检测referer时需加上# 一些其他设置proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;proxy_set_header REMOTE-HOST $remote_addr;proxy_buffering off; proxy_cache off;proxy_set_header X-Forwarded-Proto $scheme;add_header X-Cache $upstream_cache_status;add_header Access-Control-Allow-Methods *; # 允许所有跨域方法add_header Access-Control-Max-Age 3600; # 缓存,否则会发送两次请求# add_header Access-Control-Allow-Credentials true; # 请求包含cookie时要开启add_header Access-Control-Allow-Origin $http_origin;# 允许客户端跨域,不用*是因为请求包含cookie时不支持允许所有add_header Access-Control-Allow-Headers $http_access_control_request_headers; # 自动配置允许的headerif ($request_method = OPTIONS){return 200;# 判断请求类型是否为预检命令}proxy_set_header Host example.">
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://blog.fifcom.cn/posts/"},{"@type":"ListItem","position":2,"name":"nginx 反代解决CORS问题","item":"https://blog.fifcom.cn/posts/cloud-nginx-reverse-proxy-allow-cors/"}]}</script>
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"nginx 反代解决CORS问题","name":"nginx 反代解决CORS问题","description":"同源策略规定，浏览器的ajax只能访问跟它的HTML页面同源（相同域名或IP）的资源。\n使用ajax时容易遇到跨域问题\n就像这样\n最好的方法自然是修改服务端代码，如php里的\nheader(\u0026#34;Access-Control-Allow-Origin: blog.fifcom.cn\u0026#34;); // 允许指定域名跨域\rheader(\u0026#34;Access-Control-Allow-Origin: *\u0026#34;); // 允许任意域名跨域 不过有时候无法修改服务端代码，这时候就需要用 nginx 反代来解决了。编辑 nginx.conf 并添加：\nserver {\rlisten 443 ssl;\r# listen 80; # 如为http则监听80\rssl on;\rssl_certificate /path/pub.crt; #ssl证书\rssl_certificate_key /path/pri.key;#ssl私钥\rssl_protocols TLSv1 TLSv1.1 TLSv1.2;\rssl_ciphers HIGH:!aNULL:!MD5;\rserver_name example-proxy.fifcom.cn; #你的反代域名\rlocation / {\rproxy_pass https://example.fifcom.cn; # 被代理的域名(源站)\rproxy_http_version 1.1;\r# proxy_set_header Referer https://example.fifcom.cn; # 源站检测referer时需加上\r# 一些其他设置\rproxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\rproxy_set_header REMOTE-HOST $remote_addr;\rproxy_buffering off; proxy_cache off;\rproxy_set_header X-Forwarded-Proto $scheme;\radd_header X-Cache $upstream_cache_status;\radd_header Access-Control-Allow-Methods *; # 允许所有跨域方法\radd_header Access-Control-Max-Age 3600; # 缓存,否则会发送两次请求\r# add_header Access-Control-Allow-Credentials true; # 请求包含cookie时要开启\radd_header Access-Control-Allow-Origin $http_origin;\r# 允许客户端跨域,不用*是因为请求包含cookie时不支持允许所有\radd_header Access-Control-Allow-Headers $http_access_control_request_headers; # 自动配置允许的header\rif ($request_method = OPTIONS){\rreturn 200;\r# 判断请求类型是否为预检命令\r}\rproxy_set_header Host example.","keywords":["cloud","nginx"],"articleBody":"同源策略规定，浏览器的ajax只能访问跟它的HTML页面同源（相同域名或IP）的资源。\n使用ajax时容易遇到跨域问题\n就像这样\n最好的方法自然是修改服务端代码，如php里的\nheader(\"Access-Control-Allow-Origin: blog.fifcom.cn\"); // 允许指定域名跨域\rheader(\"Access-Control-Allow-Origin: *\"); // 允许任意域名跨域 不过有时候无法修改服务端代码，这时候就需要用 nginx 反代来解决了。编辑 nginx.conf 并添加：\nserver {\rlisten 443 ssl;\r# listen 80; # 如为http则监听80\rssl on;\rssl_certificate /path/pub.crt; #ssl证书\rssl_certificate_key /path/pri.key;#ssl私钥\rssl_protocols TLSv1 TLSv1.1 TLSv1.2;\rssl_ciphers HIGH:!aNULL:!MD5;\rserver_name example-proxy.fifcom.cn; #你的反代域名\rlocation / {\rproxy_pass https://example.fifcom.cn; # 被代理的域名(源站)\rproxy_http_version 1.1;\r# proxy_set_header Referer https://example.fifcom.cn; # 源站检测referer时需加上\r# 一些其他设置\rproxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\rproxy_set_header REMOTE-HOST $remote_addr;\rproxy_buffering off; proxy_cache off;\rproxy_set_header X-Forwarded-Proto $scheme;\radd_header X-Cache $upstream_cache_status;\radd_header Access-Control-Allow-Methods *; # 允许所有跨域方法\radd_header Access-Control-Max-Age 3600; # 缓存,否则会发送两次请求\r# add_header Access-Control-Allow-Credentials true; # 请求包含cookie时要开启\radd_header Access-Control-Allow-Origin $http_origin;\r# 允许客户端跨域,不用*是因为请求包含cookie时不支持允许所有\radd_header Access-Control-Allow-Headers $http_access_control_request_headers; # 自动配置允许的header\rif ($request_method = OPTIONS){\rreturn 200;\r# 判断请求类型是否为预检命令\r}\rproxy_set_header Host example.fifcom.cn; # 设置host为源站\r}\r} 在前端js代码里可以将源站替换为反代域名\nurl = url.replace('example.fifcom.cn(源站域名)', 'example-proxy.fifcom.cn(反代域名)'); 保存后需要重启nginx\n总结下，当无法修改服务端代码时需要使用nginx搭一个反代，并添加允许跨域的相关配置\n","wordCount":"128","inLanguage":"en","datePublished":"2021-11-27T00:00:00+08:00","dateModified":"2021-11-27T00:00:00+08:00","author":{"@type":"Person","name":"FIFCOM"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.fifcom.cn/posts/cloud-nginx-reverse-proxy-allow-cors/"},"publisher":{"@type":"Organization","name":"FIFCOM实验室","logo":{"@type":"ImageObject","url":"https://fifcom.cn/avatar/?transparent=1"}}}</script>
+</head><body id=top>
+<script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script>
+<header class=header>
+<nav class=nav>
+<div class=logo>
+<a href=https://blog.fifcom.cn/ accesskey=h title="FIFCOM实验室 (Alt + H)">
+<img src="https://fifcom.cn/avatar/?transparent=1" alt=logo aria-label=logo height=35>FIFCOM实验室</a>
+<span class=logo-switches>
+<button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+</span>
+</div><ul id=menu>
+<li>
+<a href=https://blog.fifcom.cn/tags/ title=标签>
+<span>标签</span>
+</a>
+</li><li>
+<a href=https://fifcom.cn/ title=主页>
+<span>主页</span>
+</a>
+</li></ul></nav></header><main class=main>
+<article class=post-single>
+<header class=post-header>
+<div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a>&nbsp;»&nbsp;<a href=https://blog.fifcom.cn/posts/>Posts</a></div><h1 class=post-title>
+nginx 反代解决CORS问题
+</h1><div class=post-meta><span title="2021-11-27 00:00:00 +0800 CST">November 27, 2021</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM&nbsp;|&nbsp;<a href="https://fifcom.cn/aff/?aff=blog" rel="noopener noreferrer" target=_blank>Support Me</a>
+</div></header><div class=post-content><p>同源策略规定，浏览器的ajax只能访问跟它的HTML页面同源（相同域名或IP）的资源。</p><p>使用ajax时容易遇到跨域问题</p><p><img loading=lazy src=../assets/4DW6fNW.png alt="nginx 反代解决CORS问题">
+</p><p>就像这样</p><p>最好的方法自然是修改服务端代码，如php里的</p><pre tabindex=0><code>header(&#34;Access-Control-Allow-Origin: blog.fifcom.cn&#34;); // 允许指定域名跨域
+header(&#34;Access-Control-Allow-Origin: *&#34;); // 允许任意域名跨域
+</code></pre><p>不过有时候无法修改服务端代码，这时候就需要用 nginx 反代来解决了。编辑 nginx.conf 并添加：</p><pre tabindex=0><code>server 
+{
+	listen 443 ssl;
+        # listen 80; # 如为http则监听80
+	ssl on;
+	ssl_certificate /path/pub.crt;    #ssl证书
+	ssl_certificate_key /path/pri.key;#ssl私钥
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+	ssl_ciphers HIGH:!aNULL:!MD5;
+	server_name example-proxy.fifcom.cn; #你的反代域名
+	location / {
+	    proxy_pass https://example.fifcom.cn; # 被代理的域名(源站)
+            proxy_http_version 1.1;
+            # proxy_set_header Referer https://example.fifcom.cn; # 源站检测referer时需加上
+
+            # 一些其他设置
+            proxy_set_header X-Real-IP $remote_addr; 
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header REMOTE-HOST $remote_addr;
+	    proxy_buffering off; 
+	    proxy_cache off;
+	    proxy_set_header X-Forwarded-Proto $scheme;
+
+	    add_header X-Cache $upstream_cache_status;
+            add_header Access-Control-Allow-Methods *; # 允许所有跨域方法
+            add_header Access-Control-Max-Age 3600; # 缓存,否则会发送两次请求
+            # add_header Access-Control-Allow-Credentials true; # 请求包含cookie时要开启
+            add_header Access-Control-Allow-Origin $http_origin;
+            # 允许客户端跨域,不用*是因为请求包含cookie时不支持允许所有
+
+            add_header Access-Control-Allow-Headers $http_access_control_request_headers; # 自动配置允许的header
+            if ($request_method = OPTIONS){
+                return 200;
+                # 判断请求类型是否为预检命令
+            }
+	    proxy_set_header Host example.fifcom.cn; # 设置host为源站
+	}
+}
+</code></pre><p>在前端js代码里可以将源站替换为反代域名</p><pre tabindex=0><code>url = url.replace(&#39;example.fifcom.cn(源站域名)&#39;, &#39;example-proxy.fifcom.cn(反代域名)&#39;);
+</code></pre><p>保存后需要重启nginx</p><p>总结下，当无法修改服务端代码时需要使用nginx搭一个反代，并添加允许跨域的相关配置</p></div><footer class=post-footer>
+<ul class=post-tags>
+<li><a href=https://blog.fifcom.cn/tags/cloud/>cloud</a></li><li><a href=https://blog.fifcom.cn/tags/nginx/>nginx</a></li></ul><nav class=paginav>
+<a class=prev href=https://blog.fifcom.cn/posts/cloud-cf-yjs-cdn-get-remote-addr/>
+<span class=title>« Prev Page</span>
+<br>
+<span>CF/YJS CDN下使用PHP获取客户端真实IP地址</span>
+</a>
+<a class=next href=https://blog.fifcom.cn/posts/linux-install-jdk16-at-debian10/>
+<span class=title>Next Page »</span>
+<br>
+<span>在Debian10上安装AdoptOpenJDK16</span>
+</a>
+</nav><div class=share-buttons>
+<a target=_blank rel="noopener noreferrer" aria-label="share nginx 反代解决CORS问题 on twitter" href="https://twitter.com/intent/tweet/?text=nginx%20%e5%8f%8d%e4%bb%a3%e8%a7%a3%e5%86%b3CORS%e9%97%ae%e9%a2%98&url=https%3a%2f%2fblog.fifcom.cn%2fposts%2fcloud-nginx-reverse-proxy-allow-cors%2f&hashtags=cloud%2cnginx"><svg viewBox="0 0 512 512"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM195.519 424.544c135.939.0 210.268-112.643 210.268-210.268.0-3.218.0-6.437-.153-9.502 14.406-10.421 26.973-23.448 36.935-38.314-13.18 5.824-27.433 9.809-42.452 11.648 15.326-9.196 26.973-23.602 32.49-40.92-14.252 8.429-30.038 14.56-46.896 17.931-13.487-14.406-32.644-23.295-53.946-23.295-40.767.0-73.87 33.104-73.87 73.87.0 5.824.613 11.494 1.992 16.858-61.456-3.065-115.862-32.49-152.337-77.241-6.284 10.881-9.962 23.601-9.962 37.088.0 25.594 13.027 48.276 32.95 61.456-12.107-.307-23.448-3.678-33.41-9.196v.92c0 35.862 25.441 65.594 59.311 72.49-6.13 1.686-12.72 2.606-19.464 2.606-4.751.0-9.348-.46-13.946-1.38 9.349 29.426 36.628 50.728 68.965 51.341-25.287 19.771-57.164 31.571-91.8 31.571-5.977.0-11.801-.306-17.625-1.073 32.337 21.15 71.264 33.41 112.95 33.41z"/></svg>
+</a>
+<a target=_blank rel="noopener noreferrer" aria-label="share nginx 反代解决CORS问题 on telegram" href="https://telegram.me/share/url?text=nginx%20%e5%8f%8d%e4%bb%a3%e8%a7%a3%e5%86%b3CORS%e9%97%ae%e9%a2%98&url=https%3a%2f%2fblog.fifcom.cn%2fposts%2fcloud-nginx-reverse-proxy-allow-cors%2f"><svg viewBox="2 2 28 28"><path d="M26.49 29.86H5.5a3.37 3.37.0 01-2.47-1 3.35 3.35.0 01-1-2.47V5.48A3.36 3.36.0 013 3 3.37 3.37.0 015.5 2h21A3.38 3.38.0 0129 3a3.36 3.36.0 011 2.46V26.37a3.35 3.35.0 01-1 2.47 3.38 3.38.0 01-2.51 1.02zm-5.38-6.71a.79.79.0 00.85-.66L24.73 9.24a.55.55.0 00-.18-.46.62.62.0 00-.41-.17q-.08.0-16.53 6.11a.59.59.0 00-.41.59.57.57.0 00.43.52l4 1.24 1.61 4.83a.62.62.0 00.63.43.56.56.0 00.4-.17L16.54 20l4.09 3A.9.9.0 0021.11 23.15zM13.8 20.71l-1.21-4q8.72-5.55 8.78-5.55c.15.0.23.0.23.16a.18.18.0 010 .06s-2.51 2.3-7.52 6.8z"/></svg>
+</a>
+</div></footer></article></main><footer class=footer>
+<span>&copy; 2022 <a href=https://blog.fifcom.cn/>FIFCOM实验室</a></span>
+<span>
+Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://git.io/hugopapermod rel=noopener target=_blank>PaperMod</a>
+</span>
+</footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a>
+<script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(t){t.preventDefault();var e=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(e)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(e)}']`).scrollIntoView({behavior:"smooth"}),e==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${e}`)})})</script>
+<script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script>
+<script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script>
+</body></html>

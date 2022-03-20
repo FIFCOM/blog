@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>debian on FIFCOM实验室</title>
+    <link>https://blog.fifcom.cn/tags/debian/</link>
+    <description>Recent content in debian on FIFCOM实验室</description>
+    <image>
+      <url>https://fifcom.cn/avatar/?transparent=1</url>
+      <link>https://fifcom.cn/avatar/?transparent=1</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 06 Jul 2021 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/debian/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>在Debian10上安装AdoptOpenJDK16</title>
+      <link>https://blog.fifcom.cn/posts/linux-install-jdk16-at-debian10/</link>
+      <pubDate>Tue, 06 Jul 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/linux-install-jdk16-at-debian10/</guid>
+      <description>首先卸载掉自带的openjdk
+apt-get remove openjdk*apt-get purge openjdk* 再配置一下源
+ 信任GnuPG公钥  wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add - 在/etc/apt/sources.list.d/AdoptOpenJDK.list里添加以下内容：  deb http://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/deb buster main (编辑器可以用vim : vi /etc/apt/sources.list.d/AdoptOpenJDK.list ,添加完成后输入 :wq! 退出)
+更新apt  sudo apt-get update 下载并安装 AdoptOpenJDK 16  sudo apt install adoptopenjdk-16-openj9 完成！
+ 参考 AdoptOpenJDK 镜像使用帮助
+ </description>
+    </item>
+    
+  </channel>
+</rss>

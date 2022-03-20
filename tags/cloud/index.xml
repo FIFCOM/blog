@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>cloud on FIFCOM实验室</title>
+    <link>https://blog.fifcom.cn/tags/cloud/</link>
+    <description>Recent content in cloud on FIFCOM实验室</description>
+    <image>
+      <url>https://fifcom.cn/avatar/?transparent=1</url>
+      <link>https://fifcom.cn/avatar/?transparent=1</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 27 Nov 2021 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/cloud/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CF/YJS CDN下使用PHP获取客户端真实IP地址</title>
+      <link>https://blog.fifcom.cn/posts/cloud-cf-yjs-cdn-get-remote-addr/</link>
+      <pubDate>Sat, 27 Nov 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/cloud-cf-yjs-cdn-get-remote-addr/</guid>
+      <description>打印一下$_SERVER
+&amp;lt;?phpecho json_encode($_SERVER, JSON_UNESCAPED_UNICODE);?&amp;gt; 有这几项值得注意
+&amp;#34;HTTP_X_FORWARDED_FOR&amp;#34;:&amp;#34;[YOUR_IP]&amp;#34;,&amp;#34;HTTP_CF_IPCOUNTRY&amp;#34;:&amp;#34;[YOUR_COUNTRY]&amp;#34;,&amp;#34;HTTP_CF_CONNECTING_IP&amp;#34;:&amp;#34;[YOUR_IP]&amp;#34;,&amp;#34;HTTP_CDN_LOOP&amp;#34;:&amp;#34;cloudflare&amp;#34;, 即 `$_SERVER[&amp;quot;HTTP_X_FORWARDED_FOR&amp;quot;]` 就是客户端的真实IP地址
+另外不支持IPv6的服务器也可以通过 $_SERVER[&amp;quot;HTTP_X_FORWARDED_FOR&amp;quot;] 来获取客户端的IPv6地址
+自动根据情况获取IP:
+$ip = isset($_SERVER[&amp;#39;HTTP_X_FORWARDED_FOR&amp;#39;]) &amp;amp;&amp;amp; $_SERVER[&amp;#39;HTTP_X_FORWARDED_FOR&amp;#39;] != &amp;#34;&amp;#34; ? $_SERVER[&amp;#39;HTTP_X_FORWARDED_FOR&amp;#39;] : $_SERVER[&amp;#39;REMOTE_ADDR&amp;#39;]; </description>
+    </item>
+    
+    <item>
+      <title>nginx 反代解决CORS问题</title>
+      <link>https://blog.fifcom.cn/posts/cloud-nginx-reverse-proxy-allow-cors/</link>
+      <pubDate>Sat, 27 Nov 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/cloud-nginx-reverse-proxy-allow-cors/</guid>
+      <description>同源策略规定，浏览器的ajax只能访问跟它的HTML页面同源（相同域名或IP）的资源。
+使用ajax时容易遇到跨域问题
+就像这样
+最好的方法自然是修改服务端代码，如php里的
+header(&amp;#34;Access-Control-Allow-Origin: blog.fifcom.cn&amp;#34;); // 允许指定域名跨域header(&amp;#34;Access-Control-Allow-Origin: *&amp;#34;); // 允许任意域名跨域 不过有时候无法修改服务端代码，这时候就需要用 nginx 反代来解决了。编辑 nginx.conf 并添加：
+server {listen 443 ssl;# listen 80; # 如为http则监听80ssl on;ssl_certificate /path/pub.crt; #ssl证书ssl_certificate_key /path/pri.key;#ssl私钥ssl_protocols TLSv1 TLSv1.1 TLSv1.2;ssl_ciphers HIGH:!aNULL:!MD5;server_name example-proxy.fifcom.cn; #你的反代域名location / {proxy_pass https://example.fifcom.cn; # 被代理的域名(源站)proxy_http_version 1.1;# proxy_set_header Referer https://example.fifcom.cn; # 源站检测referer时需加上# 一些其他设置proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;proxy_set_header REMOTE-HOST $remote_addr;proxy_buffering off; proxy_cache off;proxy_set_header X-Forwarded-Proto $scheme;add_header X-Cache $upstream_cache_status;add_header Access-Control-Allow-Methods *; # 允许所有跨域方法add_header Access-Control-Max-Age 3600; # 缓存,否则会发送两次请求# add_header Access-Control-Allow-Credentials true; # 请求包含cookie时要开启add_header Access-Control-Allow-Origin $http_origin;# 允许客户端跨域,不用*是因为请求包含cookie时不支持允许所有add_header Access-Control-Allow-Headers $http_access_control_request_headers; # 自动配置允许的headerif ($request_method = OPTIONS){return 200;# 判断请求类型是否为预检命令}proxy_set_header Host example.</description>
+    </item>
+    
+  </channel>
+</rss>
