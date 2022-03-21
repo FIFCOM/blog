@@ -3,7 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://blog.fifcom.cn/</loc>
-    <lastmod>2022-01-03T00:00:00+08:00</lastmod>
+    <lastmod>2022-03-15T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/tags/hadoop/</loc>
+    <lastmod>2022-03-15T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/hadoop-wordcount-example/</loc>
+    <lastmod>2022-03-15T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/</loc>
+    <lastmod>2022-03-15T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/tags/</loc>
+    <lastmod>2022-03-15T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/hadoop-commands/</loc>
+    <lastmod>2022-03-10T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/hadoop-distributed-install/</loc>
+    <lastmod>2022-03-05T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/hadoop-pseudo-distributed-install/</loc>
+    <lastmod>2022-03-01T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/tags/linux/</loc>
     <lastmod>2022-01-03T00:00:00+08:00</lastmod>
@@ -11,13 +32,7 @@
     <loc>https://blog.fifcom.cn/posts/linux-shell-manual-1/</loc>
     <lastmod>2022-01-03T00:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://blog.fifcom.cn/posts/</loc>
-    <lastmod>2022-01-03T00:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://blog.fifcom.cn/tags/shell/</loc>
-    <lastmod>2022-01-03T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://blog.fifcom.cn/tags/</loc>
     <lastmod>2022-01-03T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/tags/cdn/</loc>
