@@ -12,11 +12,12 @@
 <meta name=msvalidate.01 content="XYZabc">
 <link crossorigin=anonymous href=/assets/css/stylesheet.min.c88963fe2d79462000fd0fb1b3737783c32855d340583e4523343f8735c787f0.css integrity="sha256-yIlj/i15RiAA/Q+xs3N3g8MoVdNAWD5FIzQ/hzXHh/A=" rel="preload stylesheet" as=style>
 <link rel=preload href="https://fifcom.cn/avatar/?transparent=1" as=image>
+<link rel=preload href="https://fifcom.cn/avatar/?transparent=1" as=image>
 <link rel=icon href="https://fifcom.cn/avatar/?transparent=1">
-<link rel=icon type=image/png sizes=16x16 href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
-<link rel=icon type=image/png sizes=32x32 href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
-<link rel=apple-touch-icon href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
-<link rel=mask-icon href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
+<link rel=icon type=image/png sizes=16x16 href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=icon type=image/png sizes=32x32 href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=apple-touch-icon href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=mask-icon href="https://fifcom.cn/avatar/?transparent=1">
 <meta name=theme-color content="#2e2e33">
 <meta name=msapplication-TileColor content="#2e2e33">
 <meta name=generator content="Hugo 0.93.2">
@@ -51,151 +52,23 @@
 <a href=https://fifcom.cn/ title=主页>
 <span>主页</span>
 </a>
-</li></ul></nav></header><main class=main>
-<article class="first-entry home-info">
-<header class=entry-header>
-<h1>🥰好耶！是FIFCOM</h1></header><section class=entry-content>
-<p>咕→咕↑咕↓↑咕↓</p></section><footer class=entry-footer>
-<div class=social-icons>
+</li><li>
+<a href=https://blog.fifcom.cn/tags/friends/ title=朋友们>
+<span>朋友们</span>
+</a>
+</li></ul></nav></header><main class=main><div class=profile>
+<div class=profile_inner><img src="https://fifcom.cn/avatar/?transparent=1" alt=FIFCOM height=120 width=120>
+<h1>好耶！是FIFCOM</h1><span>咕→咕↑咕↓↑咕↓</span><div class=social-icons>
 <a href=https://github.com/FIFCOM target=_blank rel="noopener noreferrer me" title=Github><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg>
 </a>
-</div></footer></article><article class=post-entry>
-<header class=entry-header>
-<h2>Hadoop 运行官方示例WordCount
-</h2></header><section class=entry-content>
-<p>运行官方示例WordCount 环境安装完成后输入jps确保有5+个进程： 本实验使用官方WordCount程序实现Java源码词语统计。
-准备Java源码 首先进入Java安装目录，找到src.zip，解压到tmp中
-cd /opt/jdk8u282-b08/ unzip -d tmp src.zip 接着将tmp中的所有.java文件拷贝到javasrc目录下，需要先创建javasrc文件夹
-mkdir javasrc # 找到文件名匹配*.java的文件后执行 cp 命令复制文件。注意\;是-exec的结束标志 find tmp -name *.java -exec cp {} javasrc \; 上传文件至HDFS 由于Java源码大多为小文件，需要将这些文件合并成一个大文件。如果不这样做的话会由于io开销过大而导致运行时间过长。
-此处使用appendToFile将本地的所有java文件上传到HDFS的input/data_file中
-cd /opt/jdk8u282-b08 # 文件会上传到HDFS的/user/&lt;login_user>/input/data_file中， # 该目录如果不存在则会自动创建 hadoop fs -appendToFile javasrc/*.java input/data_file hadoop fs -ls input hadoop fs -tail input/data_file # 查看末尾1KB的内容 运行WordCount 官方示例文件在/opt/hadoop~/share/hadoop/mapreduce/hadoop-mapreduce-examples-~.jar中
-hadoop jar命令用于执行jar文件，wordcount是例子的主类[?]，input是输入文件所在目录，output是输出文件所在目录。output目录不能事先存在。
-hadoop jar /opt/hadoop-2.9.2/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.9.2.jar wordcount input output 可以看到map和reduce操作是并行进行的
-查看输出结果 查看HDFS中的output文件夹
-hadoop fs -ls output 当运行成功后会在该文件下生成一个_SUCCESS文件，该文件长度为0，仅预示着成功输出了结果，其实际结果 存放在part-r-xxxxx文件中...</p></section><footer class=entry-footer><span title="2022-03-15 00:00:00 +0800 CST">March 15, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 运行官方示例WordCount" href=https://blog.fifcom.cn/posts/hadoop-wordcount-example/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>Hadoop 常用命令
-</h2></header><section class=entry-content>
-<p>Hadoop常用命令 版本号 hadoop version 创建文件夹 hdfs dfs -mkdir /dir1 # 根目录下创建 列出文件和文件夹 展示根目录下所有文件和文件夹，及其信息
-hdfs dfs -ls / 递归展示子文件夹中的内容
-hdfs dfs -ls -R / 复制本地文件至HDFS put或copyFromLocal命令, 使用-f强制覆盖HDFS中已存在的文件
-touch aaa.txt hdfs dfs -put aaa.txt /dir1 # hdfs dfs -copyFromLocal aaa.txt /dir1 hdfs dfs -ls -R / 获取HDFS中的文件 get / copyToLocal: 将单个文件复制至本地 # rm aaa.txt hdfs dfs -get /dir1/aaa.txt ~ # hdfs dfs -copyToLocal /dir1/aaa.txt ~ ls -al getmerge: 将多个文件存入本地的同一个文件中 touch a....</p></section><footer class=entry-footer><span title="2022-03-10 00:00:00 +0800 CST">March 10, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 常用命令" href=https://blog.fifcom.cn/posts/hadoop-commands/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>Hadoop 完全分布式安装
-</h2></header><section class=entry-content>
-<p>基本环境准备 配置Java环境 编辑/etc/profile:
-export JAVA_HOME=/usr/local/jdk1.8/ export JRE_HOME=/usr/local/jdk1.8/jre export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar source /etc/profile
-配置hosts 三台机器都要配置，以便于免密登录 编辑/etc/hosts:
-master_ip_here master slave1_ip_here slave1 slave2_ip_here slave2 配置免密登录 在所有节点上生成rsa公钥和私钥: ssh-keygen -t rsa 将slave节点上生成的公钥用scp命令传到master节点上： scp ~/.ssh/id_rsa.pub root@master:~/.ssh/id_rsa.pub.slave1 scp ~/.ssh/id_rsa.pub root@master:~/.ssh/id_rsa.pub.slave2 3. 在master上生成authorized_keys，即把三个生成的公钥输入进一个文件：
-cd ~/.ssh cat id_rsa.pub >> authorized_keys cat id_rsa.pub.slave1 >> authorized_keys cat id_rsa.pub.slave2 >> authorized_keys 将master上的authorized_keys用scp命令传到slave节点上： scp ~/.ssh/authorized_keys root@slave1:~/.ssh/authorized_keys scp ~/.ssh/authorized_keys root@slave2:~/.ssh/authorized_keys 测试免密登录： ssh master ssh slave1 ssh slave2 Hadoop配置 配置Java路径 在master上编辑hadoop-env....</p></section><footer class=entry-footer><span title="2022-03-05 00:00:00 +0800 CST">March 5, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 完全分布式安装" href=https://blog.fifcom.cn/posts/hadoop-distributed-install/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>Hadoop 伪分布式安装
-</h2></header><section class=entry-content>
-<p>环境配置 三台机器上都安装JDK环境: 可以使用包管理工具一键安装，也可以上传JDK安装包，解压后配置环境变量即可 yum -y install java-1.8.0-openjdk* # 不推荐 或者
-tar -zxvf OpenJDK8U-jdk_x64_linux_openj9_linuxXL_8u282b08_openj9-0.24.0.tar.gz -C /opt vi /etc/profile # 在文件下方添加 export JAVA_HOME=/opt/jdk8u282-b08 export JRE_HOME=/opt/jdk8u282-b08/jre export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar # 输入:wq!退出 source /etc/profile # 使用环境变量配置 安装Hadoop环境: 首先上传安装包，再解压至opt目录 tar -zxvf hadoop-2.9.2.tar.gz -C /opt hadoop前提配置 配置master节点 首先进入安装目录, 编辑脚本:
-cd /opt/hadoop-2.9.2/etc/hadoop vi hadoop-env.sh # 找到`# The java implementation to use. ...`， 编辑下面的为 export JAVA_HOME=/opt/jdk8u282-b08 继续编辑当前目录下的core-site.xml文件，指定HDFS的 NameNode的地址，value值是主机名加端口号，主机使用master节点的ip地址
-vi core-site.xml 在configuration标签内添加：
-&lt;property> &lt;name>fs....</p></section><footer class=entry-footer><span title="2022-03-01 00:00:00 +0800 CST">March 1, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 伪分布式安装" href=https://blog.fifcom.cn/posts/hadoop-pseudo-distributed-install/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>Linux Shell 语法(上)
-</h2></header><section class=entry-content>
-<p>Hello World! #! /bin/bash
-echo "Hello World!" 第一行是注释，声明用bash作为此脚本的解释器。注释分为两种:
-# 单行注释
-:&lt;&lt;EOF
-多行
-注释
-EOF
-# 其中EOF可以替换为任意字符串 第二行的echo用于在控制台上输出内容并自动换行。准确的说，echo会输出传递给它的所有参数，以空格分隔。 "Hello World!" 是字符串，后面会详细介绍。
-保存后可以使用bash filename.sh运行，或者:
-chmod +x filename.sh # 赋予可执行权限
-./hw.sh # 作为可执行文件执行 变量 定义可变变量 v1=123
-v2=123.4
-v3=fifcom
-v4="fifcom"
-v5='fifcom'
-declare v6=fifcom
-# 变量默认为字符串，在使用时会根据需求自动转换类型
-# 注意：定义变量时等号的左右两边不可以有空格
-# 否则可能被解析器作为系统命令来执行 定义只读变量 readonly v1="immut" # 定义只读变量
-v2="mut"
-readonly v2 # 转换为只读变量
-declare -r v3="immut" # 定义只读变量 使用变量 使用变量需要加上$或${}符号。 ${} 可以帮助解释器识别变量名
-v1=fifcom
-echo $v1 # 输出fifcom
-echo ${v1} # 输出fifcom
-echo ${v1}v1 # 输出fifcomv1 删除变量 用unset删除变量。只读变量不可删除。...</p></section><footer class=entry-footer><span title="2022-01-03 00:00:00 +0800 CST">January 3, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Linux Shell 语法(上)" href=https://blog.fifcom.cn/posts/linux-shell-manual-1/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>CF/YJS CDN下使用PHP获取客户端真实IP地址
-</h2></header><section class=entry-content>
-<p>打印一下$_SERVER
-&lt;?php
-echo json_encode($_SERVER, JSON_UNESCAPED_UNICODE);
-?> 有这几项值得注意
-"HTTP_X_FORWARDED_FOR":"[YOUR_IP]",
-"HTTP_CF_IPCOUNTRY":"[YOUR_COUNTRY]",
-"HTTP_CF_CONNECTING_IP":"[YOUR_IP]",
-"HTTP_CDN_LOOP":"cloudflare", 即 `$_SERVER["HTTP_X_FORWARDED_FOR"]` 就是客户端的真实IP地址
-另外不支持IPv6的服务器也可以通过 $_SERVER["HTTP_X_FORWARDED_FOR"] 来获取客户端的IPv6地址
-自动根据情况获取IP:
-$ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != "" ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']; </p></section><footer class=entry-footer><span title="2021-11-27 00:00:00 +0800 CST">November 27, 2021</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to CF/YJS CDN下使用PHP获取客户端真实IP地址" href=https://blog.fifcom.cn/posts/cloud-cf-yjs-cdn-get-remote-addr/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>nginx 反代解决CORS问题
-</h2></header><section class=entry-content>
-<p>同源策略规定，浏览器的ajax只能访问跟它的HTML页面同源（相同域名或IP）的资源。
-使用ajax时容易遇到跨域问题
-就像这样
-最好的方法自然是修改服务端代码，如php里的
-header("Access-Control-Allow-Origin: blog.fifcom.cn"); // 允许指定域名跨域
-header("Access-Control-Allow-Origin: *"); // 允许任意域名跨域 不过有时候无法修改服务端代码，这时候就需要用 nginx 反代来解决了。编辑 nginx.conf 并添加：
-server {
-listen 443 ssl;
-# listen 80; # 如为http则监听80
-ssl on;
-ssl_certificate /path/pub.crt; #ssl证书
-ssl_certificate_key /path/pri.key;#ssl私钥
-ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-ssl_ciphers HIGH:!aNULL:!MD5;
-server_name example-proxy.fifcom.cn; #你的反代域名
-location / {
-proxy_pass https://example.fifcom.cn; # 被代理的域名(源站)
-proxy_http_version 1.1;
-# proxy_set_header Referer https://example.fifcom.cn; # 源站检测referer时需加上
-# 一些其他设置
-proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header REMOTE-HOST $remote_addr;
-proxy_buffering off; proxy_cache off;
-proxy_set_header X-Forwarded-Proto $scheme;
-add_header X-Cache $upstream_cache_status;
-add_header Access-Control-Allow-Methods *; # 允许所有跨域方法
-add_header Access-Control-Max-Age 3600; # 缓存,否则会发送两次请求
-# add_header Access-Control-Allow-Credentials true; # 请求包含cookie时要开启
-add_header Access-Control-Allow-Origin $http_origin;
-# 允许客户端跨域,不用*是因为请求包含cookie时不支持允许所有
-add_header Access-Control-Allow-Headers $http_access_control_request_headers; # 自动配置允许的header
-if ($request_method = OPTIONS){
-return 200;
-# 判断请求类型是否为预检命令
-}
-proxy_set_header Host example....</p></section><footer class=entry-footer><span title="2021-11-27 00:00:00 +0800 CST">November 27, 2021</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to nginx 反代解决CORS问题" href=https://blog.fifcom.cn/posts/cloud-nginx-reverse-proxy-allow-cors/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>在Debian10上安装AdoptOpenJDK16
-</h2></header><section class=entry-content>
-<p>首先卸载掉自带的openjdk
-apt-get remove openjdk*
-apt-get purge openjdk* 再配置一下源
-信任GnuPG公钥 wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add - 在/etc/apt/sources.list.d/AdoptOpenJDK.list里添加以下内容： deb http://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/deb buster main (编辑器可以用vim : vi /etc/apt/sources.list.d/AdoptOpenJDK.list ,添加完成后输入 :wq! 退出)
-更新apt sudo apt-get update 下载并安装 AdoptOpenJDK 16 sudo apt install adoptopenjdk-16-openj9 完成！
-参考 AdoptOpenJDK 镜像使用帮助
-</p></section><footer class=entry-footer><span title="2021-07-06 00:00:00 +0800 CST">July 6, 2021</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to 在Debian10上安装AdoptOpenJDK16" href=https://blog.fifcom.cn/posts/linux-install-jdk16-at-debian10/></a>
-</article></main><footer class=footer>
+</div><div class=buttons>
+<a class=button href=posts rel=noopener title=文章>
+<span class=button-inner>文章</span>
+</a>
+<a class=button href=tags rel=noopener title=标签>
+<span class=button-inner>标签</span>
+</a>
+</div></div></div></main><footer class=footer>
 <span>&copy; 2022 <a href=https://blog.fifcom.cn/>FIFCOM实验室</a></span>
 <span>
 Powered by

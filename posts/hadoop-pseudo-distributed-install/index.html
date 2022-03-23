@@ -18,10 +18,10 @@ vi core-site.xml 在configuration标签内添加：
 <link rel=preload href="https://fifcom.cn/avatar/?transparent=1" as=image>
 <script defer crossorigin=anonymous src=/assets/js/highlight.min.4dcb3c4f38462f66c6b6137227726f5543cb934cca9788f041c087e374491df2.js integrity="sha256-Tcs8TzhGL2bGthNyJ3JvVUPLk0zKl4jwQcCH43RJHfI=" onload=hljs.initHighlightingOnLoad()></script>
 <link rel=icon href="https://fifcom.cn/avatar/?transparent=1">
-<link rel=icon type=image/png sizes=16x16 href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
-<link rel=icon type=image/png sizes=32x32 href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
-<link rel=apple-touch-icon href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
-<link rel=mask-icon href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
+<link rel=icon type=image/png sizes=16x16 href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=icon type=image/png sizes=32x32 href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=apple-touch-icon href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=mask-icon href="https://fifcom.cn/avatar/?transparent=1">
 <meta name=theme-color content="#2e2e33">
 <meta name=msapplication-TileColor content="#2e2e33">
 <meta name=generator content="Hugo 0.93.2">
@@ -65,6 +65,10 @@ vi core-site.xml 在configuration标签内添加：
 </li><li>
 <a href=https://fifcom.cn/ title=主页>
 <span>主页</span>
+</a>
+</li><li>
+<a href=https://blog.fifcom.cn/tags/friends/ title=朋友们>
+<span>朋友们</span>
 </a>
 </li></ul></nav></header><main class=main>
 <article class=post-single>
@@ -149,16 +153,16 @@ Hadoop 伪分布式安装
 </span></span><span style=display:flex><span>cd /opt/hadoop-2.9.2/etc/hadoop/
 </span></span><span style=display:flex><span><span style=color:#75715e># 格式化</span>
 </span></span><span style=display:flex><span>hadoop namenode -format
-</span></span></code></pre></div><p><img loading=lazy src=../assets/rI9x31h.png alt=format.png>
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/rI9x31h.png alt=format.png>
 </p><ol start=2>
 <li>启动hadoop，测试hdfs</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cd /opt/hadoop-2.9.2/sbin/
 </span></span><span style=display:flex><span>./start-all.sh
-</span></span></code></pre></div><p><img loading=lazy src=../assets/l36812v.png alt=start.png>
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/l36812v.png alt=start.png>
 </p><ol start=3>
 <li>测试hdfs命令：</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>hadoop fs -ls /
 </span></span><span style=display:flex><span>hadoop fs -mkdir /test
 </span></span><span style=display:flex><span>hadoop fs -ls /
-</span></span></code></pre></div><p><img loading=lazy src=../assets/cMXetCC.png alt=result.png>
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/cMXetCC.png alt=result.png>
 </p><p>注： 如果输入hdfs命令时connection refused，可以</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e># 1. 编辑core-site.xml，主机名可以改成localhost，端口是9000</span>
 </span></span><span style=display:flex><span><span style=color:#75715e># 2. 进opt/hadoop~/sbin，停止服务后重新格式化，再启动服务</span>
 </span></span><span style=display:flex><span>./stop-all.sh

@@ -19,10 +19,10 @@ server {listen 443 ssl;# listen 80; # 如为http则监听80ssl on;ssl_certif
 <link rel=preload href="https://fifcom.cn/avatar/?transparent=1" as=image>
 <script defer crossorigin=anonymous src=/assets/js/highlight.min.4dcb3c4f38462f66c6b6137227726f5543cb934cca9788f041c087e374491df2.js integrity="sha256-Tcs8TzhGL2bGthNyJ3JvVUPLk0zKl4jwQcCH43RJHfI=" onload=hljs.initHighlightingOnLoad()></script>
 <link rel=icon href="https://fifcom.cn/avatar/?transparent=1">
-<link rel=icon type=image/png sizes=16x16 href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
-<link rel=icon type=image/png sizes=32x32 href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
-<link rel=apple-touch-icon href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
-<link rel=mask-icon href=https://blog.fifcom.cn/%3Clink%20/%20abs%20url%3E>
+<link rel=icon type=image/png sizes=16x16 href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=icon type=image/png sizes=32x32 href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=apple-touch-icon href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=mask-icon href="https://fifcom.cn/avatar/?transparent=1">
 <meta name=theme-color content="#2e2e33">
 <meta name=msapplication-TileColor content="#2e2e33">
 <meta name=generator content="Hugo 0.93.2">
@@ -69,13 +69,17 @@ server {listen 443 ssl;# listen 80; # 如为http则监听80ssl on;ssl_certif
 <a href=https://fifcom.cn/ title=主页>
 <span>主页</span>
 </a>
+</li><li>
+<a href=https://blog.fifcom.cn/tags/friends/ title=朋友们>
+<span>朋友们</span>
+</a>
 </li></ul></nav></header><main class=main>
 <article class=post-single>
 <header class=post-header>
 <div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a>&nbsp;»&nbsp;<a href=https://blog.fifcom.cn/posts/>Posts</a></div><h1 class=post-title>
 nginx 反代解决CORS问题
 </h1><div class=post-meta><span title="2021-11-27 00:00:00 +0800 CST">November 27, 2021</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM&nbsp;|&nbsp;<a href="https://fifcom.cn/aff/?from=61c389caa31f73f1601ace6ee9ebe3ed" rel="noopener noreferrer" target=_blank>支持我</a>
-</div></header><div class=post-content><p>同源策略规定，浏览器的ajax只能访问跟它的HTML页面同源（相同域名或IP）的资源。</p><p>使用ajax时容易遇到跨域问题</p><p><img loading=lazy src=../assets/4DW6fNW.png alt="nginx 反代解决CORS问题">
+</div></header><div class=post-content><p>同源策略规定，浏览器的ajax只能访问跟它的HTML页面同源（相同域名或IP）的资源。</p><p>使用ajax时容易遇到跨域问题</p><p><img loading=lazy src=https://cdn.fifcom.cn/blog/4DW6fNW.png alt="nginx 反代解决CORS问题">
 </p><p>就像这样</p><p>最好的方法自然是修改服务端代码，如php里的</p><pre tabindex=0><code>header(&#34;Access-Control-Allow-Origin: blog.fifcom.cn&#34;); // 允许指定域名跨域
 header(&#34;Access-Control-Allow-Origin: *&#34;); // 允许任意域名跨域
 </code></pre><p>不过有时候无法修改服务端代码，这时候就需要用 nginx 反代来解决了。编辑 nginx.conf 并添加：</p><pre tabindex=0><code>server 

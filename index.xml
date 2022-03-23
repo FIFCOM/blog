@@ -121,5 +121,15 @@ apt-get remove openjdk*apt-get purge openjdk* 再配置一下源
  </description>
     </item>
     
+    <item>
+      <title>友情链接</title>
+      <link>https://blog.fifcom.cn/posts/friends-link/</link>
+      <pubDate>Wed, 01 Jan 2020 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/friends-link/</guid>
+      <description>淅筱TUEP的博客
+粉身若叶のBlog</description>
+    </item>
+    
   </channel>
 </rss>
