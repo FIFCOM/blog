@@ -58,11 +58,10 @@
 </li></ul></nav></header><main class=main>
 <header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a></div><h1>Posts</h1></header><article class=post-entry>
 <header class=entry-header>
-<h2>Hadoop HBase安装
+<h2>HBase安装
 </h2></header><section class=entry-content>
-<p>安装HBase 环境准备 首先应完成完全/伪分布式安装Hadoop
-并配置免密登录
-首先上传Zookeeper、HBase安装包至master
+<p>安装HBase 环境准备 首先应完成完全分布式安装Hadoop
+并配置免密登录、上传Zookeeper、HBase安装包至master节点
 配置Zookeeper 解压Zookeeper安装包
 tar -zxvf apache-zookeeper-3.8.0-bin.tar.gz -C /opt 在解压目录创建data和log目录
 cd /opt/apache-zookeeper-3.8.0-bin mkdir data log 编辑配置文件：复制conf目录下的样例文件，并修改dataDir(数据文件目录)和dataLogDir(日志文件目录)
@@ -70,7 +69,7 @@ cd conf cp zoo_sample.cfg zoo.cfg vi zoo.cfg => dataDir=/opt/apache-zookeeper-3.
 cd ../data/ echo 1 >> myid 再次编辑zoo.cfg，添加主节点和从节点地址
 cd ../conf/ vi zoo.cfg => # 底部添加 server.1=master:2888:3888 server.2=slave1:2888:3888 server.3=slave2:2888:3888 接着将Zookeeper安装文件分发到子节点
 scp -r /opt/apache-zookeeper-3.8.0-bin/ slave1:/opt/ scp -r /opt/apache-zookeeper-3.8.0-bin/ slave2:/opt/ 修改子节点上的myid
-cd /opt/apache-zookeeper-3.8.0-bin/data/ echo 2 > myid # echo 3 > myid cat myid 启动Zookeeper 在所有节点上执行：...</p></section><footer class=entry-footer><span title="2022-03-30 00:00:00 +0800 CST">March 30, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop HBase安装" href=https://blog.fifcom.cn/posts/hadoop-hbase-install/></a>
+cd /opt/apache-zookeeper-3.8.0-bin/data/ echo 2 > myid # echo 3 > myid cat myid 启动Zookeeper 在所有节点上执行：...</p></section><footer class=entry-footer><span title="2022-03-30 00:00:00 +0800 CST">March 30, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase安装" href=https://blog.fifcom.cn/posts/hadoop-hbase-install/></a>
 </article><article class=post-entry>
 <header class=entry-header>
 <h2>Hadoop 运行官方示例WordCount

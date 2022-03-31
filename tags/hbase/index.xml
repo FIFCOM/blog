@@ -11,14 +11,13 @@
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Wed, 30 Mar 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/hbase/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Hadoop HBase安装</title>
+      <title>HBase安装</title>
       <link>https://blog.fifcom.cn/posts/hadoop-hbase-install/</link>
       <pubDate>Wed, 30 Mar 2022 00:00:00 +0800</pubDate>
       
       <guid>https://blog.fifcom.cn/posts/hadoop-hbase-install/</guid>
-      <description>安装HBase 环境准备 首先应完成完全/伪分布式安装Hadoop
-并配置免密登录
-首先上传Zookeeper、HBase安装包至master
+      <description>安装HBase 环境准备 首先应完成完全分布式安装Hadoop
+并配置免密登录、上传Zookeeper、HBase安装包至master节点
 配置Zookeeper 解压Zookeeper安装包
 tar -zxvf apache-zookeeper-3.8.0-bin.tar.gz -C /opt 在解压目录创建data和log目录
 cd /opt/apache-zookeeper-3.8.0-bin mkdir data log 编辑配置文件：复制conf目录下的样例文件，并修改dataDir(数据文件目录)和dataLogDir(日志文件目录)
