@@ -25,7 +25,7 @@ cd conf cp zoo_sample.cfg zoo.cfg vi zoo.cfg =&amp;gt; dataDir=/opt/apache-zooke
 cd ../data/ echo 1 &amp;gt;&amp;gt; myid 再次编辑zoo.cfg，添加主节点和从节点地址
 cd ../conf/ vi zoo.cfg =&amp;gt; # 底部添加 server.1=master:2888:3888 server.2=slave1:2888:3888 server.3=slave2:2888:3888 接着将Zookeeper安装文件分发到子节点
 scp -r /opt/apache-zookeeper-3.8.0-bin/ slave1:/opt/ scp -r /opt/apache-zookeeper-3.8.0-bin/ slave2:/opt/ 修改子节点上的myid
-cd /opt/apache-zookeeper-3.8.0-bin/data/ echo 2 &amp;gt; myid # echo 3 &amp;gt; myid cat myid 启动Zookeeper 在所有节点上执行：</description>
+cd /opt/apache-zookeeper-3.8.0-bin/data/ echo 2 &amp;gt; myid # echo 3 &amp;gt; myid cat myid 启动Zookeeper 启动前需关闭防火墙，以及在master上启动Hadoop</description>
     </item>
     
     <item>
