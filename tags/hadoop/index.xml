@@ -9,7 +9,23 @@
       <link>https://fifcom.cn/avatar/?transparent=1</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 30 Mar 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/hadoop/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 Apr 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/hadoop/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HBase常用命令</title>
+      <link>https://blog.fifcom.cn/posts/hadoop-hbase-commands/</link>
+      <pubDate>Mon, 04 Apr 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/hadoop-hbase-commands/</guid>
+      <description>环境准备 安装并启动HBase
+这里主要记录HBase shell的命令。进入HBase shell:
+hbase shell 帮助文档 使用help查看所有命令
+help 可以使用help &amp;quot;create&amp;quot;来查看具体命令的帮助
+命名空间 namespace指对一组表的逻辑分组，类似DBMS中的一个数据库，方便对表在业务上划分。
+常用操作：
+ 创建命名空间：create_namespace &amp;quot;test&amp;quot; 列出所有命名空间：list_namespace   可以看到3个namespace，其中hbase是系统内建的；用户建表时未指定命名空间的表都放在default里。 3. 查看描述：describe_namespace &amp;quot;test&amp;quot; 4. 列出命名空间下的所有表：list_namespace_tables &amp;quot;hbase&amp;quot; 可以看到内建的命名空间hbase中有两个表：meta和namespace
+建表  不指定命名空间建表：  # create &amp;#39;表名&amp;#39;, &amp;#39;列名a&amp;#39;, &amp;#39;列名b&amp;#39; create &amp;#39;tb_a&amp;#39;, &amp;#39;col_a&amp;#39;, &amp;#39;col_b&amp;#39; 即在default命名空间下创建了表tb_a，包含列名col_a和col_b 指定命名空间建表：  # create &amp;#39;命名空间:表名&amp;#39;, &amp;#39;列名a&amp;#39;, &amp;#39;列名b&amp;#39; create &amp;#39;test:tb_b&amp;#39;, &amp;#39;col_a&amp;#39;, &amp;#39;col_b&amp;#39; 即在test命名空间下创建了表tb_b，包含列名col_a和col_b 查看所有表：  list # [&amp;#34;tb_a&amp;#34;, &amp;#34;test:tb_b&amp;#34;] 判断表是否存在：  exists &amp;#34;tb_a&amp;#34; # =&amp;gt; true exists &amp;#34;tb_c&amp;#34; # =&amp;gt; false 插入数据 使用put命令插入数据</description>
+    </item>
+    
     <item>
       <title>HBase安装</title>
       <link>https://blog.fifcom.cn/posts/hadoop-hbase-install/</link>

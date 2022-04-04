@@ -58,6 +58,18 @@
 </li></ul></nav></header><main class=main>
 <header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a></div><h1>Posts</h1></header><article class=post-entry>
 <header class=entry-header>
+<h2>HBase常用命令
+</h2></header><section class=entry-content>
+<p>环境准备 安装并启动HBase
+这里主要记录HBase shell的命令。进入HBase shell:
+hbase shell 帮助文档 使用help查看所有命令
+help 可以使用help "create"来查看具体命令的帮助
+命名空间 namespace指对一组表的逻辑分组，类似DBMS中的一个数据库，方便对表在业务上划分。
+常用操作：
+创建命名空间：create_namespace "test" 列出所有命名空间：list_namespace 可以看到3个namespace，其中hbase是系统内建的；用户建表时未指定命名空间的表都放在default里。 3. 查看描述：describe_namespace "test" 4. 列出命名空间下的所有表：list_namespace_tables "hbase" 可以看到内建的命名空间hbase中有两个表：meta和namespace
+建表 不指定命名空间建表： # create '表名', '列名a', '列名b' create 'tb_a', 'col_a', 'col_b' 即在default命名空间下创建了表tb_a，包含列名col_a和col_b 指定命名空间建表： # create '命名空间:表名', '列名a', '列名b' create 'test:tb_b', 'col_a', 'col_b' 即在test命名空间下创建了表tb_b，包含列名col_a和col_b 查看所有表： list # ["tb_a", "test:tb_b"] 判断表是否存在： exists "tb_a" # => true exists "tb_c" # => false 插入数据 使用put命令插入数据...</p></section><footer class=entry-footer><span title="2022-04-04 00:00:00 +0800 CST">April 4, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase常用命令" href=https://blog.fifcom.cn/posts/hadoop-hbase-commands/></a>
+</article><article class=post-entry>
+<header class=entry-header>
 <h2>HBase安装
 </h2></header><section class=entry-content>
 <p>安装HBase 环境准备 首先应完成完全分布式安装Hadoop
@@ -206,13 +218,10 @@ apt-get purge openjdk* 再配置一下源
 更新apt sudo apt-get update 下载并安装 AdoptOpenJDK 16 sudo apt install adoptopenjdk-16-openj9 完成！
 参考 AdoptOpenJDK 镜像使用帮助
 </p></section><footer class=entry-footer><span title="2021-07-06 00:00:00 +0800 CST">July 6, 2021</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to 在Debian10上安装AdoptOpenJDK16" href=https://blog.fifcom.cn/posts/linux-install-jdk16-at-debian10/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>友情链接
-</h2></header><section class=entry-content>
-<p>淅筱TUEP的博客
-粉身若叶のBlog</p></section><footer class=entry-footer><span title="2020-01-01 00:00:00 +0800 CST">January 1, 2020</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to 友情链接" href=https://blog.fifcom.cn/posts/friends-link/></a>
-</article></main><footer class=footer>
+</article><footer class=page-footer>
+<nav class=pagination>
+<a class=next href=https://blog.fifcom.cn/posts/page/2/>Next Page »</a>
+</nav></footer></main><footer class=footer>
 <span>&copy; 2022 <a href=https://blog.fifcom.cn/>FIFCOM实验室</a></span>
 <span>
 Powered by
