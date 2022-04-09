@@ -9,7 +9,46 @@
       <link>https://fifcom.cn/avatar/?transparent=1</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 04 Apr 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 09 Apr 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HBase JavaAPI 数据操作</title>
+      <link>https://blog.fifcom.cn/posts/hadoop-hbase-java-api-data-ops/</link>
+      <pubDate>Sat, 09 Apr 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/hadoop-hbase-java-api-data-ops/</guid>
+      <description>环境准备：在HBase shell中创建一个新表curd， 包含两个列族cfa和cfb:
+create &#39;curd&#39;, &#39;cfa&#39;, &#39;cfb&#39;
+为行键修改/添加列族和值 使用put操作进行添加或修改数据
+package demo;  import java.io.IOException; import org.apache.hadoop.conf.Configuration; import org.apache.hadoop.hbase.HBaseConfiguration; import org.apache.hadoop.hbase.TableName; import org.apache.hadoop.hbase.client.*; import org.apache.hadoop.hbase.util.Bytes;  class HBaseAPI { 	private final Connection conn; 	private final Admin admin;  	public HBaseAPI() throws IOException { 	Configuration conf = HBaseConfiguration.create(); 	conf.addResource(&amp;#34;hbase-site.xml&amp;#34;); 	conn = ConnectionFactory.createConnection(conf); 	admin = conn.getAdmin(); 	}  	public void put(String tb, String row, String[][] cols) throws IOException { 	// 获取表的实例 	Table table = conn.</description>
+    </item>
+    
+    <item>
+      <title>HBase JavaAPI 表操作</title>
+      <link>https://blog.fifcom.cn/posts/hadoop-hbase-java-api-table-ops/</link>
+      <pubDate>Thu, 07 Apr 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/hadoop-hbase-java-api-table-ops/</guid>
+      <description>连接到HBase  创建配置对象并从本地载入配置文件 使用配置对象作为参数创建连接对象conn conn.getAdmin()返回管理HBase集群的Admin对象 此时已连接到HBase 可以调用Admin对象中的listTableNames()返回TableName[]，包含HBase中的所有表  package demo;  import org.apache.hadoop.conf.Configuration; import org.apache.hadoop.hbase.HBaseConfiguration; import org.apache.hadoop.hbase.TableName; import org.apache.hadoop.hbase.client.Admin; import org.apache.hadoop.hbase.client.Connection; import org.apache.hadoop.hbase.client.ConnectionFactory;  import java.io.IOException;   public class Main { 	public static void main(String[] args) throws IOException { 	// load configuration and connect to HBase 	Configuration config = HBaseConfiguration.create(); 	config.addResource(&amp;#34;/hbase-site.xml&amp;#34;); 	Connection conn = ConnectionFactory.createConnection(config); 	Admin admin = conn.getAdmin(); 	// print all tables 	for (TableName tableName : admin.</description>
+    </item>
+    
+    <item>
+      <title>HBase JavaAPI 配置</title>
+      <link>https://blog.fifcom.cn/posts/hadoop-hbase-java-api-config/</link>
+      <pubDate>Tue, 05 Apr 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/hadoop-hbase-java-api-config/</guid>
+      <description>这里演示在Windows上运行示例
+配置Hosts 在Windows的Hosts文件夹中加入集群的所有节点
+1.1.1.1 master2.2.2.2 slave1 配置Hadoop  复制已在集群上安装的Hadoop文件到本地。文件比较多，可以压缩后复制  从master上复制
+# 压缩文件夹 cd /opt/ zip -r hadoop.zip /hadoop # 将/opt/hadoop.zip复制到本地  解压hadoop.zip到本地某目录，注意：目录中不能有空格
+  编辑hadoop\etc\hadoop\hadoop-env.cmd中的JAVA_HOME
+  :: 首先在cmd里找到JAVA_HOME echo %JAVA_HOME% :: =&amp;gt; D:\Program_Files\Semeru\jdk-17.0.1.12-openj9\ :: 编辑hadoop-env.cmd中的JAVA_HOME :: =&amp;gt; JAVA_HOME=D:\Program_Files\Semeru\jdk-17.0.1.12-openj9\ 配置HADOOP环境变量  在系统变量中加入
+HADOOP_HOME=hadoop_path_hereHADOOP_USER_NAME=root 在path中加入
+%HADOOP_HOME%\bin%HADOOP_HOME%\sbin  将winutils复制进hadoop\bin中
+  测试hadoop version，正常则成功   创建测试数据 在hbase shell中:
+create &amp;#39;scores&amp;#39;,&amp;#39;grade&amp;#39;,&amp;#39;course&amp;#39; put &amp;#39;scores&amp;#39;,&amp;#39;1001&amp;#39;,&amp;#39;grade:&amp;#39;,&amp;#39;1&amp;#39; put &amp;#39;scores&amp;#39;,&amp;#39;1001&amp;#39;,&amp;#39;course:art&amp;#39;,&amp;#39;80&amp;#39; put &amp;#39;scores&amp;#39;,&amp;#39;1001&amp;#39;,&amp;#39;course:math&amp;#39;,&amp;#39;89&amp;#39; put &amp;#39;scores&amp;#39;,&amp;#39;1002&amp;#39;,&amp;#39;grade:&amp;#39;,&amp;#39;2&amp;#39; put &amp;#39;scores&amp;#39;,&amp;#39;1002&amp;#39;,&amp;#39;course:art&amp;#39;,&amp;#39;87&amp;#39; put &amp;#39;scores&amp;#39;,&amp;#39;1002&amp;#39;,&amp;#39;course:math&amp;#39;,&amp;#39;57&amp;#39; put &amp;#39;scores&amp;#39;,&amp;#39;1003&amp;#39;,&amp;#39;course:math&amp;#39;,&amp;#39;90&amp;#39; # 查看插入的数据 scan &amp;#34;scores&amp;#34; 创建工程 这里用到的IDE是eclipse</description>
+    </item>
+    
     <item>
       <title>HBase常用命令</title>
       <link>https://blog.fifcom.cn/posts/hadoop-hbase-commands/</link>

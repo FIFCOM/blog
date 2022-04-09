@@ -3,21 +3,30 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://blog.fifcom.cn/</loc>
-    <lastmod>2022-04-04T00:00:00+08:00</lastmod>
+    <lastmod>2022-04-09T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/tags/hadoop/</loc>
-    <lastmod>2022-04-04T00:00:00+08:00</lastmod>
+    <lastmod>2022-04-09T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/tags/hbase/</loc>
-    <lastmod>2022-04-04T00:00:00+08:00</lastmod>
+    <lastmod>2022-04-09T00:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://blog.fifcom.cn/posts/hadoop-hbase-commands/</loc>
-    <lastmod>2022-04-04T00:00:00+08:00</lastmod>
+    <loc>https://blog.fifcom.cn/posts/hadoop-hbase-java-api-data-ops/</loc>
+    <lastmod>2022-04-09T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/posts/</loc>
-    <lastmod>2022-04-04T00:00:00+08:00</lastmod>
+    <lastmod>2022-04-09T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/tags/</loc>
+    <lastmod>2022-04-09T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/hadoop-hbase-java-api-table-ops/</loc>
+    <lastmod>2022-04-07T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/hadoop-hbase-java-api-config/</loc>
+    <lastmod>2022-04-05T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/hadoop-hbase-commands/</loc>
     <lastmod>2022-04-04T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/posts/hadoop-hbase-install/</loc>
