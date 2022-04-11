@@ -108,9 +108,10 @@ tar -zxvf apache-zookeeper-3.8.0-bin.tar.gz -C /opt 在解压目录创建data和
 cd /opt/apache-zookeeper-3.8.0-bin mkdir data log 编辑配置文件：复制conf目录下的样例文件，并修改dataDir(数据文件目录)和dataLogDir(日志文件目录)
 cd conf cp zoo_sample.cfg zoo.cfg vi zoo.cfg => dataDir=/opt/apache-zookeeper-3.8.0-bin/data dataLogDir=/opt/apache-zookeeper-3.8.0-bin/log 在data目录中新建myid文件，向里面写入1。这里的1表示是集群的第几台机器，slave节点则这里为2，3，4…
 cd ../data/ echo 1 >> myid 再次编辑zoo.cfg，添加主节点和从节点地址
-cd ../conf/ vi zoo.cfg => # 底部添加 server.1=master:2888:3888 server.2=slave1:2888:3888 server.3=slave2:2888:3888 接着将Zookeeper安装文件分发到子节点
-scp -r /opt/apache-zookeeper-3.8.0-bin/ slave1:/opt/ scp -r /opt/apache-zookeeper-3.8.0-bin/ slave2:/opt/ 修改子节点上的myid
-cd /opt/apache-zookeeper-3.8.0-bin/data/ echo 2 > myid # echo 3 > myid cat myid 启动Zookeeper 启动前需关闭防火墙，以及在master上启动Hadoop...</p></section><footer class=entry-footer><span title="2022-03-30 00:00:00 +0800 CST">March 30, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase安装" href=https://blog.fifcom.cn/posts/hadoop-hbase-install/></a>
+cd /opt/apache-zookeeper-3.8.0-bin/conf/ vi zoo.cfg => # 底部添加 server.1=master:2888:3888 server.2=slave1:2888:3888 接着将Zookeeper安装文件分发到子节点
+scp -r /opt/apache-zookeeper-3.8.0-bin/ slave1:/opt/ 修改子节点上的myid
+cd /opt/apache-zookeeper-3.8.0-bin/data/ echo 2 > myid # echo 3 > myid cat myid 启动Zookeeper 启动前需关闭防火墙，以及在master上启动Hadoop
+systemctl stop firewalld.service systemctl disable firewalld....</p></section><footer class=entry-footer><span title="2022-03-30 00:00:00 +0800 CST">March 30, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase安装" href=https://blog.fifcom.cn/posts/hadoop-hbase-install/></a>
 </article><article class="post-entry tag-entry">
 <header class=entry-header>
 <h2>Hadoop 运行官方示例WordCount
@@ -125,21 +126,6 @@ hadoop jar命令用于执行jar文件，wordcount是例子的主类[?]，input�
 hadoop jar /opt/hadoop-2.9.2/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.9.2.jar wordcount input output 可以看到map和reduce操作是并行进行的
 查看输出结果 查看HDFS中的output文件夹
 hadoop fs -ls output 当运行成功后会在该文件下生成一个_SUCCESS文件，该文件长度为0，仅预示着成功输出了结果，其实际结果 存放在part-r-xxxxx文件中...</p></section><footer class=entry-footer><span title="2022-03-15 00:00:00 +0800 CST">March 15, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 运行官方示例WordCount" href=https://blog.fifcom.cn/posts/hadoop-wordcount-example/></a>
-</article><article class="post-entry tag-entry">
-<header class=entry-header>
-<h2>HBase Phoenix安装
-</h2></header><section class=entry-content>
-<p>Phoenix操作HBase Phoenix可以使用标准SQL来操作HBase
-下载Phoenix 首先应下载Phoenix: Apache Phoenix ，下载apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz
-文件名是: apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz
-并将其上传至master节点
-安装Phoenix 解压到opt目录
-tar -zxvf apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz -C /opt/ cd /opt mv apache-phoenix-5.0.0-HBase-2.0-bin/ phoenix/ 复制phoenix目录下的两个jar文件到hbase/lib下
-cd /opt/phoenix cp phoenix-5.0.0-HBase-2.0-client.jar /opt/hbase/lib/ cp phoenix-core-5.0.0-HBase-2.0.jar /opt/hbase/lib/ 并将其分发到所有子节点上
-scp phoenix-5.0.0-HBase-2.0-client.jar slave1:/opt/hbase/lib/ scp phoenix-core-5.0.0-HBase-2.0.jar slave1:/opt/hbase/lib/ 配置Phoenix 将Hadoop的和HBase的配置文件复制到Phoenix/bin下
-cp /opt/hadoop/etc/hadoop/core-site.xml /opt/phoenix/bin/ cp /opt/hadoop/etc/hadoop/hdfs-site.xml /opt/phoenix/bin/ cp /opt/hbase/conf/hbase-site.xml /opt/phoenix/bin/ 在master上配置环境变量
-vi /etc/profile => # 最后添加 export PHOENIX_HOME=/opt/phoenix export PHOENIX_CLASSPATH=$PHOENIX_HOME export PATH=$PATH:$PHOENIX_HOME/bin &lt;= # :wq source /etc/profile 设置脚本为可执行
-cd /opt/phoenix/bin chmod +x psql....</p></section><footer class=entry-footer><span title="2022-03-15 00:00:00 +0800 CST">March 15, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase Phoenix安装" href=https://blog.fifcom.cn/posts/hbase-phoenix/></a>
 </article><article class="post-entry tag-entry">
 <header class=entry-header>
 <h2>Hadoop 常用命令
