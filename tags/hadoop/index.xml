@@ -102,6 +102,25 @@ hadoop fs -ls output 当运行成功后会在该文件下生成一个_SUCCESS文
     </item>
     
     <item>
+      <title>HBase Phoenix安装</title>
+      <link>https://blog.fifcom.cn/posts/hbase-phoenix/</link>
+      <pubDate>Tue, 15 Mar 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/hbase-phoenix/</guid>
+      <description>Phoenix操作HBase Phoenix可以使用标准SQL来操作HBase
+下载Phoenix 首先应下载Phoenix: Apache Phoenix ，下载apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz
+文件名是: apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz
+并将其上传至master节点
+安装Phoenix 解压到opt目录
+tar -zxvf apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz -C /opt/ cd /opt mv apache-phoenix-5.0.0-HBase-2.0-bin/ phoenix/ 复制phoenix目录下的两个jar文件到hbase/lib下
+cd /opt/phoenix cp phoenix-5.0.0-HBase-2.0-client.jar /opt/hbase/lib/ cp phoenix-core-5.0.0-HBase-2.0.jar /opt/hbase/lib/ 并将其分发到所有子节点上
+scp phoenix-5.0.0-HBase-2.0-client.jar slave1:/opt/hbase/lib/ scp phoenix-core-5.0.0-HBase-2.0.jar slave1:/opt/hbase/lib/ 配置Phoenix 将Hadoop的和HBase的配置文件复制到Phoenix/bin下
+cp /opt/hadoop/etc/hadoop/core-site.xml /opt/phoenix/bin/ cp /opt/hadoop/etc/hadoop/hdfs-site.xml /opt/phoenix/bin/ cp /opt/hbase/conf/hbase-site.xml /opt/phoenix/bin/ 在master上配置环境变量
+vi /etc/profile =&amp;gt; # 最后添加 export PHOENIX_HOME=/opt/phoenix export PHOENIX_CLASSPATH=$PHOENIX_HOME export PATH=$PATH:$PHOENIX_HOME/bin &amp;lt;= # :wq source /etc/profile 设置脚本为可执行
+cd /opt/phoenix/bin chmod +x psql.</description>
+    </item>
+    
+    <item>
       <title>Hadoop 常用命令</title>
       <link>https://blog.fifcom.cn/posts/hadoop-commands/</link>
       <pubDate>Thu, 10 Mar 2022 00:00:00 +0800</pubDate>

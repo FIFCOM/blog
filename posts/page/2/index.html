@@ -58,6 +58,36 @@
 </li></ul></nav></header><main class=main>
 <header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a></div><h1>Posts</h1></header><article class=post-entry>
 <header class=entry-header>
+<h2>Linux Shell 语法(上)
+</h2></header><section class=entry-content>
+<p>Hello World! #! /bin/bash
+echo "Hello World!" 第一行是注释，声明用bash作为此脚本的解释器。注释分为两种:
+# 单行注释
+:&lt;&lt;EOF
+多行
+注释
+EOF
+# 其中EOF可以替换为任意字符串 第二行的echo用于在控制台上输出内容并自动换行。准确的说，echo会输出传递给它的所有参数，以空格分隔。 "Hello World!" 是字符串，后面会详细介绍。
+保存后可以使用bash filename.sh运行，或者:
+chmod +x filename.sh # 赋予可执行权限
+./hw.sh # 作为可执行文件执行 变量 定义可变变量 v1=123
+v2=123.4
+v3=fifcom
+v4="fifcom"
+v5='fifcom'
+declare v6=fifcom
+# 变量默认为字符串，在使用时会根据需求自动转换类型
+# 注意：定义变量时等号的左右两边不可以有空格
+# 否则可能被解析器作为系统命令来执行 定义只读变量 readonly v1="immut" # 定义只读变量
+v2="mut"
+readonly v2 # 转换为只读变量
+declare -r v3="immut" # 定义只读变量 使用变量 使用变量需要加上$或${}符号。 ${} 可以帮助解释器识别变量名
+v1=fifcom
+echo $v1 # 输出fifcom
+echo ${v1} # 输出fifcom
+echo ${v1}v1 # 输出fifcomv1 删除变量 用unset删除变量。只读变量不可删除。...</p></section><footer class=entry-footer><span title="2022-01-03 00:00:00 +0800 CST">January 3, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Linux Shell 语法(上)" href=https://blog.fifcom.cn/posts/linux-shell-manual-1/></a>
+</article><article class=post-entry>
+<header class=entry-header>
 <h2>CF/YJS CDN下使用PHP获取客户端真实IP地址
 </h2></header><section class=entry-content>
 <p>打印一下$_SERVER

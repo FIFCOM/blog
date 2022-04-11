@@ -128,6 +128,21 @@ hadoop jar /opt/hadoop-2.9.2/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.
 hadoop fs -ls output 当运行成功后会在该文件下生成一个_SUCCESS文件，该文件长度为0，仅预示着成功输出了结果，其实际结果 存放在part-r-xxxxx文件中...</p></section><footer class=entry-footer><span title="2022-03-15 00:00:00 +0800 CST">March 15, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 运行官方示例WordCount" href=https://blog.fifcom.cn/posts/hadoop-wordcount-example/></a>
 </article><article class=post-entry>
 <header class=entry-header>
+<h2>HBase Phoenix安装
+</h2></header><section class=entry-content>
+<p>Phoenix操作HBase Phoenix可以使用标准SQL来操作HBase
+下载Phoenix 首先应下载Phoenix: Apache Phoenix ，下载apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz
+文件名是: apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz
+并将其上传至master节点
+安装Phoenix 解压到opt目录
+tar -zxvf apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz -C /opt/ cd /opt mv apache-phoenix-5.0.0-HBase-2.0-bin/ phoenix/ 复制phoenix目录下的两个jar文件到hbase/lib下
+cd /opt/phoenix cp phoenix-5.0.0-HBase-2.0-client.jar /opt/hbase/lib/ cp phoenix-core-5.0.0-HBase-2.0.jar /opt/hbase/lib/ 并将其分发到所有子节点上
+scp phoenix-5.0.0-HBase-2.0-client.jar slave1:/opt/hbase/lib/ scp phoenix-core-5.0.0-HBase-2.0.jar slave1:/opt/hbase/lib/ 配置Phoenix 将Hadoop的和HBase的配置文件复制到Phoenix/bin下
+cp /opt/hadoop/etc/hadoop/core-site.xml /opt/phoenix/bin/ cp /opt/hadoop/etc/hadoop/hdfs-site.xml /opt/phoenix/bin/ cp /opt/hbase/conf/hbase-site.xml /opt/phoenix/bin/ 在master上配置环境变量
+vi /etc/profile => # 最后添加 export PHOENIX_HOME=/opt/phoenix export PHOENIX_CLASSPATH=$PHOENIX_HOME export PATH=$PATH:$PHOENIX_HOME/bin &lt;= # :wq source /etc/profile 设置脚本为可执行
+cd /opt/phoenix/bin chmod +x psql....</p></section><footer class=entry-footer><span title="2022-03-15 00:00:00 +0800 CST">March 15, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase Phoenix安装" href=https://blog.fifcom.cn/posts/hbase-phoenix/></a>
+</article><article class=post-entry>
+<header class=entry-header>
 <h2>Hadoop 常用命令
 </h2></header><section class=entry-content>
 <p>Hadoop常用命令 版本号 hadoop version 创建文件夹 hdfs dfs -mkdir /dir1 # 根目录下创建 列出文件和文件夹 展示根目录下所有文件和文件夹，及其信息
@@ -152,36 +167,6 @@ cd ~/.ssh cat id_rsa.pub >> authorized_keys cat id_rsa.pub.slave1 >> authorized_
 cd /opt/hadoop-2.9.2/etc/hadoop vi hadoop-env.sh # 找到`# The java implementation to use. ...`， 编辑下面的为 export JAVA_HOME=/opt/jdk8u282-b08 继续编辑当前目录下的core-site.xml文件，指定HDFS的 NameNode的地址，value值是主机名加端口号，主机使用master节点的ip地址
 vi core-site.xml 在configuration标签内添加：
 &lt;property> &lt;name>fs.default.name&lt;/name> &lt;value>hdfs://master_ip_here:9000&lt;/value> &lt;/property> &lt;property> &lt;name>fs....</p></section><footer class=entry-footer><span title="2022-03-01 00:00:00 +0800 CST">March 1, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 伪分布式安装" href=https://blog.fifcom.cn/posts/hadoop-pseudo-distributed-install/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>Linux Shell 语法(上)
-</h2></header><section class=entry-content>
-<p>Hello World! #! /bin/bash
-echo "Hello World!" 第一行是注释，声明用bash作为此脚本的解释器。注释分为两种:
-# 单行注释
-:&lt;&lt;EOF
-多行
-注释
-EOF
-# 其中EOF可以替换为任意字符串 第二行的echo用于在控制台上输出内容并自动换行。准确的说，echo会输出传递给它的所有参数，以空格分隔。 "Hello World!" 是字符串，后面会详细介绍。
-保存后可以使用bash filename.sh运行，或者:
-chmod +x filename.sh # 赋予可执行权限
-./hw.sh # 作为可执行文件执行 变量 定义可变变量 v1=123
-v2=123.4
-v3=fifcom
-v4="fifcom"
-v5='fifcom'
-declare v6=fifcom
-# 变量默认为字符串，在使用时会根据需求自动转换类型
-# 注意：定义变量时等号的左右两边不可以有空格
-# 否则可能被解析器作为系统命令来执行 定义只读变量 readonly v1="immut" # 定义只读变量
-v2="mut"
-readonly v2 # 转换为只读变量
-declare -r v3="immut" # 定义只读变量 使用变量 使用变量需要加上$或${}符号。 ${} 可以帮助解释器识别变量名
-v1=fifcom
-echo $v1 # 输出fifcom
-echo ${v1} # 输出fifcom
-echo ${v1}v1 # 输出fifcomv1 删除变量 用unset删除变量。只读变量不可删除。...</p></section><footer class=entry-footer><span title="2022-01-03 00:00:00 +0800 CST">January 3, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Linux Shell 语法(上)" href=https://blog.fifcom.cn/posts/linux-shell-manual-1/></a>
 </article><footer class=page-footer>
 <nav class=pagination>
 <a class=next href=https://blog.fifcom.cn/posts/page/2/>Next Page »</a>
