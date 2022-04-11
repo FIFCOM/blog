@@ -9,7 +9,25 @@
       <link>https://fifcom.cn/avatar/?transparent=1</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 09 Apr 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/hbase/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Apr 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/hbase/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Phoenix操作HBase</title>
+      <link>https://blog.fifcom.cn/posts/hbase-phoenix/</link>
+      <pubDate>Mon, 11 Apr 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/hbase-phoenix/</guid>
+      <description>Phoenix可以使用标准SQL来操作HBase
+安装前建议关闭HBase、Zookeeper、Hadoop服务
+下载Phoenix 首先应下载Phoenix: Apache Phoenix ，下载apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz，并将其上传至master节点
+安装Phoenix 解压到opt目录
+tar -zxvf apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz -C /opt/ cd /opt mv apache-phoenix-5.0.0-HBase-2.0-bin/ phoenix/ 复制phoenix目录下的两个jar文件到hbase/lib下
+cd /opt/phoenix cp phoenix-5.0.0-HBase-2.0-client.jar /opt/hbase/lib/ cp phoenix-core-5.0.0-HBase-2.0.jar /opt/hbase/lib/ 并将其分发到所有子节点上
+scp phoenix-5.0.0-HBase-2.0-client.jar slave1:/opt/hbase/lib/ scp phoenix-core-5.0.0-HBase-2.0.jar slave1:/opt/hbase/lib/ 配置Phoenix 将Hadoop的和HBase的配置文件复制到Phoenix/bin下
+cp /opt/hadoop/etc/hadoop/core-site.xml /opt/phoenix/bin/ cp /opt/hadoop/etc/hadoop/hdfs-site.xml /opt/phoenix/bin/ cp /opt/hbase/conf/hbase-site.xml /opt/phoenix/bin/ 在master上配置环境变量
+vi /etc/profile =&amp;gt; # 最后添加 export PHOENIX_HOME=/opt/phoenix export PHOENIX_CLASSPATH=$PHOENIX_HOME export PATH=$PATH:$PHOENIX_HOME/bin &amp;lt;= # :wq source /etc/profile 设置脚本为可执行
+cd /opt/phoenix/bin chmod +x psql.py chmod +x sqlline.</description>
+    </item>
+    
     <item>
       <title>HBase JavaAPI 数据操作</title>
       <link>https://blog.fifcom.cn/posts/hadoop-hbase-java-api-data-ops/</link>
