@@ -74,9 +74,8 @@ cd /opt/phoenix/bin chmod +x psql.py chmod +x sqlline....</p></section><footer c
 <h2>HBase JavaAPI 数据操作
 </h2></header><section class=entry-content>
 <p>环境准备：在HBase shell中创建一个新表curd， 包含两个列族cfa和cfb:
-create 'curd', 'cfa', 'cfb'
-为行键修改/添加列族和值 使用put操作进行添加或修改数据
-package demo; import java.io.IOException; import org.apache.hadoop.conf.Configuration; import org.apache.hadoop.hbase.HBaseConfiguration; import org.apache.hadoop.hbase.TableName; import org.apache.hadoop.hbase.client.*; import org.apache.hadoop.hbase.util.Bytes; class HBaseAPI { private final Connection conn; private final Admin admin; public HBaseAPI() throws IOException { Configuration conf = HBaseConfiguration.create(); conf.addResource("hbase-site.xml"); conn = ConnectionFactory.createConnection(conf); admin = conn.getAdmin(); } public void put(String tb, String row, String[][] cols) throws IOException { // 获取表的实例 Table table = conn....</p></section><footer class=entry-footer><span title="2022-04-09 00:00:00 +0800 CST">April 9, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase JavaAPI 数据操作" href=https://blog.fifcom.cn/posts/hadoop-hbase-java-api-data-ops/></a>
+create 'curd', 'cfa', 'cfb' 为行键修改/添加列族和值 使用put操作进行添加或修改数据
+package demo; import java.io.IOException; import org.apache.hadoop.conf.Configuration; import org.apache.hadoop.hbase.HBaseConfiguration; import org.apache.hadoop.hbase.TableName; import org.apache.hadoop.hbase.client.*; import org.apache.hadoop.hbase.util.Bytes; class HBaseAPI { private final Connection conn; private final Admin admin; public HBaseAPI() throws IOException { Configuration conf = HBaseConfiguration.create(); conf.addResource("hbase-site.xml"); conn = ConnectionFactory.createConnection(conf); admin = conn.getAdmin(); } public void put(String tb, String row, String[][] cols) throws IOException { // 获取表的实例 Table table = conn....</p></section><footer class=entry-footer><span title="2022-04-09 00:00:00 +0800 CST">April 9, 2022</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase JavaAPI 数据操作" href=https://blog.fifcom.cn/posts/hadoop-hbase-java-api-data-ops/></a>
 </article><article class="post-entry tag-entry">
 <header class=entry-header>
 <h2>HBase JavaAPI 表操作

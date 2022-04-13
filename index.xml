@@ -35,8 +35,7 @@ cd /opt/phoenix/bin chmod +x psql.py chmod +x sqlline.</description>
       
       <guid>https://blog.fifcom.cn/posts/hadoop-hbase-java-api-data-ops/</guid>
       <description>环境准备：在HBase shell中创建一个新表curd， 包含两个列族cfa和cfb:
-create &#39;curd&#39;, &#39;cfa&#39;, &#39;cfb&#39;
-为行键修改/添加列族和值 使用put操作进行添加或修改数据
+create &amp;#39;curd&amp;#39;, &amp;#39;cfa&amp;#39;, &amp;#39;cfb&amp;#39; 为行键修改/添加列族和值 使用put操作进行添加或修改数据
 package demo;  import java.io.IOException; import org.apache.hadoop.conf.Configuration; import org.apache.hadoop.hbase.HBaseConfiguration; import org.apache.hadoop.hbase.TableName; import org.apache.hadoop.hbase.client.*; import org.apache.hadoop.hbase.util.Bytes;  class HBaseAPI { 	private final Connection conn; 	private final Admin admin;  	public HBaseAPI() throws IOException { 	Configuration conf = HBaseConfiguration.create(); 	conf.addResource(&amp;#34;hbase-site.xml&amp;#34;); 	conn = ConnectionFactory.createConnection(conf); 	admin = conn.getAdmin(); 	}  	public void put(String tb, String row, String[][] cols) throws IOException { 	// 获取表的实例 	Table table = conn.</description>
     </item>
     
