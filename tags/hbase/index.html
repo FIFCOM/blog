@@ -57,6 +57,13 @@
 </li></ul></nav></header><main class=main>
 <header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a>&nbsp;»&nbsp;<a href=https://blog.fifcom.cn/tags/>Tags</a></div><h1>hbase</h1></header><article class="post-entry tag-entry">
 <header class=entry-header>
+<h2>PhoenixAPI 表操作和数据操作
+</h2></header><section class=entry-content>
+<p>Phoenix JavaAPI可以在java中使用sql对HBase进行操作
+配置项目环境 下载master节点中phoenix安装目录下的两个包到本地项目/phoenix中 phoenix-5.0.0-HBase-2.0-client.jar phoenix-core-5.0.0-HBase-2.0.jar 将这两个文件添加进模块依赖中 尝试建表代码，注意: JRE版本建议为1.8 建表 建表语法为 create table tablename(column1,column2,column3)，使用stmt.execute()执行
+package demo; import java.sql.*; class PhoenixAPI { Connection conn = null; Statement stmt = null; PhoenixAPI() { try { Class.forName("org.apache.phoenix.jdbc.PhoenixDriver"); conn = DriverManager.getConnection("jdbc:phoenix:master:2181/hbase","",""); stmt = conn.createStatement(); } catch (ClassNotFoundException | SQLException e) { e.printStackTrace(); } } public void create(String tb) { // 注意：在Phoenix中，整数不能简写为int，而是要写为INTEGER String sql = "create table " + tb + " (id integer primary key, name varchar, age integer)"; try { stmt....</p></section><footer class=entry-footer><span title="2022-04-18 00:00:00 +0800 CST">April 18, 2022</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to PhoenixAPI 表操作和数据操作" href=https://blog.fifcom.cn/posts/hbase-phoenix-java-api-ops/></a>
+</article><article class="post-entry tag-entry">
+<header class=entry-header>
 <h2>Phoenix操作HBase
 </h2></header><section class=entry-content>
 <p>Phoenix可以使用标准SQL来操作HBase

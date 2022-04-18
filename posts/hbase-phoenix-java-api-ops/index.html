@@ -1,0 +1,279 @@
+<!doctype html><html lang=en dir=auto>
+<head><meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<meta name=robots content="index, follow">
+<title>PhoenixAPI 表操作和数据操作 | FIFCOM实验室</title><meta name=keywords content="hadoop,hbase,phoenix">
+<meta name=description content="Phoenix JavaAPI可以在java中使用sql对HBase进行操作
+配置项目环境  下载master节点中phoenix安装目录下的两个包到本地项目/phoenix中  phoenix-5.0.0-HBase-2.0-client.jar phoenix-core-5.0.0-HBase-2.0.jar 将这两个文件添加进模块依赖中 尝试建表代码，注意: JRE版本建议为1.8  建表 建表语法为 create table tablename(column1,column2,column3)，使用stmt.execute()执行
+package demo;  import java.sql.*;  class PhoenixAPI { 	Connection conn = null; 	Statement stmt = null;  	PhoenixAPI() { 	try { 	Class.forName(&#34;org.apache.phoenix.jdbc.PhoenixDriver&#34;); 	conn = DriverManager.getConnection(&#34;jdbc:phoenix:master:2181/hbase&#34;,&#34;&#34;,&#34;&#34;); 	stmt = conn.createStatement(); 	} catch (ClassNotFoundException | SQLException e) { 	e.printStackTrace(); 	} 	}  	public void create(String tb) { 	// 注意：在Phoenix中，整数不能简写为int，而是要写为INTEGER 	String sql = &#34;create table &#34; + tb + 	&#34; (id integer primary key, name varchar, age integer)&#34;; 	try { 	stmt.">
+<meta name=author content="FIFCOM">
+<link rel=canonical href=https://blog.fifcom.cn/posts/hbase-phoenix-java-api-ops/>
+<meta name=google-site-verification content="XYZabc">
+<meta name=yandex-verification content="XYZabc">
+<meta name=msvalidate.01 content="XYZabc">
+<link crossorigin=anonymous href=/assets/css/stylesheet.min.c88963fe2d79462000fd0fb1b3737783c32855d340583e4523343f8735c787f0.css integrity="sha256-yIlj/i15RiAA/Q+xs3N3g8MoVdNAWD5FIzQ/hzXHh/A=" rel="preload stylesheet" as=style>
+<link rel=preload href="https://fifcom.cn/avatar/?transparent=1" as=image>
+<script defer crossorigin=anonymous src=/assets/js/highlight.min.4dcb3c4f38462f66c6b6137227726f5543cb934cca9788f041c087e374491df2.js integrity="sha256-Tcs8TzhGL2bGthNyJ3JvVUPLk0zKl4jwQcCH43RJHfI=" onload=hljs.initHighlightingOnLoad()></script>
+<link rel=icon href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=icon type=image/png sizes=16x16 href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=icon type=image/png sizes=32x32 href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=apple-touch-icon href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=mask-icon href="https://fifcom.cn/avatar/?transparent=1">
+<meta name=theme-color content="#2e2e33">
+<meta name=msapplication-TileColor content="#2e2e33">
+<meta name=generator content="Hugo 0.93.2">
+<noscript>
+<style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(e,o,i,a,t,n,s){e.GoogleAnalyticsObject=t,e[t]=e[t]||function(){(e[t].q=e[t].q||[]).push(arguments)},e[t].l=1*new Date,n=o.createElement(i),s=o.getElementsByTagName(i)[0],n.async=1,n.src=a,s.parentNode.insertBefore(n,s)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-123-45","auto"),ga("send","pageview"))</script><meta property="og:title" content="PhoenixAPI 表操作和数据操作">
+<meta property="og:description" content="Phoenix JavaAPI可以在java中使用sql对HBase进行操作
+配置项目环境  下载master节点中phoenix安装目录下的两个包到本地项目/phoenix中  phoenix-5.0.0-HBase-2.0-client.jar phoenix-core-5.0.0-HBase-2.0.jar 将这两个文件添加进模块依赖中 尝试建表代码，注意: JRE版本建议为1.8  建表 建表语法为 create table tablename(column1,column2,column3)，使用stmt.execute()执行
+package demo;  import java.sql.*;  class PhoenixAPI { 	Connection conn = null; 	Statement stmt = null;  	PhoenixAPI() { 	try { 	Class.forName(&#34;org.apache.phoenix.jdbc.PhoenixDriver&#34;); 	conn = DriverManager.getConnection(&#34;jdbc:phoenix:master:2181/hbase&#34;,&#34;&#34;,&#34;&#34;); 	stmt = conn.createStatement(); 	} catch (ClassNotFoundException | SQLException e) { 	e.printStackTrace(); 	} 	}  	public void create(String tb) { 	// 注意：在Phoenix中，整数不能简写为int，而是要写为INTEGER 	String sql = &#34;create table &#34; + tb + 	&#34; (id integer primary key, name varchar, age integer)&#34;; 	try { 	stmt.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.fifcom.cn/posts/hbase-phoenix-java-api-ops/"><meta property="og:image" content="https://fifcom.cn/avatar/?transparent=1"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2022-04-18T00:00:00+08:00">
+<meta property="article:modified_time" content="2022-04-18T00:00:00+08:00"><meta property="og:site_name" content="FIFCOM实验室">
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://fifcom.cn/avatar/?transparent=1">
+<meta name=twitter:title content="PhoenixAPI 表操作和数据操作">
+<meta name=twitter:description content="Phoenix JavaAPI可以在java中使用sql对HBase进行操作
+配置项目环境  下载master节点中phoenix安装目录下的两个包到本地项目/phoenix中  phoenix-5.0.0-HBase-2.0-client.jar phoenix-core-5.0.0-HBase-2.0.jar 将这两个文件添加进模块依赖中 尝试建表代码，注意: JRE版本建议为1.8  建表 建表语法为 create table tablename(column1,column2,column3)，使用stmt.execute()执行
+package demo;  import java.sql.*;  class PhoenixAPI { 	Connection conn = null; 	Statement stmt = null;  	PhoenixAPI() { 	try { 	Class.forName(&#34;org.apache.phoenix.jdbc.PhoenixDriver&#34;); 	conn = DriverManager.getConnection(&#34;jdbc:phoenix:master:2181/hbase&#34;,&#34;&#34;,&#34;&#34;); 	stmt = conn.createStatement(); 	} catch (ClassNotFoundException | SQLException e) { 	e.printStackTrace(); 	} 	}  	public void create(String tb) { 	// 注意：在Phoenix中，整数不能简写为int，而是要写为INTEGER 	String sql = &#34;create table &#34; + tb + 	&#34; (id integer primary key, name varchar, age integer)&#34;; 	try { 	stmt.">
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://blog.fifcom.cn/posts/"},{"@type":"ListItem","position":2,"name":"PhoenixAPI 表操作和数据操作","item":"https://blog.fifcom.cn/posts/hbase-phoenix-java-api-ops/"}]}</script>
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"PhoenixAPI 表操作和数据操作","name":"PhoenixAPI 表操作和数据操作","description":"Phoenix JavaAPI可以在java中使用sql对HBase进行操作\n配置项目环境  下载master节点中phoenix安装目录下的两个包到本地项目/phoenix中  phoenix-5.0.0-HBase-2.0-client.jar phoenix-core-5.0.0-HBase-2.0.jar 将这两个文件添加进模块依赖中 尝试建表代码，注意: JRE版本建议为1.8  建表 建表语法为 create table tablename(column1,column2,column3)，使用stmt.execute()执行\npackage demo;  import java.sql.*;  class PhoenixAPI { \tConnection conn = null; \tStatement stmt = null;  \tPhoenixAPI() { \ttry { \tClass.forName(\u0026#34;org.apache.phoenix.jdbc.PhoenixDriver\u0026#34;); \tconn = DriverManager.getConnection(\u0026#34;jdbc:phoenix:master:2181/hbase\u0026#34;,\u0026#34;\u0026#34;,\u0026#34;\u0026#34;); \tstmt = conn.createStatement(); \t} catch (ClassNotFoundException | SQLException e) { \te.printStackTrace(); \t} \t}  \tpublic void create(String tb) { \t// 注意：在Phoenix中，整数不能简写为int，而是要写为INTEGER \tString sql = \u0026#34;create table \u0026#34; + tb + \t\u0026#34; (id integer primary key, name varchar, age integer)\u0026#34;; \ttry { \tstmt.","keywords":["hadoop","hbase","phoenix"],"articleBody":"Phoenix JavaAPI可以在java中使用sql对HBase进行操作\n配置项目环境  下载master节点中phoenix安装目录下的两个包到本地项目/phoenix中  phoenix-5.0.0-HBase-2.0-client.jar phoenix-core-5.0.0-HBase-2.0.jar 将这两个文件添加进模块依赖中 尝试建表代码，注意: JRE版本建议为1.8  建表 建表语法为 create table tablename(column1,column2,column3)，使用stmt.execute()执行\npackage demo;  import java.sql.*;  class PhoenixAPI { \tConnection conn = null; \tStatement stmt = null;  \tPhoenixAPI() { \ttry { \tClass.forName(\"org.apache.phoenix.jdbc.PhoenixDriver\"); \tconn = DriverManager.getConnection(\"jdbc:phoenix:master:2181/hbase\",\"\",\"\"); \tstmt = conn.createStatement(); \t} catch (ClassNotFoundException | SQLException e) { \te.printStackTrace(); \t} \t}  \tpublic void create(String tb) { \t// 注意：在Phoenix中，整数不能简写为int，而是要写为INTEGER \tString sql = \"create table \" + tb + \t\" (id integer primary key, name varchar, age integer)\"; \ttry { \tstmt.execute(sql); // 执行sql语句，不是事务，无需提交 \tSystem.out.println(tb + \"表 创建成功\"); \t} catch (SQLException e) { \te.printStackTrace(); \t} \t} \t\tpublic void close() { \ttry { \tstmt.close(); \tconn.close(); \t} catch (SQLException e) { \te.printStackTrace(); \t} \t} }  public class Main { \tpublic static void main(String[] args) { \tPhoenixAPI phoenix = new PhoenixAPI(); \tphoenix.create(\"test\"); \tphoenix.close(); \t} } 可以看到test表已创建成功\n删除表 使用drop table tbname删除表\nclass PhoenixAPI { \t...  \tPhoenixAPI() { ... }  \tpublic void drop(String tb) { \tString sql = \"DROP TABLE \" + tb; \ttry { \tstmt.execute(sql); // 执行sql语句, 无需commit \tSystem.out.println(\"表 \" + tb + \" 已删除\"); \t} catch (SQLException e) { \te.printStackTrace(); \t} \t}  \tpublic void close() { ... } }  public class Main { \tpublic static void main(String[] args) { \tPhoenixAPI phoenix = new PhoenixAPI(); \tphoenix.drop(\"test\"); \tphoenix.close(); \t} } 可以看到test已被删除\n查询数据 使用select * from tbname来查询数据。返回的数据会放在结果集中，可以使用迭代函数遍历所有行数据。\nclass PhoenixAPI { \t...  \tPhoenixAPI() { ... }  \tpublic void select(String tb) { \tString sql = \"select * from \" + tb; \ttry { \t// executeQuery()返回结果集 \tResultSet rs = stmt.executeQuery(sql); \t// 使用next()迭代函数遍历结果集 \tSystem.out.println(\"id\\tname\\tage\"); \twhile (rs.next()) { \t// 打印数据，使用getType(col)获取当前行的列值 \t// 这里所有列都是varchar类型，所以使用getString(col)获取 \tSystem.out.println(rs.getString(\"id\") + \"\\t\" \t+ rs.getString(\"name\") + \"\\t\" \t+ rs.getString(\"age\")); \t} \t} catch (SQLException e) { \te.printStackTrace(); \t} \t}  \tpublic void close() { ... } }  public class Main { \tpublic static void main(String[] args) { \tPhoenixAPI phoenix = new PhoenixAPI(); \tphoenix.select(\"student\"); \tphoenix.close(); \t} } 添加/修改数据 使用upsert into来添加/修改数据，upsert into tbname values(?,?,?)\npackage demo;  import java.sql.*; import java.util.ArrayList;  class PhoenixAPI { \t...  \tPhoenixAPI() { ... }  \tpublic void create(String tb) { ... }  \tpublic void upsert(String tb) { \tArrayListString dataList = new ArrayList(); \tdataList.add(\"upsert into \" + tb + \" values(1,'zhangsan',11)\"); \tdataList.add(\"upsert into \" + tb + \" values(2,'lisi',22)\"); \tdataList.add(\"upsert into \" + tb + \" values(999,'wangwu',33)\"); \tfor (String sql : dataList) { \ttry { \tstmt.execute(sql); \tconn.commit(); \tSystem.out.println(\"插入数据成功\"); \t} catch (Exception e) { \te.printStackTrace(); \t} \t} \t}  \tpublic void close() { ... } }  public class Main { \tpublic static void main(String[] args) { \tPhoenixAPI phoenix = new PhoenixAPI(); \tphoenix.create(\"student\"); \tphoenix.upsert(\"student\"); \tphoenix.close(); \t} } 删除数据 使用delete from tbname where id=?来删除数据\nclass PhoenixAPI { \t...  \tPhoenixAPI() { ... }  \tpublic void delete(String tb, String id) { \tString sql = \"DELETE FROM \" + tb + \" WHERE id = \" + id; \ttry { \tstmt.execute(sql); // 执行sql语句, 需commit \tconn.commit(); // 提交事务 \tSystem.out.println(\"删除成功\"); \t} catch (SQLException e) { \te.printStackTrace(); \t} \t}  \tpublic void close() { ... } }  public class Main { \tpublic static void main(String[] args) { \tPhoenixAPI phoenix = new PhoenixAPI(); \tphoenix.delete(\"student\", \"999\"); \tphoenix.close(); \t} } 相比上面，已删除。\n","wordCount":"482","inLanguage":"en","datePublished":"2022-04-18T00:00:00+08:00","dateModified":"2022-04-18T00:00:00+08:00","author":{"@type":"Person","name":"FIFCOM"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.fifcom.cn/posts/hbase-phoenix-java-api-ops/"},"publisher":{"@type":"Organization","name":"FIFCOM实验室","logo":{"@type":"ImageObject","url":"https://fifcom.cn/avatar/?transparent=1"}}}</script>
+</head><body id=top>
+<script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script>
+<header class=header>
+<nav class=nav>
+<div class=logo>
+<a href=https://blog.fifcom.cn/ accesskey=h title="FIFCOM实验室 (Alt + H)">
+<img src="https://fifcom.cn/avatar/?transparent=1" alt=logo aria-label=logo height=35>FIFCOM实验室</a>
+<span class=logo-switches>
+<button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+</span>
+</div><ul id=menu>
+<li>
+<a href=https://blog.fifcom.cn/tags/ title=标签>
+<span>标签</span>
+</a>
+</li><li>
+<a href=https://fifcom.cn/ title=主页>
+<span>主页</span>
+</a>
+</li><li>
+<a href=https://blog.fifcom.cn/tags/friends/ title=朋友们>
+<span>朋友们</span>
+</a>
+</li></ul></nav></header><main class=main>
+<article class=post-single>
+<header class=post-header>
+<div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a>&nbsp;»&nbsp;<a href=https://blog.fifcom.cn/posts/>Posts</a></div><h1 class=post-title>
+PhoenixAPI 表操作和数据操作
+</h1><div class=post-meta><span title="2022-04-18 00:00:00 +0800 CST">April 18, 2022</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;FIFCOM&nbsp;|&nbsp;<a href="https://fifcom.cn/aff/?from=61c389caa31f73f1601ace6ee9ebe3ed" rel="noopener noreferrer" target=_blank>支持我</a>
+</div></header><div class=post-content><p>Phoenix JavaAPI可以在java中使用sql对HBase进行操作</p><h4 id=配置项目环境>配置项目环境<a hidden class=anchor aria-hidden=true href=#配置项目环境>#</a></h4><ol>
+<li>下载master节点中phoenix安装目录下的两个包到本地项目/phoenix中</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>phoenix-5.0.0-HBase-2.0-client.jar
+</span></span><span style=display:flex><span>phoenix-core-5.0.0-HBase-2.0.jar
+</span></span></code></pre></div><ol start=2>
+<li>将这两个文件添加进模块依赖中</li><li>尝试建表代码，<strong>注意: JRE版本建议为1.8</strong></li></ol><h4 id=建表>建表<a hidden class=anchor aria-hidden=true href=#建表>#</a></h4><p>建表语法为 create table tablename(column1,column2,column3)，使用stmt.execute()执行</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#f92672>package</span> demo<span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> java.sql.*<span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PhoenixAPI</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>	Connection conn <span style=color:#f92672>=</span> <span style=color:#66d9ef>null</span><span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>	Statement stmt <span style=color:#f92672>=</span> <span style=color:#66d9ef>null</span><span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	PhoenixAPI<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>try</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>			Class<span style=color:#f92672>.</span><span style=color:#a6e22e>forName</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;org.apache.phoenix.jdbc.PhoenixDriver&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>			conn <span style=color:#f92672>=</span> DriverManager<span style=color:#f92672>.</span><span style=color:#a6e22e>getConnection</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;jdbc:phoenix:master:2181/hbase&#34;</span><span style=color:#f92672>,</span><span style=color:#e6db74>&#34;&#34;</span><span style=color:#f92672>,</span><span style=color:#e6db74>&#34;&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>			stmt <span style=color:#f92672>=</span> conn<span style=color:#f92672>.</span><span style=color:#a6e22e>createStatement</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>		<span style=color:#f92672>}</span> <span style=color:#66d9ef>catch</span> <span style=color:#f92672>(</span>ClassNotFoundException <span style=color:#f92672>|</span> SQLException e<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>			e<span style=color:#f92672>.</span><span style=color:#a6e22e>printStackTrace</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>		<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>create</span><span style=color:#f92672>(</span>String tb<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// 注意：在Phoenix中，整数不能简写为int，而是要写为INTEGER
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>		String sql <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;create table &#34;</span> <span style=color:#f92672>+</span> tb <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34; (id integer primary key, name varchar, age integer)&#34;</span><span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>try</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>			stmt<span style=color:#f92672>.</span><span style=color:#a6e22e>execute</span><span style=color:#f92672>(</span>sql<span style=color:#f92672>);</span> <span style=color:#75715e>// 执行sql语句，不是事务，无需提交
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>			System<span style=color:#f92672>.</span><span style=color:#a6e22e>out</span><span style=color:#f92672>.</span><span style=color:#a6e22e>println</span><span style=color:#f92672>(</span>tb <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;表 创建成功&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>		<span style=color:#f92672>}</span> <span style=color:#66d9ef>catch</span> <span style=color:#f92672>(</span>SQLException e<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>			e<span style=color:#f92672>.</span><span style=color:#a6e22e>printStackTrace</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>		<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>	
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>close</span><span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>try</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>			stmt<span style=color:#f92672>.</span><span style=color:#a6e22e>close</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>			conn<span style=color:#f92672>.</span><span style=color:#a6e22e>close</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>		<span style=color:#f92672>}</span> <span style=color:#66d9ef>catch</span> <span style=color:#f92672>(</span>SQLException e<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>			e<span style=color:#f92672>.</span><span style=color:#a6e22e>printStackTrace</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>		<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Main</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>main</span><span style=color:#f92672>(</span>String<span style=color:#f92672>[]</span> args<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>		PhoenixAPI phoenix <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> PhoenixAPI<span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>		phoenix<span style=color:#f92672>.</span><span style=color:#a6e22e>create</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;test&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>		phoenix<span style=color:#f92672>.</span><span style=color:#a6e22e>close</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/aSVqMTe.png alt=create>
+可以看到test表已创建成功</p><h4 id=删除表>删除表<a hidden class=anchor aria-hidden=true href=#删除表>#</a></h4><p>使用drop table tbname删除表</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PhoenixAPI</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	PhoenixAPI<span style=color:#f92672>()</span> <span style=color:#f92672>{</span> <span style=color:#f92672>...</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>drop</span><span style=color:#f92672>(</span>String tb<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>		String sql <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;DROP TABLE &#34;</span> <span style=color:#f92672>+</span> tb<span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>try</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>			stmt<span style=color:#f92672>.</span><span style=color:#a6e22e>execute</span><span style=color:#f92672>(</span>sql<span style=color:#f92672>);</span> <span style=color:#75715e>// 执行sql语句, 无需commit
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>			System<span style=color:#f92672>.</span><span style=color:#a6e22e>out</span><span style=color:#f92672>.</span><span style=color:#a6e22e>println</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;表 &#34;</span> <span style=color:#f92672>+</span> tb <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34; 已删除&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>		<span style=color:#f92672>}</span> <span style=color:#66d9ef>catch</span> <span style=color:#f92672>(</span>SQLException e<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>			e<span style=color:#f92672>.</span><span style=color:#a6e22e>printStackTrace</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>		<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>close</span><span style=color:#f92672>()</span> <span style=color:#f92672>{</span> <span style=color:#f92672>...</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Main</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>main</span><span style=color:#f92672>(</span>String<span style=color:#f92672>[]</span> args<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>		PhoenixAPI phoenix <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> PhoenixAPI<span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>		phoenix<span style=color:#f92672>.</span><span style=color:#a6e22e>drop</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;test&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>		phoenix<span style=color:#f92672>.</span><span style=color:#a6e22e>close</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/zHXl0mN.png alt=drop>
+可以看到test已被删除</p><h4 id=查询数据>查询数据<a hidden class=anchor aria-hidden=true href=#查询数据>#</a></h4><p>使用select * from tbname来查询数据。返回的数据会放在结果集中，可以使用迭代函数遍历所有行数据。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PhoenixAPI</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	PhoenixAPI<span style=color:#f92672>()</span> <span style=color:#f92672>{</span> <span style=color:#f92672>...</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>select</span><span style=color:#f92672>(</span>String tb<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>		String sql <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;select * from &#34;</span> <span style=color:#f92672>+</span> tb<span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>try</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>			<span style=color:#75715e>// executeQuery()返回结果集
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>			ResultSet rs <span style=color:#f92672>=</span> stmt<span style=color:#f92672>.</span><span style=color:#a6e22e>executeQuery</span><span style=color:#f92672>(</span>sql<span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>			<span style=color:#75715e>// 使用next()迭代函数遍历结果集
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>			System<span style=color:#f92672>.</span><span style=color:#a6e22e>out</span><span style=color:#f92672>.</span><span style=color:#a6e22e>println</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;id\tname\tage&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>while</span> <span style=color:#f92672>(</span>rs<span style=color:#f92672>.</span><span style=color:#a6e22e>next</span><span style=color:#f92672>())</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>				<span style=color:#75715e>// 打印数据，使用getType(col)获取当前行的列值
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>				<span style=color:#75715e>// 这里所有列都是varchar类型，所以使用getString(col)获取
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>				System<span style=color:#f92672>.</span><span style=color:#a6e22e>out</span><span style=color:#f92672>.</span><span style=color:#a6e22e>println</span><span style=color:#f92672>(</span>rs<span style=color:#f92672>.</span><span style=color:#a6e22e>getString</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;id&#34;</span><span style=color:#f92672>)</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;\t&#34;</span>
+</span></span><span style=display:flex><span>						<span style=color:#f92672>+</span> rs<span style=color:#f92672>.</span><span style=color:#a6e22e>getString</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;name&#34;</span><span style=color:#f92672>)</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;\t&#34;</span>
+</span></span><span style=display:flex><span>						<span style=color:#f92672>+</span> rs<span style=color:#f92672>.</span><span style=color:#a6e22e>getString</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;age&#34;</span><span style=color:#f92672>));</span>
+</span></span><span style=display:flex><span>			<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>		<span style=color:#f92672>}</span> <span style=color:#66d9ef>catch</span> <span style=color:#f92672>(</span>SQLException e<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>			e<span style=color:#f92672>.</span><span style=color:#a6e22e>printStackTrace</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>		<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>close</span><span style=color:#f92672>()</span> <span style=color:#f92672>{</span> <span style=color:#f92672>...</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Main</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>main</span><span style=color:#f92672>(</span>String<span style=color:#f92672>[]</span> args<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>		PhoenixAPI phoenix <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> PhoenixAPI<span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>		phoenix<span style=color:#f92672>.</span><span style=color:#a6e22e>select</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;student&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>		phoenix<span style=color:#f92672>.</span><span style=color:#a6e22e>close</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/9WMSyHI.png alt=select>
+</p><h4 id=添加修改数据>添加/修改数据<a hidden class=anchor aria-hidden=true href=#添加修改数据>#</a></h4><p>使用upsert into来添加/修改数据，upsert into tbname values(?,?,?)</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#f92672>package</span> demo<span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> java.sql.*<span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> java.util.ArrayList<span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PhoenixAPI</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	PhoenixAPI<span style=color:#f92672>()</span> <span style=color:#f92672>{</span> <span style=color:#f92672>...</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>create</span><span style=color:#f92672>(</span>String tb<span style=color:#f92672>)</span> <span style=color:#f92672>{</span> <span style=color:#f92672>...</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>upsert</span><span style=color:#f92672>(</span>String tb<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>		ArrayList<span style=color:#f92672>&lt;</span>String<span style=color:#f92672>&gt;</span> dataList <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> ArrayList<span style=color:#f92672>&lt;&gt;();</span>
+</span></span><span style=display:flex><span>		dataList<span style=color:#f92672>.</span><span style=color:#a6e22e>add</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;upsert into &#34;</span> <span style=color:#f92672>+</span> tb <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34; values(1,&#39;zhangsan&#39;,11)&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>		dataList<span style=color:#f92672>.</span><span style=color:#a6e22e>add</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;upsert into &#34;</span> <span style=color:#f92672>+</span> tb <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34; values(2,&#39;lisi&#39;,22)&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>		dataList<span style=color:#f92672>.</span><span style=color:#a6e22e>add</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;upsert into &#34;</span> <span style=color:#f92672>+</span> tb <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34; values(999,&#39;wangwu&#39;,33)&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>for</span> <span style=color:#f92672>(</span>String sql <span style=color:#f92672>:</span> dataList<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>try</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>				stmt<span style=color:#f92672>.</span><span style=color:#a6e22e>execute</span><span style=color:#f92672>(</span>sql<span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>				conn<span style=color:#f92672>.</span><span style=color:#a6e22e>commit</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>				System<span style=color:#f92672>.</span><span style=color:#a6e22e>out</span><span style=color:#f92672>.</span><span style=color:#a6e22e>println</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;插入数据成功&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>			<span style=color:#f92672>}</span> <span style=color:#66d9ef>catch</span> <span style=color:#f92672>(</span>Exception e<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>				e<span style=color:#f92672>.</span><span style=color:#a6e22e>printStackTrace</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>			<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>		<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>close</span><span style=color:#f92672>()</span> <span style=color:#f92672>{</span> <span style=color:#f92672>...</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Main</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>main</span><span style=color:#f92672>(</span>String<span style=color:#f92672>[]</span> args<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>		PhoenixAPI phoenix <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> PhoenixAPI<span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>		phoenix<span style=color:#f92672>.</span><span style=color:#a6e22e>create</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;student&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>		phoenix<span style=color:#f92672>.</span><span style=color:#a6e22e>upsert</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;student&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>		phoenix<span style=color:#f92672>.</span><span style=color:#a6e22e>close</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/9vYymgb.png alt=upsert>
+</p><h4 id=删除数据>删除数据<a hidden class=anchor aria-hidden=true href=#删除数据>#</a></h4><p>使用delete from tbname where id=?来删除数据</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PhoenixAPI</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	PhoenixAPI<span style=color:#f92672>()</span> <span style=color:#f92672>{</span> <span style=color:#f92672>...</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>delete</span><span style=color:#f92672>(</span>String tb<span style=color:#f92672>,</span> String id<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>		String sql <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;DELETE FROM &#34;</span> <span style=color:#f92672>+</span> tb <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34; WHERE id = &#34;</span> <span style=color:#f92672>+</span> id<span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>try</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>			stmt<span style=color:#f92672>.</span><span style=color:#a6e22e>execute</span><span style=color:#f92672>(</span>sql<span style=color:#f92672>);</span> <span style=color:#75715e>// 执行sql语句, 需commit
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>			conn<span style=color:#f92672>.</span><span style=color:#a6e22e>commit</span><span style=color:#f92672>();</span> <span style=color:#75715e>// 提交事务
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>			System<span style=color:#f92672>.</span><span style=color:#a6e22e>out</span><span style=color:#f92672>.</span><span style=color:#a6e22e>println</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;删除成功&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>		<span style=color:#f92672>}</span> <span style=color:#66d9ef>catch</span> <span style=color:#f92672>(</span>SQLException e<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>			e<span style=color:#f92672>.</span><span style=color:#a6e22e>printStackTrace</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>		<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>close</span><span style=color:#f92672>()</span> <span style=color:#f92672>{</span> <span style=color:#f92672>...</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Main</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>main</span><span style=color:#f92672>(</span>String<span style=color:#f92672>[]</span> args<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>		PhoenixAPI phoenix <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> PhoenixAPI<span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>		phoenix<span style=color:#f92672>.</span><span style=color:#a6e22e>delete</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;student&#34;</span><span style=color:#f92672>,</span> <span style=color:#e6db74>&#34;999&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>		phoenix<span style=color:#f92672>.</span><span style=color:#a6e22e>close</span><span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/fso2hwt.png alt=delete>
+相比上面，已删除。</p></div><footer class=post-footer>
+<ul class=post-tags>
+<li><a href=https://blog.fifcom.cn/tags/hadoop/>hadoop</a></li><li><a href=https://blog.fifcom.cn/tags/hbase/>hbase</a></li><li><a href=https://blog.fifcom.cn/tags/phoenix/>phoenix</a></li></ul><nav class=paginav>
+<a class=next href=https://blog.fifcom.cn/posts/hbase-phoenix/>
+<span class=title>Next Page »</span>
+<br>
+<span>Phoenix操作HBase</span>
+</a>
+</nav><div class=share-buttons>
+<a target=_blank rel="noopener noreferrer" aria-label="share PhoenixAPI 表操作和数据操作 on twitter" href="https://twitter.com/intent/tweet/?text=PhoenixAPI%20%e8%a1%a8%e6%93%8d%e4%bd%9c%e5%92%8c%e6%95%b0%e6%8d%ae%e6%93%8d%e4%bd%9c&url=https%3a%2f%2fblog.fifcom.cn%2fposts%2fhbase-phoenix-java-api-ops%2f&hashtags=hadoop%2chbase%2cphoenix"><svg viewBox="0 0 512 512"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM195.519 424.544c135.939.0 210.268-112.643 210.268-210.268.0-3.218.0-6.437-.153-9.502 14.406-10.421 26.973-23.448 36.935-38.314-13.18 5.824-27.433 9.809-42.452 11.648 15.326-9.196 26.973-23.602 32.49-40.92-14.252 8.429-30.038 14.56-46.896 17.931-13.487-14.406-32.644-23.295-53.946-23.295-40.767.0-73.87 33.104-73.87 73.87.0 5.824.613 11.494 1.992 16.858-61.456-3.065-115.862-32.49-152.337-77.241-6.284 10.881-9.962 23.601-9.962 37.088.0 25.594 13.027 48.276 32.95 61.456-12.107-.307-23.448-3.678-33.41-9.196v.92c0 35.862 25.441 65.594 59.311 72.49-6.13 1.686-12.72 2.606-19.464 2.606-4.751.0-9.348-.46-13.946-1.38 9.349 29.426 36.628 50.728 68.965 51.341-25.287 19.771-57.164 31.571-91.8 31.571-5.977.0-11.801-.306-17.625-1.073 32.337 21.15 71.264 33.41 112.95 33.41z"/></svg>
+</a>
+<a target=_blank rel="noopener noreferrer" aria-label="share PhoenixAPI 表操作和数据操作 on telegram" href="https://telegram.me/share/url?text=PhoenixAPI%20%e8%a1%a8%e6%93%8d%e4%bd%9c%e5%92%8c%e6%95%b0%e6%8d%ae%e6%93%8d%e4%bd%9c&url=https%3a%2f%2fblog.fifcom.cn%2fposts%2fhbase-phoenix-java-api-ops%2f"><svg viewBox="2 2 28 28"><path d="M26.49 29.86H5.5a3.37 3.37.0 01-2.47-1 3.35 3.35.0 01-1-2.47V5.48A3.36 3.36.0 013 3 3.37 3.37.0 015.5 2h21A3.38 3.38.0 0129 3a3.36 3.36.0 011 2.46V26.37a3.35 3.35.0 01-1 2.47 3.38 3.38.0 01-2.51 1.02zm-5.38-6.71a.79.79.0 00.85-.66L24.73 9.24a.55.55.0 00-.18-.46.62.62.0 00-.41-.17q-.08.0-16.53 6.11a.59.59.0 00-.41.59.57.57.0 00.43.52l4 1.24 1.61 4.83a.62.62.0 00.63.43.56.56.0 00.4-.17L16.54 20l4.09 3A.9.9.0 0021.11 23.15zM13.8 20.71l-1.21-4q8.72-5.55 8.78-5.55c.15.0.23.0.23.16a.18.18.0 010 .06s-2.51 2.3-7.52 6.8z"/></svg>
+</a>
+</div></footer></article></main><footer class=footer>
+<span>&copy; 2022 <a href=https://blog.fifcom.cn/>FIFCOM实验室</a></span>
+<span>
+Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://git.io/hugopapermod rel=noopener target=_blank>PaperMod</a>
+</span>
+</footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a>
+<script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(t){t.preventDefault();var e=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(e)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(e)}']`).scrollIntoView({behavior:"smooth"}),e==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${e}`)})})</script>
+<script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script>
+<script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script>
+<script>document.querySelectorAll("pre > code").forEach(t=>{const n=t.parentNode.parentNode,e=document.createElement("button");e.classList.add("copy-code"),e.innerText="copy";function s(){e.innerText="copied!",setTimeout(()=>{e.innerText="copy"},2e3)}e.addEventListener("click",o=>{if("clipboard"in navigator){navigator.clipboard.writeText(t.textContent),s();return}const e=document.createRange();e.selectNodeContents(t);const n=window.getSelection();n.removeAllRanges(),n.addRange(e);try{document.execCommand("copy"),s()}catch(e){}n.removeRange(e)}),n.classList.contains("highlight")?n.appendChild(e):n.parentNode.firstChild==n||(t.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?t.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(e):t.parentNode.appendChild(e))})</script>
+</body></html>

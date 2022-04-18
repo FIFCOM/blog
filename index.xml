@@ -9,7 +9,18 @@
       <link>https://fifcom.cn/avatar/?transparent=1</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 11 Apr 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 18 Apr 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PhoenixAPI 表操作和数据操作</title>
+      <link>https://blog.fifcom.cn/posts/hbase-phoenix-java-api-ops/</link>
+      <pubDate>Mon, 18 Apr 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/hbase-phoenix-java-api-ops/</guid>
+      <description>Phoenix JavaAPI可以在java中使用sql对HBase进行操作
+配置项目环境  下载master节点中phoenix安装目录下的两个包到本地项目/phoenix中  phoenix-5.0.0-HBase-2.0-client.jar phoenix-core-5.0.0-HBase-2.0.jar 将这两个文件添加进模块依赖中 尝试建表代码，注意: JRE版本建议为1.8  建表 建表语法为 create table tablename(column1,column2,column3)，使用stmt.execute()执行
+package demo;  import java.sql.*;  class PhoenixAPI { 	Connection conn = null; 	Statement stmt = null;  	PhoenixAPI() { 	try { 	Class.forName(&amp;#34;org.apache.phoenix.jdbc.PhoenixDriver&amp;#34;); 	conn = DriverManager.getConnection(&amp;#34;jdbc:phoenix:master:2181/hbase&amp;#34;,&amp;#34;&amp;#34;,&amp;#34;&amp;#34;); 	stmt = conn.createStatement(); 	} catch (ClassNotFoundException | SQLException e) { 	e.printStackTrace(); 	} 	}  	public void create(String tb) { 	// 注意：在Phoenix中，整数不能简写为int，而是要写为INTEGER 	String sql = &amp;#34;create table &amp;#34; + tb + 	&amp;#34; (id integer primary key, name varchar, age integer)&amp;#34;; 	try { 	stmt.</description>
+    </item>
+    
     <item>
       <title>Phoenix操作HBase</title>
       <link>https://blog.fifcom.cn/posts/hbase-phoenix/</link>

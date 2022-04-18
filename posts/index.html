@@ -58,6 +58,13 @@
 </li></ul></nav></header><main class=main>
 <header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a></div><h1>Posts</h1></header><article class=post-entry>
 <header class=entry-header>
+<h2>PhoenixAPI 表操作和数据操作
+</h2></header><section class=entry-content>
+<p>Phoenix JavaAPI可以在java中使用sql对HBase进行操作
+配置项目环境 下载master节点中phoenix安装目录下的两个包到本地项目/phoenix中 phoenix-5.0.0-HBase-2.0-client.jar phoenix-core-5.0.0-HBase-2.0.jar 将这两个文件添加进模块依赖中 尝试建表代码，注意: JRE版本建议为1.8 建表 建表语法为 create table tablename(column1,column2,column3)，使用stmt.execute()执行
+package demo; import java.sql.*; class PhoenixAPI { Connection conn = null; Statement stmt = null; PhoenixAPI() { try { Class.forName("org.apache.phoenix.jdbc.PhoenixDriver"); conn = DriverManager.getConnection("jdbc:phoenix:master:2181/hbase","",""); stmt = conn.createStatement(); } catch (ClassNotFoundException | SQLException e) { e.printStackTrace(); } } public void create(String tb) { // 注意：在Phoenix中，整数不能简写为int，而是要写为INTEGER String sql = "create table " + tb + " (id integer primary key, name varchar, age integer)"; try { stmt....</p></section><footer class=entry-footer><span title="2022-04-18 00:00:00 +0800 CST">April 18, 2022</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to PhoenixAPI 表操作和数据操作" href=https://blog.fifcom.cn/posts/hbase-phoenix-java-api-ops/></a>
+</article><article class=post-entry>
+<header class=entry-header>
 <h2>Phoenix操作HBase
 </h2></header><section class=entry-content>
 <p>Phoenix可以使用标准SQL来操作HBase
@@ -158,14 +165,6 @@ vi /etc/profile # 在文件下方添加 export JAVA_HOME=/opt/jdk8u282-b08 expor
 编辑/etc/hosts:
 master_ip_here master slave1_ip_here slave1 slave2_ip_here slave2 配置免密登录 在所有节点上生成rsa公钥和私钥: ssh-keygen -t rsa 将slave节点上生成的公钥用scp命令传到master节点上： scp ~/.ssh/id_rsa.pub root@master:~/.ssh/id_rsa.pub.slave1 scp ~/.ssh/id_rsa.pub root@master:~/.ssh/id_rsa.pub.slave2 3. 在master上生成authorized_keys，即把生成的公钥输入进一个文件：
 cd ~/.ssh cat id_rsa.pub >> authorized_keys cat id_rsa.pub.slave1 >> authorized_keys cat id_rsa.pub.slave2 >> authorized_keys 将master上的authorized_keys用scp命令传到slave节点上： scp ~/....</p></section><footer class=entry-footer><span title="2022-03-05 00:00:00 +0800 CST">March 5, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 完全分布式安装" href=https://blog.fifcom.cn/posts/hadoop-distributed-install/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>Hadoop 伪分布式安装
-</h2></header><section class=entry-content>
-<p>环境配置 三台机器上都安装JDK环境: 上传JDK安装包，解压后配置环境变量即可 tar -zxvf OpenJDK8U-jdk_x64_linux_openj9_linuxXL_8u282b08_openj9-0.24.0.tar.gz -C /opt vi /etc/profile # 在文件下方添加 export JAVA_HOME=/opt/jdk8u282-b08 export JRE_HOME=/opt/jdk8u282-b08/jre export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar # 输入:wq!退出 source /etc/profile # 使用环境变量配置 安装Hadoop环境: 首先上传安装包，再解压至opt目录 tar -zxvf hadoop-2.9.2.tar.gz -C /opt hadoop前提配置 配置master节点 首先进入安装目录, 编辑脚本:
-cd /opt/hadoop-2.9.2/etc/hadoop vi hadoop-env.sh # 找到`# The java implementation to use. ...`， 编辑下面的为 export JAVA_HOME=/opt/jdk8u282-b08 继续编辑当前目录下的core-site.xml文件，指定HDFS的 NameNode的地址，value值是主机名加端口号，主机使用master节点的ip地址
-vi core-site.xml 在configuration标签内添加：
-&lt;property> &lt;name>fs.default.name&lt;/name> &lt;value>hdfs://master_ip_here:9000&lt;/value> &lt;/property> &lt;property> &lt;name>fs....</p></section><footer class=entry-footer><span title="2022-03-01 00:00:00 +0800 CST">March 1, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 伪分布式安装" href=https://blog.fifcom.cn/posts/hadoop-pseudo-distributed-install/></a>
 </article><footer class=page-footer>
 <nav class=pagination>
 <a class=next href=https://blog.fifcom.cn/posts/page/2/>Next Page »</a>

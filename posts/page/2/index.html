@@ -58,6 +58,14 @@
 </li></ul></nav></header><main class=main>
 <header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a></div><h1>Posts</h1></header><article class=post-entry>
 <header class=entry-header>
+<h2>Hadoop 伪分布式安装
+</h2></header><section class=entry-content>
+<p>环境配置 三台机器上都安装JDK环境: 上传JDK安装包，解压后配置环境变量即可 tar -zxvf OpenJDK8U-jdk_x64_linux_openj9_linuxXL_8u282b08_openj9-0.24.0.tar.gz -C /opt vi /etc/profile # 在文件下方添加 export JAVA_HOME=/opt/jdk8u282-b08 export JRE_HOME=/opt/jdk8u282-b08/jre export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar # 输入:wq!退出 source /etc/profile # 使用环境变量配置 安装Hadoop环境: 首先上传安装包，再解压至opt目录 tar -zxvf hadoop-2.9.2.tar.gz -C /opt hadoop前提配置 配置master节点 首先进入安装目录, 编辑脚本:
+cd /opt/hadoop-2.9.2/etc/hadoop vi hadoop-env.sh # 找到`# The java implementation to use. ...`， 编辑下面的为 export JAVA_HOME=/opt/jdk8u282-b08 继续编辑当前目录下的core-site.xml文件，指定HDFS的 NameNode的地址，value值是主机名加端口号，主机使用master节点的ip地址
+vi core-site.xml 在configuration标签内添加：
+&lt;property> &lt;name>fs.default.name&lt;/name> &lt;value>hdfs://master_ip_here:9000&lt;/value> &lt;/property> &lt;property> &lt;name>fs....</p></section><footer class=entry-footer><span title="2022-03-01 00:00:00 +0800 CST">March 1, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 伪分布式安装" href=https://blog.fifcom.cn/posts/hadoop-pseudo-distributed-install/></a>
+</article><article class=post-entry>
+<header class=entry-header>
 <h2>Linux Shell 语法(上)
 </h2></header><section class=entry-content>
 <p>Hello World! #! /bin/bash
