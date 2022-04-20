@@ -1,0 +1,263 @@
+<!doctype html><html lang=en dir=auto>
+<head><meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<meta name=robots content="index, follow">
+<title>安装Hive | FIFCOM实验室</title><meta name=keywords content="hadoop,hive">
+<meta name=description content="安装Hive Hive是一个数据仓库，适合存读多写少的数据，依赖Hadoop。
+下载安装包 wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/apache-hive-2.3.9-bin.tar.gz wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql57-community-release-el7-10.noarch.rpm wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql-connector-java-5.1.49.tar.gz 安装配置元数据库 Hive需要配置元数据库，这里使用MySQL作为元数据库。
+yum -y install mysql57-community-release-el7-10.noarch.rpm --nogpgcheck yum -y install mysql-community-server --nogpgcheck 查看MySQL状态, 此时为未启动(inactive)
+service mysqld status 启动MySQL
+systemctl start mysqld MySQL安装后会设置一个随机密码，可以通过log来查看
+cat /var/log/mysqld.log | grep password 现在就可以登录MySQL的命令行了。
+mysql -u root -p08d*****X49q 登录后修改root密码和设置可远程登录
+# 修改root密码为H1ghEntr0pyPwd! alter user 'root'@'localhost' identified by 'H1ghEntr0pyPwd!'; # 设置可远程登录 grant all privileges on *.* to 'root'@'%' identified by 'H1ghEntr0pyPwd!' with grant option; # 刷新 flush privileges; 开启3306防火墙(如果之前没禁用防火墙的话)">
+<meta name=author content="FIFCOM">
+<link rel=canonical href=https://blog.fifcom.cn/posts/hive-install/>
+<meta name=google-site-verification content="XYZabc">
+<meta name=yandex-verification content="XYZabc">
+<meta name=msvalidate.01 content="XYZabc">
+<link crossorigin=anonymous href=/assets/css/stylesheet.min.c88963fe2d79462000fd0fb1b3737783c32855d340583e4523343f8735c787f0.css integrity="sha256-yIlj/i15RiAA/Q+xs3N3g8MoVdNAWD5FIzQ/hzXHh/A=" rel="preload stylesheet" as=style>
+<link rel=preload href="https://fifcom.cn/avatar/?transparent=1" as=image>
+<script defer crossorigin=anonymous src=/assets/js/highlight.min.4dcb3c4f38462f66c6b6137227726f5543cb934cca9788f041c087e374491df2.js integrity="sha256-Tcs8TzhGL2bGthNyJ3JvVUPLk0zKl4jwQcCH43RJHfI=" onload=hljs.initHighlightingOnLoad()></script>
+<link rel=icon href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=icon type=image/png sizes=16x16 href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=icon type=image/png sizes=32x32 href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=apple-touch-icon href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=mask-icon href="https://fifcom.cn/avatar/?transparent=1">
+<meta name=theme-color content="#2e2e33">
+<meta name=msapplication-TileColor content="#2e2e33">
+<meta name=generator content="Hugo 0.93.2">
+<noscript>
+<style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(e,o,i,a,t,n,s){e.GoogleAnalyticsObject=t,e[t]=e[t]||function(){(e[t].q=e[t].q||[]).push(arguments)},e[t].l=1*new Date,n=o.createElement(i),s=o.getElementsByTagName(i)[0],n.async=1,n.src=a,s.parentNode.insertBefore(n,s)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-123-45","auto"),ga("send","pageview"))</script><meta property="og:title" content="安装Hive">
+<meta property="og:description" content="安装Hive Hive是一个数据仓库，适合存读多写少的数据，依赖Hadoop。
+下载安装包 wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/apache-hive-2.3.9-bin.tar.gz wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql57-community-release-el7-10.noarch.rpm wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql-connector-java-5.1.49.tar.gz 安装配置元数据库 Hive需要配置元数据库，这里使用MySQL作为元数据库。
+yum -y install mysql57-community-release-el7-10.noarch.rpm --nogpgcheck yum -y install mysql-community-server --nogpgcheck 查看MySQL状态, 此时为未启动(inactive)
+service mysqld status 启动MySQL
+systemctl start mysqld MySQL安装后会设置一个随机密码，可以通过log来查看
+cat /var/log/mysqld.log | grep password 现在就可以登录MySQL的命令行了。
+mysql -u root -p08d*****X49q 登录后修改root密码和设置可远程登录
+# 修改root密码为H1ghEntr0pyPwd! alter user 'root'@'localhost' identified by 'H1ghEntr0pyPwd!'; # 设置可远程登录 grant all privileges on *.* to 'root'@'%' identified by 'H1ghEntr0pyPwd!' with grant option; # 刷新 flush privileges; 开启3306防火墙(如果之前没禁用防火墙的话)">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.fifcom.cn/posts/hive-install/"><meta property="og:image" content="https://fifcom.cn/avatar/?transparent=1"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2022-04-20T00:00:00+08:00">
+<meta property="article:modified_time" content="2022-04-20T00:00:00+08:00"><meta property="og:site_name" content="FIFCOM实验室">
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://fifcom.cn/avatar/?transparent=1">
+<meta name=twitter:title content="安装Hive">
+<meta name=twitter:description content="安装Hive Hive是一个数据仓库，适合存读多写少的数据，依赖Hadoop。
+下载安装包 wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/apache-hive-2.3.9-bin.tar.gz wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql57-community-release-el7-10.noarch.rpm wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql-connector-java-5.1.49.tar.gz 安装配置元数据库 Hive需要配置元数据库，这里使用MySQL作为元数据库。
+yum -y install mysql57-community-release-el7-10.noarch.rpm --nogpgcheck yum -y install mysql-community-server --nogpgcheck 查看MySQL状态, 此时为未启动(inactive)
+service mysqld status 启动MySQL
+systemctl start mysqld MySQL安装后会设置一个随机密码，可以通过log来查看
+cat /var/log/mysqld.log | grep password 现在就可以登录MySQL的命令行了。
+mysql -u root -p08d*****X49q 登录后修改root密码和设置可远程登录
+# 修改root密码为H1ghEntr0pyPwd! alter user 'root'@'localhost' identified by 'H1ghEntr0pyPwd!'; # 设置可远程登录 grant all privileges on *.* to 'root'@'%' identified by 'H1ghEntr0pyPwd!' with grant option; # 刷新 flush privileges; 开启3306防火墙(如果之前没禁用防火墙的话)">
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://blog.fifcom.cn/posts/"},{"@type":"ListItem","position":2,"name":"安装Hive","item":"https://blog.fifcom.cn/posts/hive-install/"}]}</script>
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"安装Hive","name":"安装Hive","description":"安装Hive Hive是一个数据仓库，适合存读多写少的数据，依赖Hadoop。\n下载安装包 wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/apache-hive-2.3.9-bin.tar.gz wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql57-community-release-el7-10.noarch.rpm wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql-connector-java-5.1.49.tar.gz 安装配置元数据库 Hive需要配置元数据库，这里使用MySQL作为元数据库。\nyum -y install mysql57-community-release-el7-10.noarch.rpm --nogpgcheck yum -y install mysql-community-server --nogpgcheck 查看MySQL状态, 此时为未启动(inactive)\nservice mysqld status 启动MySQL\nsystemctl start mysqld MySQL安装后会设置一个随机密码，可以通过log来查看\ncat /var/log/mysqld.log | grep password 现在就可以登录MySQL的命令行了。\nmysql -u root -p08d*****X49q 登录后修改root密码和设置可远程登录\n# 修改root密码为H1ghEntr0pyPwd! alter user \u0026#39;root\u0026#39;@\u0026#39;localhost\u0026#39; identified by \u0026#39;H1ghEntr0pyPwd!\u0026#39;; # 设置可远程登录 grant all privileges on *.* to \u0026#39;root\u0026#39;@\u0026#39;%\u0026#39; identified by \u0026#39;H1ghEntr0pyPwd!\u0026#39; with grant option; # 刷新 flush privileges; 开启3306防火墙(如果之前没禁用防火墙的话)","keywords":["hadoop","hive"],"articleBody":"安装Hive Hive是一个数据仓库，适合存读多写少的数据，依赖Hadoop。\n下载安装包 wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/apache-hive-2.3.9-bin.tar.gz wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql57-community-release-el7-10.noarch.rpm wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql-connector-java-5.1.49.tar.gz 安装配置元数据库 Hive需要配置元数据库，这里使用MySQL作为元数据库。\nyum -y install mysql57-community-release-el7-10.noarch.rpm --nogpgcheck yum -y install mysql-community-server --nogpgcheck 查看MySQL状态, 此时为未启动(inactive)\nservice mysqld status 启动MySQL\nsystemctl start mysqld MySQL安装后会设置一个随机密码，可以通过log来查看\ncat /var/log/mysqld.log | grep password 现在就可以登录MySQL的命令行了。\nmysql -u root -p08d*****X49q 登录后修改root密码和设置可远程登录\n# 修改root密码为H1ghEntr0pyPwd! alter user 'root'@'localhost' identified by 'H1ghEntr0pyPwd!'; # 设置可远程登录 grant all privileges on *.* to 'root'@'%' identified by 'H1ghEntr0pyPwd!' with grant option; # 刷新 flush privileges; 开启3306防火墙(如果之前没禁用防火墙的话)\nfirewall-cmd --zone=public --add-port=3306/tcp --permanent firewall-cmd --reload 这里报错是因为之前已禁用防火墙\n修改MySQL配置文件，并重启MySQL服务\nvi /etc/my.cnf = # 在[mysqld]节点下加入 lower_case_table_names=1 character_set_server=utf8 init_connect='SET NAMES utf8' = systemctl restart mysqld 再次进入MySQL Shell，新建Hive元数据库\nmysql -u root -pH1ghEntr0pyPwd! create database metastore; 安装Hive 解压Hive\ntar -zxvf apache-hive-2.3.9-bin.tar.gz -C /opt/ mv /opt/apache-hive-2.3.9-bin/ /opt/hive/ 在所有节点上配置环境变量\nvi /etc/profile = # 末尾添加 export HIVE_HOME=/opt/hive export PATH=${HIVE_HOME}/bin:$PATH = source /etc/profile 配置Hive环境\ncd /opt/hive/conf/ cp hive-env.sh.template hive-env.sh vi hive-env.sh = export HADOOP_HOME=/opt/hadoop export HIVE_CONF_DIR=/opt/hive/conf = 安装连接元数据库的驱动\ncd ~ tar -zxvf mysql-connector-java-5.1.49.tar.gz cp ~/mysql-connector-java-5.1.49/mysql-connector-java-5.1.49-bin.jar /opt/hive/lib/ rm -rf mysql-connector-java-5.1.49/ 配置Hive连接到元数据库\ncd /opt/hive/conf touch hive-site.xml vi hive-site.xml =          javax.jdo.option.ConnectionURL  jdbc:mysql://master:3306/metastore?useSSL=false        javax.jdo.option.ConnectionDriverName  com.mysql.jdbc.Driver        javax.jdo.option.ConnectionUserName  root        javax.jdo.option.ConnectionPassword  H1ghEntr0pyPwd!        hive.metastore.schema.verification  false        hive.metastore.event.db.notification.api.auth  false        hive.metastore.warehouse.dir  /user/hive/warehouse        hive.server2.thrift.bind.host  master        hive.server2.thrift.port  10000    初始化Hive元数据库，仅能初始化一次\nschematool -initSchema -dbType mysql -verbose 分发Hive到slave节点\nscp -r /opt/hive/ slave1:/opt/ 运行Hive 首先应启动Hadoop\ncd /opt/hadoop/sbin/\r./start-all.sh 然后在HDFS上创建Hive的工作目录\nhadoop dfsadmin -safemode leave # 关闭安全模式 hdfs dfs -mkdir /tmp hdfs dfs -mkdir -p /user/hive/warehouse hdfs dfs -chmod g+w /tmp hdfs dfs -chmod g+w /user/hive/warehouse 启动Hive\nhive = show databases; show tables; create table test (id int); insert into test values(1); select * from test; exit;  启动Hiveserver2 Hiveserver2可以接受多个客户端的并发访问，支持身份认证\nhive --service hiveserver2 \u0026 # 让hiveserver2在后台运行，不占用shell 注意:这里的4138是Hiveserver2的进程号\n浏览器访问master:10002，见下即成功 启动beeline 启动之前需设置Hadoop，允许所有代理用户访问\ncd /opt/hadoop/etc/hadoop/ vi core-site.xml = # 在configuration标签下添加 =   hadoop.proxyuser.root.groups  *    hadoop.proxyuser.root.hosts  *  重新启动所有相关服务\nkill 4138 # 关闭hiveserver2 cd /opt/hadoop/sbin/ # 重启Hadoop ./stop-all.sh ./start-all.sh hive --service hiveserver2 \u0026 启动beeline\nbeeline -u jdbc:hive2://master:10000 ","wordCount":"347","inLanguage":"en","datePublished":"2022-04-20T00:00:00+08:00","dateModified":"2022-04-20T00:00:00+08:00","author":{"@type":"Person","name":"FIFCOM"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.fifcom.cn/posts/hive-install/"},"publisher":{"@type":"Organization","name":"FIFCOM实验室","logo":{"@type":"ImageObject","url":"https://fifcom.cn/avatar/?transparent=1"}}}</script>
+</head><body id=top>
+<script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script>
+<header class=header>
+<nav class=nav>
+<div class=logo>
+<a href=https://blog.fifcom.cn/ accesskey=h title="FIFCOM实验室 (Alt + H)">
+<img src="https://fifcom.cn/avatar/?transparent=1" alt=logo aria-label=logo height=35>FIFCOM实验室</a>
+<span class=logo-switches>
+<button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+</span>
+</div><ul id=menu>
+<li>
+<a href=https://blog.fifcom.cn/tags/ title=标签>
+<span>标签</span>
+</a>
+</li><li>
+<a href=https://fifcom.cn/ title=主页>
+<span>主页</span>
+</a>
+</li><li>
+<a href=https://blog.fifcom.cn/tags/friends/ title=朋友们>
+<span>朋友们</span>
+</a>
+</li></ul></nav></header><main class=main>
+<article class=post-single>
+<header class=post-header>
+<div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a>&nbsp;»&nbsp;<a href=https://blog.fifcom.cn/posts/>Posts</a></div><h1 class=post-title>
+安装Hive
+</h1><div class=post-meta><span title="2022-04-20 00:00:00 +0800 CST">April 20, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM&nbsp;|&nbsp;<a href="https://fifcom.cn/aff/?from=61c389caa31f73f1601ace6ee9ebe3ed" rel="noopener noreferrer" target=_blank>支持我</a>
+</div></header><div class=post-content><h1 id=安装hive>安装Hive<a hidden class=anchor aria-hidden=true href=#安装hive>#</a></h1><p>Hive是一个数据仓库，适合存读多写少的数据，依赖Hadoop。</p><h4 id=下载安装包>下载安装包<a hidden class=anchor aria-hidden=true href=#下载安装包>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/apache-hive-2.3.9-bin.tar.gz
+</span></span><span style=display:flex><span>wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql57-community-release-el7-10.noarch.rpm
+</span></span><span style=display:flex><span>wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql-connector-java-5.1.49.tar.gz
+</span></span></code></pre></div><h4 id=安装配置元数据库>安装配置元数据库<a hidden class=anchor aria-hidden=true href=#安装配置元数据库>#</a></h4><p>Hive需要配置元数据库，这里使用MySQL作为元数据库。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>yum -y install mysql57-community-release-el7-10.noarch.rpm --nogpgcheck
+</span></span><span style=display:flex><span>yum -y install mysql-community-server --nogpgcheck
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/lRtyPa2.png alt=lRtyPa2.png>
+</p><p>查看MySQL状态, 此时为未启动(inactive)</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>service mysqld status
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/U0PIUmt.png alt=status>
+</p><p>启动MySQL</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>systemctl start mysqld
+</span></span></code></pre></div><p>MySQL安装后会设置一个随机密码，可以通过log来查看</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>cat /var/log/mysqld.log | grep password
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/ytL7KhG.png alt=pwd>
+</p><p>现在就可以登录MySQL的命令行了。</p><pre tabindex=0><code>mysql -u root -p08d*****X49q
+</code></pre><p>登录后修改root密码和设置可远程登录</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#f92672>#</span> <span style=color:#960050;background-color:#1e0010>修改</span>root密码为H1ghEntr0pyPwd<span style=color:#f92672>!</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>alter</span> <span style=color:#66d9ef>user</span> <span style=color:#e6db74>&#39;root&#39;</span><span style=color:#f92672>@</span><span style=color:#e6db74>&#39;localhost&#39;</span> identified <span style=color:#66d9ef>by</span> <span style=color:#e6db74>&#39;H1ghEntr0pyPwd!&#39;</span>;
+</span></span><span style=display:flex><span><span style=color:#f92672>#</span> <span style=color:#960050;background-color:#1e0010>设置可远程登录</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>grant</span> <span style=color:#66d9ef>all</span> <span style=color:#66d9ef>privileges</span> <span style=color:#66d9ef>on</span> <span style=color:#f92672>*</span>.<span style=color:#f92672>*</span> <span style=color:#66d9ef>to</span> <span style=color:#e6db74>&#39;root&#39;</span><span style=color:#f92672>@</span><span style=color:#e6db74>&#39;%&#39;</span> identified <span style=color:#66d9ef>by</span> <span style=color:#e6db74>&#39;H1ghEntr0pyPwd!&#39;</span> <span style=color:#66d9ef>with</span> <span style=color:#66d9ef>grant</span> <span style=color:#66d9ef>option</span>;
+</span></span><span style=display:flex><span><span style=color:#f92672>#</span> <span style=color:#960050;background-color:#1e0010>刷新</span>
+</span></span><span style=display:flex><span>flush <span style=color:#66d9ef>privileges</span>;
+</span></span></code></pre></div><p>开启3306防火墙(如果之前没禁用防火墙的话)</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>firewall-cmd --zone<span style=color:#f92672>=</span>public --add-port<span style=color:#f92672>=</span>3306/tcp --permanent
+</span></span><span style=display:flex><span>firewall-cmd --reload
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/Muhw9pj.png alt=firewalld-disabled>
+这里报错是因为之前已禁用防火墙</p><p>修改MySQL配置文件，并重启MySQL服务</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>vi /etc/my.cnf
+</span></span><span style=display:flex><span><span style=color:#f92672>=</span>&gt;
+</span></span><span style=display:flex><span><span style=color:#75715e># 在[mysqld]节点下加入</span>
+</span></span><span style=display:flex><span>lower_case_table_names<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>character_set_server<span style=color:#f92672>=</span>utf8
+</span></span><span style=display:flex><span>init_connect<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;SET NAMES utf8&#39;</span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>systemctl restart mysqld
+</span></span></code></pre></div><p>再次进入MySQL Shell，新建Hive元数据库</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>mysql -u root -pH1ghEntr0pyPwd!
+</span></span></code></pre></div><pre tabindex=0><code>create database metastore;
+</code></pre><h4 id=安装hive-1>安装Hive<a hidden class=anchor aria-hidden=true href=#安装hive-1>#</a></h4><p>解压Hive</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>tar -zxvf apache-hive-2.3.9-bin.tar.gz -C /opt/
+</span></span><span style=display:flex><span>mv /opt/apache-hive-2.3.9-bin/ /opt/hive/
+</span></span></code></pre></div><p>在所有节点上配置环境变量</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>vi /etc/profile
+</span></span><span style=display:flex><span><span style=color:#f92672>=</span>&gt; <span style=color:#75715e># 末尾添加</span>
+</span></span><span style=display:flex><span>export HIVE_HOME<span style=color:#f92672>=</span>/opt/hive
+</span></span><span style=display:flex><span>export PATH<span style=color:#f92672>=</span><span style=color:#e6db74>${</span>HIVE_HOME<span style=color:#e6db74>}</span>/bin:$PATH
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>source /etc/profile
+</span></span></code></pre></div><p>配置Hive环境</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>cd /opt/hive/conf/
+</span></span><span style=display:flex><span>cp hive-env.sh.template hive-env.sh
+</span></span><span style=display:flex><span>vi hive-env.sh
+</span></span><span style=display:flex><span><span style=color:#f92672>=</span>&gt;
+</span></span><span style=display:flex><span>export HADOOP_HOME<span style=color:#f92672>=</span>/opt/hadoop
+</span></span><span style=display:flex><span>export HIVE_CONF_DIR<span style=color:#f92672>=</span>/opt/hive/conf
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>=</span>
+</span></span></code></pre></div><p>安装连接元数据库的驱动</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>cd ~
+</span></span><span style=display:flex><span>tar -zxvf mysql-connector-java-5.1.49.tar.gz
+</span></span><span style=display:flex><span>cp ~/mysql-connector-java-5.1.49/mysql-connector-java-5.1.49-bin.jar /opt/hive/lib/
+</span></span><span style=display:flex><span>rm -rf mysql-connector-java-5.1.49/
+</span></span></code></pre></div><p>配置Hive连接到元数据库</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>cd /opt/hive/conf
+</span></span><span style=display:flex><span>touch hive-site.xml
+</span></span><span style=display:flex><span>vi hive-site.xml
+</span></span><span style=display:flex><span><span style=color:#f92672>=</span>&gt;
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=display:flex><span><span style=color:#75715e>&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>&lt;?xml-stylesheet type=&#34;text/xsl&#34; href=&#34;configuration.xsl&#34;?&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>&lt;configuration&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- jdbc 连接的URL --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;property&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;name&gt;</span>javax.jdo.option.ConnectionURL<span style=color:#f92672>&lt;/name&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;value&gt;</span>jdbc:mysql://master:3306/metastore?useSSL=false<span style=color:#f92672>&lt;/value&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;/property&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- jdbc 连接的驱动 --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;property&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;name&gt;</span>javax.jdo.option.ConnectionDriverName<span style=color:#f92672>&lt;/name&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;value&gt;</span>com.mysql.jdbc.Driver<span style=color:#f92672>&lt;/value&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;/property&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- jdbc 连接的用户名 --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;property&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;name&gt;</span>javax.jdo.option.ConnectionUserName<span style=color:#f92672>&lt;/name&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;value&gt;</span>root<span style=color:#f92672>&lt;/value&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;/property&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- jdbc 连接的密码 --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;property&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;name&gt;</span>javax.jdo.option.ConnectionPassword<span style=color:#f92672>&lt;/name&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;value&gt;</span>H1ghEntr0pyPwd!<span style=color:#f92672>&lt;/value&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;/property&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- Hive 元数据存储版本的验证 --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;property&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;name&gt;</span>hive.metastore.schema.verification<span style=color:#f92672>&lt;/name&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;value&gt;</span>false<span style=color:#f92672>&lt;/value&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;/property&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- 元数据存储授权 --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;property&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;name&gt;</span>hive.metastore.event.db.notification.api.auth<span style=color:#f92672>&lt;/name&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;value&gt;</span>false<span style=color:#f92672>&lt;/value&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;/property&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- Hive默认在HDFS的工作目录 --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;property&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;name&gt;</span>hive.metastore.warehouse.dir<span style=color:#f92672>&lt;/name&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;value&gt;</span>/user/hive/warehouse<span style=color:#f92672>&lt;/value&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;/property&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- Hiveserver2的host --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;property&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;name&gt;</span>hive.server2.thrift.bind.host<span style=color:#f92672>&lt;/name&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;value&gt;</span>master<span style=color:#f92672>&lt;/value&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;/property&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- Hiveserver2的端口 --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;property&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;name&gt;</span>hive.server2.thrift.port<span style=color:#f92672>&lt;/name&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;value&gt;</span>10000<span style=color:#f92672>&lt;/value&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;/property&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>&lt;/configuration&gt;</span>
+</span></span></code></pre></div><p>初始化Hive元数据库，仅能初始化一次</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>schematool -initSchema -dbType mysql -verbose
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/ogbLoQy.png alt=schematool>
+</p><p>分发Hive到slave节点</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>scp -r /opt/hive/ slave1:/opt/
+</span></span></code></pre></div><h4 id=运行hive>运行Hive<a hidden class=anchor aria-hidden=true href=#运行hive>#</a></h4><p>首先应启动Hadoop</p><pre tabindex=0><code>cd /opt/hadoop/sbin/
+./start-all.sh
+</code></pre><p>然后在HDFS上创建Hive的工作目录</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>hadoop dfsadmin -safemode leave <span style=color:#75715e># 关闭安全模式</span>
+</span></span><span style=display:flex><span>hdfs dfs -mkdir /tmp
+</span></span><span style=display:flex><span>hdfs dfs -mkdir -p /user/hive/warehouse
+</span></span><span style=display:flex><span>hdfs dfs -chmod g+w /tmp
+</span></span><span style=display:flex><span>hdfs dfs -chmod g+w /user/hive/warehouse
+</span></span></code></pre></div><p>启动Hive</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span>hive
+</span></span><span style=display:flex><span><span style=color:#f92672>=&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>show</span> databases;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>show</span> tables;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>create</span> <span style=color:#66d9ef>table</span> test (id int);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>insert</span> <span style=color:#66d9ef>into</span> test <span style=color:#66d9ef>values</span>(<span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>select</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>from</span> test;
+</span></span><span style=display:flex><span>exit;
+</span></span><span style=display:flex><span><span style=color:#f92672>&lt;=</span>
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/pjlp7S3.png alt=select>
+</p><h4 id=启动hiveserver2>启动Hiveserver2<a hidden class=anchor aria-hidden=true href=#启动hiveserver2>#</a></h4><p>Hiveserver2可以接受多个客户端的并发访问，支持身份认证</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>hive --service hiveserver2 &amp; <span style=color:#75715e># 让hiveserver2在后台运行，不占用shell</span>
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/TrsYmTJ.png alt=hive>
+<strong>注意:这里的4138是Hiveserver2的进程号</strong></p><p>浏览器访问master:10002，见下即成功
+<img loading=lazy src=https://cdn.fifcom.cn/blog/dkPM9oD.png alt=hs2>
+</p><h4 id=启动beeline>启动beeline<a hidden class=anchor aria-hidden=true href=#启动beeline>#</a></h4><p>启动之前需设置Hadoop，允许所有代理用户访问</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>cd /opt/hadoop/etc/hadoop/
+</span></span><span style=display:flex><span>vi core-site.xml
+</span></span><span style=display:flex><span><span style=color:#f92672>=</span>&gt;
+</span></span><span style=display:flex><span><span style=color:#75715e># 在configuration标签下添加</span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>=</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=display:flex><span><span style=color:#f92672>&lt;property&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;name&gt;</span>hadoop.proxyuser.root.groups<span style=color:#f92672>&lt;/name&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;value&gt;</span>*<span style=color:#f92672>&lt;/value&gt;</span>    
+</span></span><span style=display:flex><span><span style=color:#f92672>&lt;/property&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>&lt;property&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;name&gt;</span>hadoop.proxyuser.root.hosts<span style=color:#f92672>&lt;/name&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;value&gt;</span>*<span style=color:#f92672>&lt;/value&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>&lt;/property&gt;</span>
+</span></span></code></pre></div><p>重新启动所有相关服务</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kill <span style=color:#ae81ff>4138</span> <span style=color:#75715e># 关闭hiveserver2</span>
+</span></span><span style=display:flex><span>cd /opt/hadoop/sbin/
+</span></span><span style=display:flex><span><span style=color:#75715e># 重启Hadoop</span>
+</span></span><span style=display:flex><span>./stop-all.sh
+</span></span><span style=display:flex><span>./start-all.sh
+</span></span><span style=display:flex><span>hive --service hiveserver2 &amp;
+</span></span></code></pre></div><p>启动beeline</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>beeline -u jdbc:hive2://master:10000
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/mDu9wPL.png alt=beeline>
+</p></div><footer class=post-footer>
+<ul class=post-tags>
+<li><a href=https://blog.fifcom.cn/tags/hadoop/>hadoop</a></li><li><a href=https://blog.fifcom.cn/tags/hive/>hive</a></li></ul><nav class=paginav>
+<a class=next href=https://blog.fifcom.cn/posts/hbase-phoenix-java-api-ops/>
+<span class=title>Next Page »</span>
+<br>
+<span>PhoenixAPI 表操作和数据操作</span>
+</a>
+</nav><div class=share-buttons>
+<a target=_blank rel="noopener noreferrer" aria-label="share 安装Hive on twitter" href="https://twitter.com/intent/tweet/?text=%e5%ae%89%e8%a3%85Hive&url=https%3a%2f%2fblog.fifcom.cn%2fposts%2fhive-install%2f&hashtags=hadoop%2chive"><svg viewBox="0 0 512 512"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM195.519 424.544c135.939.0 210.268-112.643 210.268-210.268.0-3.218.0-6.437-.153-9.502 14.406-10.421 26.973-23.448 36.935-38.314-13.18 5.824-27.433 9.809-42.452 11.648 15.326-9.196 26.973-23.602 32.49-40.92-14.252 8.429-30.038 14.56-46.896 17.931-13.487-14.406-32.644-23.295-53.946-23.295-40.767.0-73.87 33.104-73.87 73.87.0 5.824.613 11.494 1.992 16.858-61.456-3.065-115.862-32.49-152.337-77.241-6.284 10.881-9.962 23.601-9.962 37.088.0 25.594 13.027 48.276 32.95 61.456-12.107-.307-23.448-3.678-33.41-9.196v.92c0 35.862 25.441 65.594 59.311 72.49-6.13 1.686-12.72 2.606-19.464 2.606-4.751.0-9.348-.46-13.946-1.38 9.349 29.426 36.628 50.728 68.965 51.341-25.287 19.771-57.164 31.571-91.8 31.571-5.977.0-11.801-.306-17.625-1.073 32.337 21.15 71.264 33.41 112.95 33.41z"/></svg>
+</a>
+<a target=_blank rel="noopener noreferrer" aria-label="share 安装Hive on telegram" href="https://telegram.me/share/url?text=%e5%ae%89%e8%a3%85Hive&url=https%3a%2f%2fblog.fifcom.cn%2fposts%2fhive-install%2f"><svg viewBox="2 2 28 28"><path d="M26.49 29.86H5.5a3.37 3.37.0 01-2.47-1 3.35 3.35.0 01-1-2.47V5.48A3.36 3.36.0 013 3 3.37 3.37.0 015.5 2h21A3.38 3.38.0 0129 3a3.36 3.36.0 011 2.46V26.37a3.35 3.35.0 01-1 2.47 3.38 3.38.0 01-2.51 1.02zm-5.38-6.71a.79.79.0 00.85-.66L24.73 9.24a.55.55.0 00-.18-.46.62.62.0 00-.41-.17q-.08.0-16.53 6.11a.59.59.0 00-.41.59.57.57.0 00.43.52l4 1.24 1.61 4.83a.62.62.0 00.63.43.56.56.0 00.4-.17L16.54 20l4.09 3A.9.9.0 0021.11 23.15zM13.8 20.71l-1.21-4q8.72-5.55 8.78-5.55c.15.0.23.0.23.16a.18.18.0 010 .06s-2.51 2.3-7.52 6.8z"/></svg>
+</a>
+</div></footer></article></main><footer class=footer>
+<span>&copy; 2022 <a href=https://blog.fifcom.cn/>FIFCOM实验室</a></span>
+<span>
+Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://git.io/hugopapermod rel=noopener target=_blank>PaperMod</a>
+</span>
+</footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a>
+<script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(t){t.preventDefault();var e=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(e)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(e)}']`).scrollIntoView({behavior:"smooth"}),e==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${e}`)})})</script>
+<script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script>
+<script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script>
+<script>document.querySelectorAll("pre > code").forEach(t=>{const n=t.parentNode.parentNode,e=document.createElement("button");e.classList.add("copy-code"),e.innerText="copy";function s(){e.innerText="copied!",setTimeout(()=>{e.innerText="copy"},2e3)}e.addEventListener("click",o=>{if("clipboard"in navigator){navigator.clipboard.writeText(t.textContent),s();return}const e=document.createRange();e.selectNodeContents(t);const n=window.getSelection();n.removeAllRanges(),n.addRange(e);try{document.execCommand("copy"),s()}catch(e){}n.removeRange(e)}),n.classList.contains("highlight")?n.appendChild(e):n.parentNode.firstChild==n||(t.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?t.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(e):t.parentNode.appendChild(e))})</script>
+</body></html>

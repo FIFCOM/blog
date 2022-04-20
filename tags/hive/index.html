@@ -3,10 +3,10 @@
 <meta http-equiv=x-ua-compatible content="IE=edge">
 <meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
 <meta name=robots content="index, follow">
-<title>hadoop | FIFCOM实验室</title><meta name=keywords content>
+<title>hive | FIFCOM实验室</title><meta name=keywords content>
 <meta name=description content="咕→咕↑咕↓↑咕↓">
 <meta name=author content="FIFCOM">
-<link rel=canonical href=https://blog.fifcom.cn/tags/hadoop/>
+<link rel=canonical href=https://blog.fifcom.cn/tags/hive/>
 <meta name=google-site-verification content="XYZabc">
 <meta name=yandex-verification content="XYZabc">
 <meta name=msvalidate.01 content="XYZabc">
@@ -20,15 +20,15 @@
 <meta name=theme-color content="#2e2e33">
 <meta name=msapplication-TileColor content="#2e2e33">
 <meta name=generator content="Hugo 0.93.2">
-<link rel=alternate type=application/rss+xml href=https://blog.fifcom.cn/tags/hadoop/index.xml>
+<link rel=alternate type=application/rss+xml href=https://blog.fifcom.cn/tags/hive/index.xml>
 <noscript>
-<style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(e,o,i,a,t,n,s){e.GoogleAnalyticsObject=t,e[t]=e[t]||function(){(e[t].q=e[t].q||[]).push(arguments)},e[t].l=1*new Date,n=o.createElement(i),s=o.getElementsByTagName(i)[0],n.async=1,n.src=a,s.parentNode.insertBefore(n,s)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-123-45","auto"),ga("send","pageview"))</script><meta property="og:title" content="hadoop">
+<style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(e,o,i,a,t,n,s){e.GoogleAnalyticsObject=t,e[t]=e[t]||function(){(e[t].q=e[t].q||[]).push(arguments)},e[t].l=1*new Date,n=o.createElement(i),s=o.getElementsByTagName(i)[0],n.async=1,n.src=a,s.parentNode.insertBefore(n,s)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-123-45","auto"),ga("send","pageview"))</script><meta property="og:title" content="hive">
 <meta property="og:description" content="咕→咕↑咕↓↑咕↓">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://blog.fifcom.cn/tags/hadoop/"><meta property="og:image" content="https://fifcom.cn/avatar/?transparent=1"><meta property="og:site_name" content="FIFCOM实验室">
+<meta property="og:url" content="https://blog.fifcom.cn/tags/hive/"><meta property="og:image" content="https://fifcom.cn/avatar/?transparent=1"><meta property="og:site_name" content="FIFCOM实验室">
 <meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://fifcom.cn/avatar/?transparent=1">
-<meta name=twitter:title content="hadoop">
+<meta name=twitter:title content="hive">
 <meta name=twitter:description content="咕→咕↑咕↓↑咕↓">
 </head><body class=list id=top>
 <script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script>
@@ -55,28 +55,19 @@
 <span>朋友们</span>
 </a>
 </li></ul></nav></header><main class=main>
-<header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a>&nbsp;»&nbsp;<a href=https://blog.fifcom.cn/tags/>Tags</a></div><h1>hadoop</h1></header><article class="post-entry tag-entry">
+<header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a>&nbsp;»&nbsp;<a href=https://blog.fifcom.cn/tags/>Tags</a></div><h1>hive</h1></header><article class="post-entry tag-entry">
 <header class=entry-header>
-<h2>Hadoop 完全分布式安装
+<h2>安装Hive
 </h2></header><section class=entry-content>
-<p>基本环境准备 配置Java环境 解压JDK安装包
-tar -zxvf OpenJDK8U-jdk_x64_linux_openj9_linuxXL_8u282b08_openj9-0.24.0.tar.gz -C /opt 配置环境变量
-vi /etc/profile # 在文件下方添加 export JAVA_HOME=/opt/jdk8u282-b08 export JRE_HOME=/opt/jdk8u282-b08/jre export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar # 输入:wq!退出 source /etc/profile # 使用环境变量配置 配置hosts 所有机器都要配置，以便设置免密登录
-编辑/etc/hosts:
-master_ip_here master slave1_ip_here slave1 slave2_ip_here slave2 配置免密登录 在所有节点上生成rsa公钥和私钥: ssh-keygen -t rsa 将slave节点上生成的公钥用scp命令传到master节点上： scp ~/.ssh/id_rsa.pub root@master:~/.ssh/id_rsa.pub.slave1 scp ~/.ssh/id_rsa.pub root@master:~/.ssh/id_rsa.pub.slave2 3. 在master上生成authorized_keys，即把生成的公钥输入进一个文件：
-cd ~/.ssh cat id_rsa.pub >> authorized_keys cat id_rsa.pub.slave1 >> authorized_keys cat id_rsa.pub.slave2 >> authorized_keys 将master上的authorized_keys用scp命令传到slave节点上： scp ~/....</p></section><footer class=entry-footer><span title="2022-03-05 00:00:00 +0800 CST">March 5, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 完全分布式安装" href=https://blog.fifcom.cn/posts/hadoop-distributed-install/></a>
-</article><article class="post-entry tag-entry">
-<header class=entry-header>
-<h2>Hadoop 伪分布式安装
-</h2></header><section class=entry-content>
-<p>环境配置 三台机器上都安装JDK环境: 上传JDK安装包，解压后配置环境变量即可 tar -zxvf OpenJDK8U-jdk_x64_linux_openj9_linuxXL_8u282b08_openj9-0.24.0.tar.gz -C /opt vi /etc/profile # 在文件下方添加 export JAVA_HOME=/opt/jdk8u282-b08 export JRE_HOME=/opt/jdk8u282-b08/jre export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar # 输入:wq!退出 source /etc/profile # 使用环境变量配置 安装Hadoop环境: 首先上传安装包，再解压至opt目录 tar -zxvf hadoop-2.9.2.tar.gz -C /opt hadoop前提配置 配置master节点 首先进入安装目录, 编辑脚本:
-cd /opt/hadoop-2.9.2/etc/hadoop vi hadoop-env.sh # 找到`# The java implementation to use. ...`， 编辑下面的为 export JAVA_HOME=/opt/jdk8u282-b08 继续编辑当前目录下的core-site.xml文件，指定HDFS的 NameNode的地址，value值是主机名加端口号，主机使用master节点的ip地址
-vi core-site.xml 在configuration标签内添加：
-&lt;property> &lt;name>fs.default.name&lt;/name> &lt;value>hdfs://master_ip_here:9000&lt;/value> &lt;/property> &lt;property> &lt;name>fs....</p></section><footer class=entry-footer><span title="2022-03-01 00:00:00 +0800 CST">March 1, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 伪分布式安装" href=https://blog.fifcom.cn/posts/hadoop-pseudo-distributed-install/></a>
-</article><footer class=page-footer>
-<nav class=pagination>
-<a class=prev href=https://blog.fifcom.cn/tags/hadoop/>« Prev Page</a>
-</nav></footer></main><footer class=footer>
+<p>安装Hive Hive是一个数据仓库，适合存读多写少的数据，依赖Hadoop。
+下载安装包 wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/apache-hive-2.3.9-bin.tar.gz wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql57-community-release-el7-10.noarch.rpm wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql-connector-java-5.1.49.tar.gz 安装配置元数据库 Hive需要配置元数据库，这里使用MySQL作为元数据库。
+yum -y install mysql57-community-release-el7-10.noarch.rpm --nogpgcheck yum -y install mysql-community-server --nogpgcheck 查看MySQL状态, 此时为未启动(inactive)
+service mysqld status 启动MySQL
+systemctl start mysqld MySQL安装后会设置一个随机密码，可以通过log来查看
+cat /var/log/mysqld.log | grep password 现在就可以登录MySQL的命令行了。
+mysql -u root -p08d*****X49q 登录后修改root密码和设置可远程登录
+# 修改root密码为H1ghEntr0pyPwd! alter user 'root'@'localhost' identified by 'H1ghEntr0pyPwd!'; # 设置可远程登录 grant all privileges on *.* to 'root'@'%' identified by 'H1ghEntr0pyPwd!' with grant option; # 刷新 flush privileges; 开启3306防火墙(如果之前没禁用防火墙的话)...</p></section><footer class=entry-footer><span title="2022-04-20 00:00:00 +0800 CST">April 20, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to 安装Hive" href=https://blog.fifcom.cn/posts/hive-install/></a>
+</article></main><footer class=footer>
 <span>&copy; 2022 <a href=https://blog.fifcom.cn/>FIFCOM实验室</a></span>
 <span>
 Powered by

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>hive on FIFCOM实验室</title>
+    <link>https://blog.fifcom.cn/tags/hive/</link>
+    <description>Recent content in hive on FIFCOM实验室</description>
+    <image>
+      <url>https://fifcom.cn/avatar/?transparent=1</url>
+      <link>https://fifcom.cn/avatar/?transparent=1</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 20 Apr 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/hive/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>安装Hive</title>
+      <link>https://blog.fifcom.cn/posts/hive-install/</link>
+      <pubDate>Wed, 20 Apr 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/hive-install/</guid>
+      <description>安装Hive Hive是一个数据仓库，适合存读多写少的数据，依赖Hadoop。
+下载安装包 wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/apache-hive-2.3.9-bin.tar.gz wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql57-community-release-el7-10.noarch.rpm wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql-connector-java-5.1.49.tar.gz 安装配置元数据库 Hive需要配置元数据库，这里使用MySQL作为元数据库。
+yum -y install mysql57-community-release-el7-10.noarch.rpm --nogpgcheck yum -y install mysql-community-server --nogpgcheck 查看MySQL状态, 此时为未启动(inactive)
+service mysqld status 启动MySQL
+systemctl start mysqld MySQL安装后会设置一个随机密码，可以通过log来查看
+cat /var/log/mysqld.log | grep password 现在就可以登录MySQL的命令行了。
+mysql -u root -p08d*****X49q 登录后修改root密码和设置可远程登录
+# 修改root密码为H1ghEntr0pyPwd! alter user &amp;#39;root&amp;#39;@&amp;#39;localhost&amp;#39; identified by &amp;#39;H1ghEntr0pyPwd!&amp;#39;; # 设置可远程登录 grant all privileges on *.* to &amp;#39;root&amp;#39;@&amp;#39;%&amp;#39; identified by &amp;#39;H1ghEntr0pyPwd!&amp;#39; with grant option; # 刷新 flush privileges; 开启3306防火墙(如果之前没禁用防火墙的话)</description>
+    </item>
+    
+  </channel>
+</rss>

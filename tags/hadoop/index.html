@@ -57,6 +57,18 @@
 </li></ul></nav></header><main class=main>
 <header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a>&nbsp;»&nbsp;<a href=https://blog.fifcom.cn/tags/>Tags</a></div><h1>hadoop</h1></header><article class="post-entry tag-entry">
 <header class=entry-header>
+<h2>安装Hive
+</h2></header><section class=entry-content>
+<p>安装Hive Hive是一个数据仓库，适合存读多写少的数据，依赖Hadoop。
+下载安装包 wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/apache-hive-2.3.9-bin.tar.gz wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql57-community-release-el7-10.noarch.rpm wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/mysql-connector-java-5.1.49.tar.gz 安装配置元数据库 Hive需要配置元数据库，这里使用MySQL作为元数据库。
+yum -y install mysql57-community-release-el7-10.noarch.rpm --nogpgcheck yum -y install mysql-community-server --nogpgcheck 查看MySQL状态, 此时为未启动(inactive)
+service mysqld status 启动MySQL
+systemctl start mysqld MySQL安装后会设置一个随机密码，可以通过log来查看
+cat /var/log/mysqld.log | grep password 现在就可以登录MySQL的命令行了。
+mysql -u root -p08d*****X49q 登录后修改root密码和设置可远程登录
+# 修改root密码为H1ghEntr0pyPwd! alter user 'root'@'localhost' identified by 'H1ghEntr0pyPwd!'; # 设置可远程登录 grant all privileges on *.* to 'root'@'%' identified by 'H1ghEntr0pyPwd!' with grant option; # 刷新 flush privileges; 开启3306防火墙(如果之前没禁用防火墙的话)...</p></section><footer class=entry-footer><span title="2022-04-20 00:00:00 +0800 CST">April 20, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to 安装Hive" href=https://blog.fifcom.cn/posts/hive-install/></a>
+</article><article class="post-entry tag-entry">
+<header class=entry-header>
 <h2>PhoenixAPI 表操作和数据操作
 </h2></header><section class=entry-content>
 <p>Phoenix JavaAPI可以在java中使用sql对HBase进行操作
@@ -154,16 +166,6 @@ hadoop fs -ls output 当运行成功后会在该文件下生成一个_SUCCESS文
 hdfs dfs -ls / 递归展示子文件夹中的内容
 hdfs dfs -ls -R / 复制本地文件至HDFS put或copyFromLocal命令, 使用-f强制覆盖HDFS中已存在的文件
 touch aaa.txt hdfs dfs -put aaa.txt /dir1 # hdfs dfs -copyFromLocal aaa.txt /dir1 hdfs dfs -ls -R / 获取HDFS中的文件 get / copyToLocal: 将单个文件复制至本地 # rm aaa.txt hdfs dfs -get /dir1/aaa.txt ~ # hdfs dfs -copyToLocal /dir1/aaa.txt ~ ls -al getmerge: 将多个文件存入本地的同一个文件中 touch a....</p></section><footer class=entry-footer><span title="2022-03-10 00:00:00 +0800 CST">March 10, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 常用命令" href=https://blog.fifcom.cn/posts/hadoop-commands/></a>
-</article><article class="post-entry tag-entry">
-<header class=entry-header>
-<h2>Hadoop 完全分布式安装
-</h2></header><section class=entry-content>
-<p>基本环境准备 配置Java环境 解压JDK安装包
-tar -zxvf OpenJDK8U-jdk_x64_linux_openj9_linuxXL_8u282b08_openj9-0.24.0.tar.gz -C /opt 配置环境变量
-vi /etc/profile # 在文件下方添加 export JAVA_HOME=/opt/jdk8u282-b08 export JRE_HOME=/opt/jdk8u282-b08/jre export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar # 输入:wq!退出 source /etc/profile # 使用环境变量配置 配置hosts 所有机器都要配置，以便设置免密登录
-编辑/etc/hosts:
-master_ip_here master slave1_ip_here slave1 slave2_ip_here slave2 配置免密登录 在所有节点上生成rsa公钥和私钥: ssh-keygen -t rsa 将slave节点上生成的公钥用scp命令传到master节点上： scp ~/.ssh/id_rsa.pub root@master:~/.ssh/id_rsa.pub.slave1 scp ~/.ssh/id_rsa.pub root@master:~/.ssh/id_rsa.pub.slave2 3. 在master上生成authorized_keys，即把生成的公钥输入进一个文件：
-cd ~/.ssh cat id_rsa.pub >> authorized_keys cat id_rsa.pub.slave1 >> authorized_keys cat id_rsa.pub.slave2 >> authorized_keys 将master上的authorized_keys用scp命令传到slave节点上： scp ~/....</p></section><footer class=entry-footer><span title="2022-03-05 00:00:00 +0800 CST">March 5, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 完全分布式安装" href=https://blog.fifcom.cn/posts/hadoop-distributed-install/></a>
 </article><footer class=page-footer>
 <nav class=pagination>
 <a class=next href=https://blog.fifcom.cn/tags/hadoop/page/2/>Next Page »</a>
