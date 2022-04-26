@@ -9,7 +9,74 @@
       <link>https://fifcom.cn/avatar/?transparent=1</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 20 Apr 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/hive/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 26 Apr 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/hive/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hive数据导入导出</title>
+      <link>https://blog.fifcom.cn/posts/hive-import-export/</link>
+      <pubDate>Tue, 26 Apr 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/hive-import-export/</guid>
+      <description>导出表至HDFS export table tmp to &amp;#39;/user/hive/exp/tmp&amp;#39;; 从HDFS导入表 导入的表不能事先存在
+import table ipt from &amp;#39;/user/hive/exp/tmp&amp;#39;; # import external table exipt from &amp;#39;/user/hive/exp/tmp&amp;#39;; # 导入进外部表 select * from ipt; 从HDFS导入分区 导出分区表
+export table part to &amp;#39;/user/hive/exp/part&amp;#39;; 导入分区
+import table part1 partition(dt=&amp;#39;2022-05-01&amp;#39;) from &amp;#39;/user/hive/exp/part&amp;#39;;  import table part2 partition(dt=&amp;#39;2022-05-02&amp;#39;) from &amp;#39;/user/hive/exp/part&amp;#39;; 导出查询结果 将查询结果导出至本地
+insert overwrite local directory &amp;#39;/root/exp&amp;#39; row format delimited fields terminated by &amp;#39;\t&amp;#39; select * from tmp; 将查询结果导出至HDFS（没有local）
+insert overwrite directory &amp;#39;/user/hive/exp.txt&amp;#39; row format delimited fields terminated by &amp;#39;\t&amp;#39; select * from tmp; 将Hive Shell的查询结果保存到本地</description>
+    </item>
+    
+    <item>
+      <title>Hive分桶表操作</title>
+      <link>https://blog.fifcom.cn/posts/hive-bucket-table-ops/</link>
+      <pubDate>Mon, 25 Apr 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/hive-bucket-table-ops/</guid>
+      <description>分桶针对数据文件进行分解，分解成更容易管理的多个部分(细粒度)。好处有：
+ 方便抽样：分桶后可以很方便的在数据集的一小部分上查询。 提高join查询效率  分桶是在表或者分区表的基础上进一步对表进行组织，分桶会对列值进行Hash，来决定放在哪个桶中。保证每个桶中都有数据，但桶中的数据条数不一定相等。
+创建分桶表 使用clustered by 命令指定划分桶的列，使用into N buckets指定桶的个数
+create table buck (id int, name string) clustered by(id) into 4 buckets row format delimited fields terminated by &amp;#39;\t&amp;#39;; 可以看到桶个数(Num Buckets)为4
+分桶表不能直接导入数据，需使用中间表。这里创建中间表
+create table tmp (id int, name string) row format delimited fields terminated by &amp;#39;\t&amp;#39;; 导入数据 首先设置Hive参数
+set hive.strict.checks.bucketing=false; 在本地/root/buck.txt中有
+1\taaa2\tbbb3\tccc4\tddd 由于不能直接导入分桶表，所以首先应导入普通表
+load data local inpath &amp;#39;/root/buck.txt&amp;#39; into table tmp; 接着清空分桶表中的数据
+truncate table buck; 最后插入tmp中的数据到分桶表中</description>
+    </item>
+    
+    <item>
+      <title>Hive分区表操作</title>
+      <link>https://blog.fifcom.cn/posts/hive-partition-table-ops/</link>
+      <pubDate>Sun, 24 Apr 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/hive-partition-table-ops/</guid>
+      <description>Hive中的分区就是子目录(粗粒度)，每个子目录包含了分区对应的列名和每一列的值，把大的数据集分割成小数据集。
+分区表对应HDFS中的一个独立文件夹，该文件夹下存储了当前分区的所有数据文件。
+在查询时使用where来指定分区，可提高查询效率。
+创建分区表 使用partitioned bt 创建分区表，并使用dt作为分割分区的列名。
+分割分区的列名越多分区的级数就越多，比如一个为一级分区，两个为二级分区。
+use curd;  create table part(id int, name string) partitioned by(dt date comment &amp;#34;partition field day time&amp;#34;) row format delimited fields terminated by &amp;#39;\t&amp;#39;; 添加分区 给分区表添加分区，区分 分区的列名为dt
+alter table part add partition(dt=&amp;#34;2022-05-01&amp;#34;); alter table part add partition(dt=&amp;#34;2022-05-02&amp;#34;); alter table part add partition(dt=&amp;#34;2022-05-03&amp;#34;); # 或者alter table part add partition(dt=&amp;#34;2022-05-01&amp;#34;) partition(dt=&amp;#34;2022-05-02&amp;#34;); show partitions part; # 查看分区 导入数据 向分区中导入数据
+在本地/root/中有三个文件: log01.txt，log02.txt，log03.txt
+1\tzhangsan2\tlisi 3\twangwu 4\tzhaoliu 导入数据:</description>
+    </item>
+    
+    <item>
+      <title>Hive内/外部表操作</title>
+      <link>https://blog.fifcom.cn/posts/hive-internal-external-table-ops/</link>
+      <pubDate>Fri, 22 Apr 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/hive-internal-external-table-ops/</guid>
+      <description>需启动Hadoop
+cd /opt/hadoop/sbin ./start-all.sh 并进入Hive命令行
+cd /opt/hive/bin./hive 创建数据库 create database curd; # create database if not exists curd;  show databases; # desc database extended curd; # 可以查看数据库的详细信息 创建表后Hive默认会在HDFS的warehouse文件夹中创建文件夹curd.db/，将来可以直接拷贝数据文件到该目录下的相关表进行数据填充。
+查看HDFS
+hdfs dfs -ls -R /user/hive/ 显示数据库 使用命令查看所有数据库
+show databases; 查看数据库的描述与详细(extended)描述
+desc database curd; # 查看描述 desc database extended curd; # 查看详细描述 修改数据库描述 数据库的名称和所在位置等不可修改，但可以添加/修改描述数据库的键值对。
+alter database curd set dbproperties(&amp;#39;createtime&amp;#39;=&amp;#39;20220501&amp;#39;); 删除数据库 删除数据库前最好判断该数据库是否存在
+drop database if exists curd; 数据库不为空时需要强制删除：使用cascade命令
+drop database curd cascade; 创建内部表 内部表又称管理表</description>
+    </item>
+    
     <item>
       <title>安装Hive</title>
       <link>https://blog.fifcom.cn/posts/hive-install/</link>

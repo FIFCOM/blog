@@ -1,0 +1,193 @@
+<!doctype html><html lang=en dir=auto>
+<head><meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<meta name=robots content="index, follow">
+<title>Hive内/外部表操作 | FIFCOM实验室</title><meta name=keywords content="hadoop,hive">
+<meta name=description content="需启动Hadoop
+cd /opt/hadoop/sbin ./start-all.sh 并进入Hive命令行
+cd /opt/hive/bin./hive 创建数据库 create database curd; # create database if not exists curd;  show databases; # desc database extended curd; # 可以查看数据库的详细信息 创建表后Hive默认会在HDFS的warehouse文件夹中创建文件夹curd.db/，将来可以直接拷贝数据文件到该目录下的相关表进行数据填充。
+查看HDFS
+hdfs dfs -ls -R /user/hive/ 显示数据库 使用命令查看所有数据库
+show databases; 查看数据库的描述与详细(extended)描述
+desc database curd; # 查看描述 desc database extended curd; # 查看详细描述 修改数据库描述 数据库的名称和所在位置等不可修改，但可以添加/修改描述数据库的键值对。
+alter database curd set dbproperties('createtime'='20220501'); 删除数据库 删除数据库前最好判断该数据库是否存在
+drop database if exists curd; 数据库不为空时需要强制删除：使用cascade命令
+drop database curd cascade; 创建内部表 内部表又称管理表">
+<meta name=author content="FIFCOM">
+<link rel=canonical href=https://blog.fifcom.cn/posts/hive-internal-external-table-ops/>
+<meta name=google-site-verification content="XYZabc">
+<meta name=yandex-verification content="XYZabc">
+<meta name=msvalidate.01 content="XYZabc">
+<link crossorigin=anonymous href=/assets/css/stylesheet.min.c88963fe2d79462000fd0fb1b3737783c32855d340583e4523343f8735c787f0.css integrity="sha256-yIlj/i15RiAA/Q+xs3N3g8MoVdNAWD5FIzQ/hzXHh/A=" rel="preload stylesheet" as=style>
+<link rel=preload href="https://fifcom.cn/avatar/?transparent=1" as=image>
+<script defer crossorigin=anonymous src=/assets/js/highlight.min.4dcb3c4f38462f66c6b6137227726f5543cb934cca9788f041c087e374491df2.js integrity="sha256-Tcs8TzhGL2bGthNyJ3JvVUPLk0zKl4jwQcCH43RJHfI=" onload=hljs.initHighlightingOnLoad()></script>
+<link rel=icon href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=icon type=image/png sizes=16x16 href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=icon type=image/png sizes=32x32 href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=apple-touch-icon href="https://fifcom.cn/avatar/?transparent=1">
+<link rel=mask-icon href="https://fifcom.cn/avatar/?transparent=1">
+<meta name=theme-color content="#2e2e33">
+<meta name=msapplication-TileColor content="#2e2e33">
+<meta name=generator content="Hugo 0.93.2">
+<noscript>
+<style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(e,o,i,a,t,n,s){e.GoogleAnalyticsObject=t,e[t]=e[t]||function(){(e[t].q=e[t].q||[]).push(arguments)},e[t].l=1*new Date,n=o.createElement(i),s=o.getElementsByTagName(i)[0],n.async=1,n.src=a,s.parentNode.insertBefore(n,s)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-123-45","auto"),ga("send","pageview"))</script><meta property="og:title" content="Hive内/外部表操作">
+<meta property="og:description" content="需启动Hadoop
+cd /opt/hadoop/sbin ./start-all.sh 并进入Hive命令行
+cd /opt/hive/bin./hive 创建数据库 create database curd; # create database if not exists curd;  show databases; # desc database extended curd; # 可以查看数据库的详细信息 创建表后Hive默认会在HDFS的warehouse文件夹中创建文件夹curd.db/，将来可以直接拷贝数据文件到该目录下的相关表进行数据填充。
+查看HDFS
+hdfs dfs -ls -R /user/hive/ 显示数据库 使用命令查看所有数据库
+show databases; 查看数据库的描述与详细(extended)描述
+desc database curd; # 查看描述 desc database extended curd; # 查看详细描述 修改数据库描述 数据库的名称和所在位置等不可修改，但可以添加/修改描述数据库的键值对。
+alter database curd set dbproperties('createtime'='20220501'); 删除数据库 删除数据库前最好判断该数据库是否存在
+drop database if exists curd; 数据库不为空时需要强制删除：使用cascade命令
+drop database curd cascade; 创建内部表 内部表又称管理表">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.fifcom.cn/posts/hive-internal-external-table-ops/"><meta property="og:image" content="https://fifcom.cn/avatar/?transparent=1"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2022-04-22T00:00:00+08:00">
+<meta property="article:modified_time" content="2022-04-22T00:00:00+08:00"><meta property="og:site_name" content="FIFCOM实验室">
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://fifcom.cn/avatar/?transparent=1">
+<meta name=twitter:title content="Hive内/外部表操作">
+<meta name=twitter:description content="需启动Hadoop
+cd /opt/hadoop/sbin ./start-all.sh 并进入Hive命令行
+cd /opt/hive/bin./hive 创建数据库 create database curd; # create database if not exists curd;  show databases; # desc database extended curd; # 可以查看数据库的详细信息 创建表后Hive默认会在HDFS的warehouse文件夹中创建文件夹curd.db/，将来可以直接拷贝数据文件到该目录下的相关表进行数据填充。
+查看HDFS
+hdfs dfs -ls -R /user/hive/ 显示数据库 使用命令查看所有数据库
+show databases; 查看数据库的描述与详细(extended)描述
+desc database curd; # 查看描述 desc database extended curd; # 查看详细描述 修改数据库描述 数据库的名称和所在位置等不可修改，但可以添加/修改描述数据库的键值对。
+alter database curd set dbproperties('createtime'='20220501'); 删除数据库 删除数据库前最好判断该数据库是否存在
+drop database if exists curd; 数据库不为空时需要强制删除：使用cascade命令
+drop database curd cascade; 创建内部表 内部表又称管理表">
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://blog.fifcom.cn/posts/"},{"@type":"ListItem","position":2,"name":"Hive内/外部表操作","item":"https://blog.fifcom.cn/posts/hive-internal-external-table-ops/"}]}</script>
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Hive内/外部表操作","name":"Hive内\/外部表操作","description":"需启动Hadoop\ncd /opt/hadoop/sbin ./start-all.sh 并进入Hive命令行\ncd /opt/hive/bin\r./hive 创建数据库 create database curd; # create database if not exists curd;  show databases; # desc database extended curd; # 可以查看数据库的详细信息 创建表后Hive默认会在HDFS的warehouse文件夹中创建文件夹curd.db/，将来可以直接拷贝数据文件到该目录下的相关表进行数据填充。\n查看HDFS\nhdfs dfs -ls -R /user/hive/ 显示数据库 使用命令查看所有数据库\nshow databases; 查看数据库的描述与详细(extended)描述\ndesc database curd; # 查看描述 desc database extended curd; # 查看详细描述 修改数据库描述 数据库的名称和所在位置等不可修改，但可以添加/修改描述数据库的键值对。\nalter database curd set dbproperties(\u0026#39;createtime\u0026#39;=\u0026#39;20220501\u0026#39;); 删除数据库 删除数据库前最好判断该数据库是否存在\ndrop database if exists curd; 数据库不为空时需要强制删除：使用cascade命令\ndrop database curd cascade; 创建内部表 内部表又称管理表","keywords":["hadoop","hive"],"articleBody":"需启动Hadoop\ncd /opt/hadoop/sbin ./start-all.sh 并进入Hive命令行\ncd /opt/hive/bin\r./hive 创建数据库 create database curd; # create database if not exists curd;  show databases; # desc database extended curd; # 可以查看数据库的详细信息 创建表后Hive默认会在HDFS的warehouse文件夹中创建文件夹curd.db/，将来可以直接拷贝数据文件到该目录下的相关表进行数据填充。\n查看HDFS\nhdfs dfs -ls -R /user/hive/ 显示数据库 使用命令查看所有数据库\nshow databases; 查看数据库的描述与详细(extended)描述\ndesc database curd; # 查看描述 desc database extended curd; # 查看详细描述 修改数据库描述 数据库的名称和所在位置等不可修改，但可以添加/修改描述数据库的键值对。\nalter database curd set dbproperties('createtime'='20220501'); 删除数据库 删除数据库前最好判断该数据库是否存在\ndrop database if exists curd; 数据库不为空时需要强制删除：使用cascade命令\ndrop database curd cascade; 创建内部表 内部表又称管理表\n首先应使用数据库，再创建表\nuse curd; create table tab(line string); # 仅有一列，string类型 导入数据至内部表 Hive可以从本地文件系统和HDFS中的文件导入数据。\n比如root目录下有1.txt，内容为\naa\rbb\rcc\raa\rbb\raa\rbb 可以在Hive命令行中导入:\nload data local inpath '/root/1.txt' into table curd.tab; 导入后即可查询\nuse curd; select * from tab; 如果在HDFS中有文件/1.txt，内容同上\n# 上传本地文件至HDFS*\rhdfs dfs -put /root/1.txt / 在Hive命令行中导入:\nload data inpath '/1.txt' into table curd.tab; 导入后即可查询，可以看到共导入1.txt共两次\nuse curd; select * from tab; 插入数据至内部表 首先使用自定义分隔符创建内部表\ncreate table student(id int, name string) row format delimited fields terminated by '\\t'; 插入数据\ninsert into student(id, name) values(1, 'zhangsan'); insert into student(id, name) values(2, 'lisi'); insert into student(id, name) values(3, 'wangwu'); 查看数据\nselect * from student; 删除内部表 内部表删除后HDFS中的对应文件也会被删除\ndrop table student; 创建外部表 上面已经删除了内部表student，这里创建外部表student\n在HDFS中的/hive_ext_student中有student.txt\n1 aaa\r2 bbb\r3 ccc\r4 zhangsan\r5 lisi # 上传至HDFS\rhdfs dfs -mkdir /hive_ext_student\rhdfs dfs -put /root/student.txt /hive_ext_student 创建表，设置分隔符为\\t，设置外部表文件夹为/hive_ext_student\ncreate external table student(id int, name string) row format delimited fields terminated by '\\t' location '/hive_ext_student'; 此时就可以查看数据了\nselect * from student;  此外，还可以在创建表之后修改外部表文件夹 alter table student set location '/hive_ext_student';\n 删除外部表 删除外部表不会删除HDFS中的文件\n同删除内部表\ndrop table student; 但通过查看HDFS，文件还存在\nhdfs dfs -ls -R /hive_ext_student 内/外部表转换 外转内:\nalter table student set tblproperties ('EXTERNAL'='FALSE'); 转换后删除该内部表，HDFS中的目录会被同步删除。\n内转外:\nalter table student set tblproperties ('EXTERNAL'='TRUE'); 转换后删除该外部表，HDFS中的目录会保留。\n查询表详情 desc formatted tab; ","wordCount":"260","inLanguage":"en","datePublished":"2022-04-22T00:00:00+08:00","dateModified":"2022-04-22T00:00:00+08:00","author":{"@type":"Person","name":"FIFCOM"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.fifcom.cn/posts/hive-internal-external-table-ops/"},"publisher":{"@type":"Organization","name":"FIFCOM实验室","logo":{"@type":"ImageObject","url":"https://fifcom.cn/avatar/?transparent=1"}}}</script>
+</head><body id=top>
+<script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script>
+<header class=header>
+<nav class=nav>
+<div class=logo>
+<a href=https://blog.fifcom.cn/ accesskey=h title="FIFCOM实验室 (Alt + H)">
+<img src="https://fifcom.cn/avatar/?transparent=1" alt=logo aria-label=logo height=35>FIFCOM实验室</a>
+<span class=logo-switches>
+<button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+</span>
+</div><ul id=menu>
+<li>
+<a href=https://blog.fifcom.cn/tags/ title=标签>
+<span>标签</span>
+</a>
+</li><li>
+<a href=https://fifcom.cn/ title=主页>
+<span>主页</span>
+</a>
+</li><li>
+<a href=https://blog.fifcom.cn/tags/friends/ title=朋友们>
+<span>朋友们</span>
+</a>
+</li></ul></nav></header><main class=main>
+<article class=post-single>
+<header class=post-header>
+<div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a>&nbsp;»&nbsp;<a href=https://blog.fifcom.cn/posts/>Posts</a></div><h1 class=post-title>
+Hive内/外部表操作
+</h1><div class=post-meta><span title="2022-04-22 00:00:00 +0800 CST">April 22, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM&nbsp;|&nbsp;<a href="https://fifcom.cn/aff/?from=61c389caa31f73f1601ace6ee9ebe3ed" rel="noopener noreferrer" target=_blank>支持我</a>
+</div></header><div class=post-content><p>需启动Hadoop</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>cd /opt/hadoop/sbin
+</span></span><span style=display:flex><span>./start-all.sh
+</span></span></code></pre></div><p>并进入Hive命令行</p><pre tabindex=0><code>cd /opt/hive/bin
+./hive
+</code></pre><h4 id=创建数据库>创建数据库<a hidden class=anchor aria-hidden=true href=#创建数据库>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>create</span> <span style=color:#66d9ef>database</span> curd;
+</span></span><span style=display:flex><span><span style=color:#f92672>#</span> <span style=color:#66d9ef>create</span> <span style=color:#66d9ef>database</span> <span style=color:#66d9ef>if</span> <span style=color:#66d9ef>not</span> <span style=color:#66d9ef>exists</span> curd;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>show</span> databases;
+</span></span><span style=display:flex><span><span style=color:#f92672>#</span> <span style=color:#66d9ef>desc</span> <span style=color:#66d9ef>database</span> extended curd; <span style=color:#f92672>#</span> <span style=color:#960050;background-color:#1e0010>可以查看数据库的详细信息</span>
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/AW5B5QT.png alt=create>
+</p><p>创建表后Hive<strong>默认</strong>会在HDFS的warehouse文件夹中创建文件夹curd.db/，将来可以直接拷贝数据文件到该目录下的相关表进行数据填充。</p><p>查看HDFS</p><pre tabindex=0><code>hdfs dfs -ls -R /user/hive/
+</code></pre><p><img loading=lazy src=https://cdn.fifcom.cn/blog/BV9NI7J.png alt=ls>
+</p><h4 id=显示数据库>显示数据库<a hidden class=anchor aria-hidden=true href=#显示数据库>#</a></h4><p>使用命令查看所有数据库</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>show</span> databases;
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/F8pmp8r.png alt=show>
+</p><p>查看数据库的描述与详细(extended)描述</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>desc</span> <span style=color:#66d9ef>database</span> curd; <span style=color:#f92672>#</span> <span style=color:#960050;background-color:#1e0010>查看描述</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>desc</span> <span style=color:#66d9ef>database</span> extended curd; <span style=color:#f92672>#</span> <span style=color:#960050;background-color:#1e0010>查看详细描述</span>
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/8BFdhTB.png alt=desc>
+</p><h4 id=修改数据库描述>修改数据库描述<a hidden class=anchor aria-hidden=true href=#修改数据库描述>#</a></h4><p>数据库的名称和所在位置等不可修改，但可以添加/修改<strong>描述数据库</strong>的键值对。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>alter</span> <span style=color:#66d9ef>database</span> curd <span style=color:#66d9ef>set</span> dbproperties(<span style=color:#e6db74>&#39;createtime&#39;</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#39;20220501&#39;</span>);
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/bXn6P94.png alt=alter>
+</p><h4 id=删除数据库>删除数据库<a hidden class=anchor aria-hidden=true href=#删除数据库>#</a></h4><p>删除数据库前最好判断该数据库是否存在</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>drop</span> <span style=color:#66d9ef>database</span> <span style=color:#66d9ef>if</span> <span style=color:#66d9ef>exists</span> curd;
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/VykaFRn.png alt=drop>
+</p><p>数据库不为空时需要强制删除：使用cascade命令</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>drop</span> <span style=color:#66d9ef>database</span> curd <span style=color:#66d9ef>cascade</span>;
+</span></span></code></pre></div><h4 id=创建内部表>创建内部表<a hidden class=anchor aria-hidden=true href=#创建内部表>#</a></h4><p>内部表又称管理表</p><p>首先应使用数据库，再创建表</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span>use curd;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>create</span> <span style=color:#66d9ef>table</span> tab(line string); <span style=color:#f92672>#</span> <span style=color:#960050;background-color:#1e0010>仅有一列，</span>string类型
+</span></span></code></pre></div><h4 id=导入数据至内部表>导入数据至内部表<a hidden class=anchor aria-hidden=true href=#导入数据至内部表>#</a></h4><p>Hive可以从本地文件系统和HDFS中的文件导入数据。</p><p>比如root目录下有1.txt，内容为</p><pre tabindex=0><code>aa
+bb
+cc
+aa
+bb
+aa
+bb
+</code></pre><p>可以在Hive命令行中导入:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>load</span> <span style=color:#66d9ef>data</span> <span style=color:#66d9ef>local</span> inpath <span style=color:#e6db74>&#39;/root/1.txt&#39;</span> <span style=color:#66d9ef>into</span> <span style=color:#66d9ef>table</span> curd.tab;
+</span></span></code></pre></div><p>导入后即可查询</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span>use curd;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>select</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>from</span> tab;
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/j1uWYUk.png alt=select>
+</p><p>如果在HDFS中有文件/1.txt，内容同上</p><pre tabindex=0><code># 上传本地文件至HDFS*
+hdfs dfs -put /root/1.txt /
+</code></pre><p>在Hive命令行中导入:</p><pre tabindex=0><code>load data inpath &#39;/1.txt&#39; into table curd.tab;
+</code></pre><p>导入后即可查询，可以看到共导入1.txt共两次</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span>use curd;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>select</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>from</span> tab;
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/q1riHJM.png alt=hdfs-import>
+</p><h4 id=插入数据至内部表>插入数据至内部表<a hidden class=anchor aria-hidden=true href=#插入数据至内部表>#</a></h4><p>首先使用自定义分隔符创建内部表</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>create</span> <span style=color:#66d9ef>table</span> student(id int, name string) <span style=color:#66d9ef>row</span> format delimited fields terminated <span style=color:#66d9ef>by</span> <span style=color:#e6db74>&#39;\t&#39;</span>;
+</span></span></code></pre></div><p>插入数据</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>insert</span> <span style=color:#66d9ef>into</span> student(id, name) <span style=color:#66d9ef>values</span>(<span style=color:#ae81ff>1</span>, <span style=color:#e6db74>&#39;zhangsan&#39;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>insert</span> <span style=color:#66d9ef>into</span> student(id, name) <span style=color:#66d9ef>values</span>(<span style=color:#ae81ff>2</span>, <span style=color:#e6db74>&#39;lisi&#39;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>insert</span> <span style=color:#66d9ef>into</span> student(id, name) <span style=color:#66d9ef>values</span>(<span style=color:#ae81ff>3</span>, <span style=color:#e6db74>&#39;wangwu&#39;</span>);
+</span></span></code></pre></div><p>查看数据</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>select</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>from</span> student;
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/nKfP9et.png alt=select>
+</p><h4 id=删除内部表>删除内部表<a hidden class=anchor aria-hidden=true href=#删除内部表>#</a></h4><p>内部表删除后HDFS中的对应文件也会被删除</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>drop</span> <span style=color:#66d9ef>table</span> student;
+</span></span></code></pre></div><h4 id=创建外部表>创建外部表<a hidden class=anchor aria-hidden=true href=#创建外部表>#</a></h4><p>上面已经删除了内部表student，这里创建外部表student</p><p>在HDFS中的/hive_ext_student中有student.txt</p><pre tabindex=0><code>1   aaa
+2   bbb
+3   ccc
+4   zhangsan
+5   lisi
+</code></pre><pre tabindex=0><code># 上传至HDFS
+hdfs dfs -mkdir /hive_ext_student
+hdfs dfs -put /root/student.txt /hive_ext_student
+</code></pre><p>创建表，设置分隔符为<code>\t</code>，设置外部表文件夹为<code>/hive_ext_student</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>create</span> <span style=color:#66d9ef>external</span> <span style=color:#66d9ef>table</span> student(id int, name string) <span style=color:#66d9ef>row</span> format delimited fields terminated <span style=color:#66d9ef>by</span> <span style=color:#e6db74>&#39;\t&#39;</span> <span style=color:#66d9ef>location</span> <span style=color:#e6db74>&#39;/hive_ext_student&#39;</span>;
+</span></span></code></pre></div><p>此时就可以查看数据了</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>select</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>from</span> student;
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/VsGN4bA.png alt=select>
+</p><blockquote>
+<p>此外，还可以在创建表之后修改外部表文件夹
+<code>alter table student set location '/hive_ext_student';</code></p></blockquote><h4 id=删除外部表>删除外部表<a hidden class=anchor aria-hidden=true href=#删除外部表>#</a></h4><p>删除外部表不会删除HDFS中的文件</p><p>同删除内部表</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>drop</span> <span style=color:#66d9ef>table</span> student;
+</span></span></code></pre></div><p>但通过查看HDFS，文件还存在</p><pre tabindex=0><code>hdfs dfs -ls -R /hive_ext_student
+</code></pre><p><img loading=lazy src=https://cdn.fifcom.cn/blog/gE8Dgn7.png alt=ls>
+</p><h4 id=内外部表转换>内/外部表转换<a hidden class=anchor aria-hidden=true href=#内外部表转换>#</a></h4><p>外转内:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>alter</span> <span style=color:#66d9ef>table</span> student <span style=color:#66d9ef>set</span> tblproperties (<span style=color:#e6db74>&#39;EXTERNAL&#39;</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#39;FALSE&#39;</span>);
+</span></span></code></pre></div><p>转换后删除该内部表，HDFS中的目录会被同步删除。</p><p>内转外:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>alter</span> <span style=color:#66d9ef>table</span> student <span style=color:#66d9ef>set</span> tblproperties (<span style=color:#e6db74>&#39;EXTERNAL&#39;</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#39;TRUE&#39;</span>);
+</span></span></code></pre></div><p>转换后删除该外部表，HDFS中的目录会保留。</p><h4 id=查询表详情>查询表详情<a hidden class=anchor aria-hidden=true href=#查询表详情>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>desc</span> formatted tab;
+</span></span></code></pre></div><p><img loading=lazy src=https://cdn.fifcom.cn/blog/JHPtMoK.png alt=desc>
+</p></div><footer class=post-footer>
+<ul class=post-tags>
+<li><a href=https://blog.fifcom.cn/tags/hadoop/>hadoop</a></li><li><a href=https://blog.fifcom.cn/tags/hive/>hive</a></li></ul><nav class=paginav>
+<a class=prev href=https://blog.fifcom.cn/posts/hive-partition-table-ops/>
+<span class=title>« Prev Page</span>
+<br>
+<span>Hive分区表操作</span>
+</a>
+<a class=next href=https://blog.fifcom.cn/posts/hive-install/>
+<span class=title>Next Page »</span>
+<br>
+<span>安装Hive</span>
+</a>
+</nav><div class=share-buttons>
+<a target=_blank rel="noopener noreferrer" aria-label="share Hive内/外部表操作 on twitter" href="https://twitter.com/intent/tweet/?text=Hive%e5%86%85%2f%e5%a4%96%e9%83%a8%e8%a1%a8%e6%93%8d%e4%bd%9c&url=https%3a%2f%2fblog.fifcom.cn%2fposts%2fhive-internal-external-table-ops%2f&hashtags=hadoop%2chive"><svg viewBox="0 0 512 512"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM195.519 424.544c135.939.0 210.268-112.643 210.268-210.268.0-3.218.0-6.437-.153-9.502 14.406-10.421 26.973-23.448 36.935-38.314-13.18 5.824-27.433 9.809-42.452 11.648 15.326-9.196 26.973-23.602 32.49-40.92-14.252 8.429-30.038 14.56-46.896 17.931-13.487-14.406-32.644-23.295-53.946-23.295-40.767.0-73.87 33.104-73.87 73.87.0 5.824.613 11.494 1.992 16.858-61.456-3.065-115.862-32.49-152.337-77.241-6.284 10.881-9.962 23.601-9.962 37.088.0 25.594 13.027 48.276 32.95 61.456-12.107-.307-23.448-3.678-33.41-9.196v.92c0 35.862 25.441 65.594 59.311 72.49-6.13 1.686-12.72 2.606-19.464 2.606-4.751.0-9.348-.46-13.946-1.38 9.349 29.426 36.628 50.728 68.965 51.341-25.287 19.771-57.164 31.571-91.8 31.571-5.977.0-11.801-.306-17.625-1.073 32.337 21.15 71.264 33.41 112.95 33.41z"/></svg>
+</a>
+<a target=_blank rel="noopener noreferrer" aria-label="share Hive内/外部表操作 on telegram" href="https://telegram.me/share/url?text=Hive%e5%86%85%2f%e5%a4%96%e9%83%a8%e8%a1%a8%e6%93%8d%e4%bd%9c&url=https%3a%2f%2fblog.fifcom.cn%2fposts%2fhive-internal-external-table-ops%2f"><svg viewBox="2 2 28 28"><path d="M26.49 29.86H5.5a3.37 3.37.0 01-2.47-1 3.35 3.35.0 01-1-2.47V5.48A3.36 3.36.0 013 3 3.37 3.37.0 015.5 2h21A3.38 3.38.0 0129 3a3.36 3.36.0 011 2.46V26.37a3.35 3.35.0 01-1 2.47 3.38 3.38.0 01-2.51 1.02zm-5.38-6.71a.79.79.0 00.85-.66L24.73 9.24a.55.55.0 00-.18-.46.62.62.0 00-.41-.17q-.08.0-16.53 6.11a.59.59.0 00-.41.59.57.57.0 00.43.52l4 1.24 1.61 4.83a.62.62.0 00.63.43.56.56.0 00.4-.17L16.54 20l4.09 3A.9.9.0 0021.11 23.15zM13.8 20.71l-1.21-4q8.72-5.55 8.78-5.55c.15.0.23.0.23.16a.18.18.0 010 .06s-2.51 2.3-7.52 6.8z"/></svg>
+</a>
+</div></footer></article></main><footer class=footer>
+<span>&copy; 2022 <a href=https://blog.fifcom.cn/>FIFCOM实验室</a></span>
+<span>
+Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://git.io/hugopapermod rel=noopener target=_blank>PaperMod</a>
+</span>
+</footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a>
+<script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(t){t.preventDefault();var e=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(e)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(e)}']`).scrollIntoView({behavior:"smooth"}),e==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${e}`)})})</script>
+<script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script>
+<script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script>
+<script>document.querySelectorAll("pre > code").forEach(t=>{const n=t.parentNode.parentNode,e=document.createElement("button");e.classList.add("copy-code"),e.innerText="copy";function s(){e.innerText="copied!",setTimeout(()=>{e.innerText="copy"},2e3)}e.addEventListener("click",o=>{if("clipboard"in navigator){navigator.clipboard.writeText(t.textContent),s();return}const e=document.createRange();e.selectNodeContents(t);const n=window.getSelection();n.removeAllRanges(),n.addRange(e);try{document.execCommand("copy"),s()}catch(e){}n.removeRange(e)}),n.classList.contains("highlight")?n.appendChild(e):n.parentNode.firstChild==n||(t.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?t.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(e):t.parentNode.appendChild(e))})</script>
+</body></html>

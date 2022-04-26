@@ -58,6 +58,62 @@
 </li></ul></nav></header><main class=main>
 <header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a></div><h1>Posts</h1></header><article class=post-entry>
 <header class=entry-header>
+<h2>Hive数据导入导出
+</h2></header><section class=entry-content>
+<p>导出表至HDFS export table tmp to '/user/hive/exp/tmp'; 从HDFS导入表 导入的表不能事先存在
+import table ipt from '/user/hive/exp/tmp'; # import external table exipt from '/user/hive/exp/tmp'; # 导入进外部表 select * from ipt; 从HDFS导入分区 导出分区表
+export table part to '/user/hive/exp/part'; 导入分区
+import table part1 partition(dt='2022-05-01') from '/user/hive/exp/part'; import table part2 partition(dt='2022-05-02') from '/user/hive/exp/part'; 导出查询结果 将查询结果导出至本地
+insert overwrite local directory '/root/exp' row format delimited fields terminated by '\t' select * from tmp; 将查询结果导出至HDFS（没有local）
+insert overwrite directory '/user/hive/exp.txt' row format delimited fields terminated by '\t' select * from tmp; 将Hive Shell的查询结果保存到本地...</p></section><footer class=entry-footer><span title="2022-04-26 00:00:00 +0800 CST">April 26, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hive数据导入导出" href=https://blog.fifcom.cn/posts/hive-import-export/></a>
+</article><article class=post-entry>
+<header class=entry-header>
+<h2>Hive分桶表操作
+</h2></header><section class=entry-content>
+<p>分桶针对数据文件进行分解，分解成更容易管理的多个部分(细粒度)。好处有：
+方便抽样：分桶后可以很方便的在数据集的一小部分上查询。 提高join查询效率 分桶是在表或者分区表的基础上进一步对表进行组织，分桶会对列值进行Hash，来决定放在哪个桶中。保证每个桶中都有数据，但桶中的数据条数不一定相等。
+创建分桶表 使用clustered by 命令指定划分桶的列，使用into N buckets指定桶的个数
+create table buck (id int, name string) clustered by(id) into 4 buckets row format delimited fields terminated by '\t'; 可以看到桶个数(Num Buckets)为4
+分桶表不能直接导入数据，需使用中间表。这里创建中间表
+create table tmp (id int, name string) row format delimited fields terminated by '\t'; 导入数据 首先设置Hive参数
+set hive.strict.checks.bucketing=false; 在本地/root/buck.txt中有
+1\taaa
+2\tbbb
+3\tccc
+4\tddd 由于不能直接导入分桶表，所以首先应导入普通表
+load data local inpath '/root/buck.txt' into table tmp; 接着清空分桶表中的数据
+truncate table buck; 最后插入tmp中的数据到分桶表中...</p></section><footer class=entry-footer><span title="2022-04-25 00:00:00 +0800 CST">April 25, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hive分桶表操作" href=https://blog.fifcom.cn/posts/hive-bucket-table-ops/></a>
+</article><article class=post-entry>
+<header class=entry-header>
+<h2>Hive分区表操作
+</h2></header><section class=entry-content>
+<p>Hive中的分区就是子目录(粗粒度)，每个子目录包含了分区对应的列名和每一列的值，把大的数据集分割成小数据集。
+分区表对应HDFS中的一个独立文件夹，该文件夹下存储了当前分区的所有数据文件。
+在查询时使用where来指定分区，可提高查询效率。
+创建分区表 使用partitioned bt 创建分区表，并使用dt作为分割分区的列名。
+分割分区的列名越多分区的级数就越多，比如一个为一级分区，两个为二级分区。
+use curd; create table part(id int, name string) partitioned by(dt date comment "partition field day time") row format delimited fields terminated by '\t'; 添加分区 给分区表添加分区，区分 分区的列名为dt
+alter table part add partition(dt="2022-05-01"); alter table part add partition(dt="2022-05-02"); alter table part add partition(dt="2022-05-03"); # 或者alter table part add partition(dt="2022-05-01") partition(dt="2022-05-02"); show partitions part; # 查看分区 导入数据 向分区中导入数据
+在本地/root/中有三个文件: log01.txt，log02.txt，log03.txt
+1\tzhangsan
+2\tlisi 3\twangwu 4\tzhaoliu 导入数据:...</p></section><footer class=entry-footer><span title="2022-04-24 00:00:00 +0800 CST">April 24, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hive分区表操作" href=https://blog.fifcom.cn/posts/hive-partition-table-ops/></a>
+</article><article class=post-entry>
+<header class=entry-header>
+<h2>Hive内/外部表操作
+</h2></header><section class=entry-content>
+<p>需启动Hadoop
+cd /opt/hadoop/sbin ./start-all.sh 并进入Hive命令行
+cd /opt/hive/bin
+./hive 创建数据库 create database curd; # create database if not exists curd; show databases; # desc database extended curd; # 可以查看数据库的详细信息 创建表后Hive默认会在HDFS的warehouse文件夹中创建文件夹curd.db/，将来可以直接拷贝数据文件到该目录下的相关表进行数据填充。
+查看HDFS
+hdfs dfs -ls -R /user/hive/ 显示数据库 使用命令查看所有数据库
+show databases; 查看数据库的描述与详细(extended)描述
+desc database curd; # 查看描述 desc database extended curd; # 查看详细描述 修改数据库描述 数据库的名称和所在位置等不可修改，但可以添加/修改描述数据库的键值对。
+alter database curd set dbproperties('createtime'='20220501'); 删除数据库 删除数据库前最好判断该数据库是否存在
+drop database if exists curd; 数据库不为空时需要强制删除：使用cascade命令
+drop database curd cascade; 创建内部表 内部表又称管理表...</p></section><footer class=entry-footer><span title="2022-04-22 00:00:00 +0800 CST">April 22, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hive内/外部表操作" href=https://blog.fifcom.cn/posts/hive-internal-external-table-ops/></a>
+</article><article class=post-entry>
+<header class=entry-header>
 <h2>安装Hive
 </h2></header><section class=entry-content>
 <p>安装Hive Hive是一个数据仓库，适合存读多写少的数据，依赖Hadoop。
@@ -118,55 +174,6 @@ HADOOP_USER_NAME=root 在path中加入
 %HADOOP_HOME%\sbin 将winutils复制进hadoop\bin中
 测试hadoop version，正常则成功 创建测试数据 在hbase shell中:
 create 'scores','grade','course' put 'scores','1001','grade:','1' put 'scores','1001','course:art','80' put 'scores','1001','course:math','89' put 'scores','1002','grade:','2' put 'scores','1002','course:art','87' put 'scores','1002','course:math','57' put 'scores','1003','course:math','90' # 查看插入的数据 scan "scores" 创建工程 这里用到的IDE是eclipse...</p></section><footer class=entry-footer><span title="2022-04-05 00:00:00 +0800 CST">April 5, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase JavaAPI 配置" href=https://blog.fifcom.cn/posts/hadoop-hbase-java-api-config/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>HBase常用命令
-</h2></header><section class=entry-content>
-<p>环境准备 安装并启动HBase
-这里主要记录HBase shell的命令。进入HBase shell:
-hbase shell 帮助文档 使用help查看所有命令
-help 可以使用help "create"来查看具体命令的帮助
-命名空间 namespace指对一组表的逻辑分组，类似DBMS中的一个数据库，方便对表在业务上划分。
-常用操作：
-创建命名空间：create_namespace "test" 列出所有命名空间：list_namespace 可以看到3个namespace，其中hbase是系统内建的；用户建表时未指定命名空间的表都放在default里。 3. 查看描述：describe_namespace "test" 4. 列出命名空间下的所有表：list_namespace_tables "hbase" 可以看到内建的命名空间hbase中有两个表：meta和namespace
-建表 不指定命名空间建表： # create '表名', '列名a', '列名b' create 'tb_a', 'col_a', 'col_b' 即在default命名空间下创建了表tb_a，包含列名col_a和col_b 指定命名空间建表： # create '命名空间:表名', '列名a', '列名b' create 'test:tb_b', 'col_a', 'col_b' 即在test命名空间下创建了表tb_b，包含列名col_a和col_b 查看所有表： list # ["tb_a", "test:tb_b"] 判断表是否存在： exists "tb_a" # => true exists "tb_c" # => false 插入数据 使用put命令插入数据...</p></section><footer class=entry-footer><span title="2022-04-04 00:00:00 +0800 CST">April 4, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase常用命令" href=https://blog.fifcom.cn/posts/hadoop-hbase-commands/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>HBase安装
-</h2></header><section class=entry-content>
-<p>安装HBase 环境准备 首先应完成完全分布式安装Hadoop
-并配置免密登录、上传Zookeeper、HBase安装包至master节点
-配置Zookeeper 解压Zookeeper安装包
-tar -zxvf apache-zookeeper-3.8.0-bin.tar.gz -C /opt 在解压目录创建data和log目录
-cd /opt/apache-zookeeper-3.8.0-bin mkdir data log 编辑配置文件：复制conf目录下的样例文件，并修改dataDir(数据文件目录)和dataLogDir(日志文件目录)
-cd conf cp zoo_sample.cfg zoo.cfg vi zoo.cfg => dataDir=/opt/apache-zookeeper-3.8.0-bin/data dataLogDir=/opt/apache-zookeeper-3.8.0-bin/log 在data目录中新建myid文件，向里面写入1。这里的1表示是集群的第几台机器，slave节点则这里为2，3，4…
-cd ../data/ echo 1 >> myid 再次编辑zoo.cfg，添加主节点和从节点地址
-cd /opt/apache-zookeeper-3.8.0-bin/conf/ vi zoo.cfg => # 底部添加 server.1=master:2888:3888 server.2=slave1:2888:3888 接着将Zookeeper安装文件分发到子节点
-scp -r /opt/apache-zookeeper-3.8.0-bin/ slave1:/opt/ 修改子节点上的myid
-cd /opt/apache-zookeeper-3.8.0-bin/data/ echo 2 > myid # echo 3 > myid cat myid 启动Zookeeper 启动前需关闭防火墙，以及在master上启动Hadoop
-systemctl stop firewalld.service systemctl disable firewalld....</p></section><footer class=entry-footer><span title="2022-03-30 00:00:00 +0800 CST">March 30, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase安装" href=https://blog.fifcom.cn/posts/hadoop-hbase-install/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>Hadoop 运行官方示例WordCount
-</h2></header><section class=entry-content>
-<p>运行官方示例WordCount 环境安装完成后输入jps确保有5+个进程： 本实验使用官方WordCount程序实现Java源码词语统计。
-准备Java源码 首先进入Java安装目录，找到src.zip，解压到tmp中
-cd /opt/jdk8u282-b08/ unzip -d tmp src.zip 接着将tmp中的所有.java文件拷贝到javasrc目录下，需要先创建javasrc文件夹
-mkdir javasrc # 找到文件名匹配*.java的文件后执行 cp 命令复制文件。注意\;是-exec的结束标志 find tmp -name *.java -exec cp {} javasrc \; 上传文件至HDFS 由于Java源码大多为小文件，需要将这些文件合并成一个大文件。如果不这样做的话会由于io开销过大而导致运行时间过长。
-此处使用appendToFile将本地的所有java文件上传到HDFS的input/data_file中
-cd /opt/jdk8u282-b08 # 文件会上传到HDFS的/user/&lt;login_user>/input/data_file中， # 该目录如果不存在则会自动创建 hadoop fs -appendToFile javasrc/*.java input/data_file hadoop fs -ls input hadoop fs -tail input/data_file # 查看末尾1KB的内容 运行WordCount 官方示例文件在/opt/hadoop~/share/hadoop/mapreduce/hadoop-mapreduce-examples-~.jar中
-hadoop jar命令用于执行jar文件，wordcount是例子的主类[?]，input是输入文件所在目录，output是输出文件所在目录。output目录不能事先存在。
-hadoop jar /opt/hadoop-2.9.2/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.9.2.jar wordcount input output 可以看到map和reduce操作是并行进行的
-查看输出结果 查看HDFS中的output文件夹
-hadoop fs -ls output 当运行成功后会在该文件下生成一个_SUCCESS文件，该文件长度为0，仅预示着成功输出了结果，其实际结果 存放在part-r-xxxxx文件中...</p></section><footer class=entry-footer><span title="2022-03-15 00:00:00 +0800 CST">March 15, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 运行官方示例WordCount" href=https://blog.fifcom.cn/posts/hadoop-wordcount-example/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>Hadoop 常用命令
-</h2></header><section class=entry-content>
-<p>Hadoop常用命令 版本号 hadoop version 创建文件夹 hdfs dfs -mkdir /dir1 # 根目录下创建 列出文件和文件夹 展示根目录下所有文件和文件夹，及其信息
-hdfs dfs -ls / 递归展示子文件夹中的内容
-hdfs dfs -ls -R / 复制本地文件至HDFS put或copyFromLocal命令, 使用-f强制覆盖HDFS中已存在的文件
-touch aaa.txt hdfs dfs -put aaa.txt /dir1 # hdfs dfs -copyFromLocal aaa.txt /dir1 hdfs dfs -ls -R / 获取HDFS中的文件 get / copyToLocal: 将单个文件复制至本地 # rm aaa.txt hdfs dfs -get /dir1/aaa.txt ~ # hdfs dfs -copyToLocal /dir1/aaa.txt ~ ls -al getmerge: 将多个文件存入本地的同一个文件中 touch a....</p></section><footer class=entry-footer><span title="2022-03-10 00:00:00 +0800 CST">March 10, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 常用命令" href=https://blog.fifcom.cn/posts/hadoop-commands/></a>
 </article><footer class=page-footer>
 <nav class=pagination>
 <a class=next href=https://blog.fifcom.cn/posts/page/2/>Next Page »</a>

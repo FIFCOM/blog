@@ -58,6 +58,55 @@
 </li></ul></nav></header><main class=main>
 <header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a></div><h1>Posts</h1></header><article class=post-entry>
 <header class=entry-header>
+<h2>HBase常用命令
+</h2></header><section class=entry-content>
+<p>环境准备 安装并启动HBase
+这里主要记录HBase shell的命令。进入HBase shell:
+hbase shell 帮助文档 使用help查看所有命令
+help 可以使用help "create"来查看具体命令的帮助
+命名空间 namespace指对一组表的逻辑分组，类似DBMS中的一个数据库，方便对表在业务上划分。
+常用操作：
+创建命名空间：create_namespace "test" 列出所有命名空间：list_namespace 可以看到3个namespace，其中hbase是系统内建的；用户建表时未指定命名空间的表都放在default里。 3. 查看描述：describe_namespace "test" 4. 列出命名空间下的所有表：list_namespace_tables "hbase" 可以看到内建的命名空间hbase中有两个表：meta和namespace
+建表 不指定命名空间建表： # create '表名', '列名a', '列名b' create 'tb_a', 'col_a', 'col_b' 即在default命名空间下创建了表tb_a，包含列名col_a和col_b 指定命名空间建表： # create '命名空间:表名', '列名a', '列名b' create 'test:tb_b', 'col_a', 'col_b' 即在test命名空间下创建了表tb_b，包含列名col_a和col_b 查看所有表： list # ["tb_a", "test:tb_b"] 判断表是否存在： exists "tb_a" # => true exists "tb_c" # => false 插入数据 使用put命令插入数据...</p></section><footer class=entry-footer><span title="2022-04-04 00:00:00 +0800 CST">April 4, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase常用命令" href=https://blog.fifcom.cn/posts/hadoop-hbase-commands/></a>
+</article><article class=post-entry>
+<header class=entry-header>
+<h2>HBase安装
+</h2></header><section class=entry-content>
+<p>安装HBase 环境准备 首先应完成完全分布式安装Hadoop
+并配置免密登录、上传Zookeeper、HBase安装包至master节点
+配置Zookeeper 解压Zookeeper安装包
+tar -zxvf apache-zookeeper-3.8.0-bin.tar.gz -C /opt 在解压目录创建data和log目录
+cd /opt/apache-zookeeper-3.8.0-bin mkdir data log 编辑配置文件：复制conf目录下的样例文件，并修改dataDir(数据文件目录)和dataLogDir(日志文件目录)
+cd conf cp zoo_sample.cfg zoo.cfg vi zoo.cfg => dataDir=/opt/apache-zookeeper-3.8.0-bin/data dataLogDir=/opt/apache-zookeeper-3.8.0-bin/log 在data目录中新建myid文件，向里面写入1。这里的1表示是集群的第几台机器，slave节点则这里为2，3，4…
+cd ../data/ echo 1 >> myid 再次编辑zoo.cfg，添加主节点和从节点地址
+cd /opt/apache-zookeeper-3.8.0-bin/conf/ vi zoo.cfg => # 底部添加 server.1=master:2888:3888 server.2=slave1:2888:3888 接着将Zookeeper安装文件分发到子节点
+scp -r /opt/apache-zookeeper-3.8.0-bin/ slave1:/opt/ 修改子节点上的myid
+cd /opt/apache-zookeeper-3.8.0-bin/data/ echo 2 > myid # echo 3 > myid cat myid 启动Zookeeper 启动前需关闭防火墙，以及在master上启动Hadoop
+systemctl stop firewalld.service systemctl disable firewalld....</p></section><footer class=entry-footer><span title="2022-03-30 00:00:00 +0800 CST">March 30, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase安装" href=https://blog.fifcom.cn/posts/hadoop-hbase-install/></a>
+</article><article class=post-entry>
+<header class=entry-header>
+<h2>Hadoop 运行官方示例WordCount
+</h2></header><section class=entry-content>
+<p>运行官方示例WordCount 环境安装完成后输入jps确保有5+个进程： 本实验使用官方WordCount程序实现Java源码词语统计。
+准备Java源码 首先进入Java安装目录，找到src.zip，解压到tmp中
+cd /opt/jdk8u282-b08/ unzip -d tmp src.zip 接着将tmp中的所有.java文件拷贝到javasrc目录下，需要先创建javasrc文件夹
+mkdir javasrc # 找到文件名匹配*.java的文件后执行 cp 命令复制文件。注意\;是-exec的结束标志 find tmp -name *.java -exec cp {} javasrc \; 上传文件至HDFS 由于Java源码大多为小文件，需要将这些文件合并成一个大文件。如果不这样做的话会由于io开销过大而导致运行时间过长。
+此处使用appendToFile将本地的所有java文件上传到HDFS的input/data_file中
+cd /opt/jdk8u282-b08 # 文件会上传到HDFS的/user/&lt;login_user>/input/data_file中， # 该目录如果不存在则会自动创建 hadoop fs -appendToFile javasrc/*.java input/data_file hadoop fs -ls input hadoop fs -tail input/data_file # 查看末尾1KB的内容 运行WordCount 官方示例文件在/opt/hadoop~/share/hadoop/mapreduce/hadoop-mapreduce-examples-~.jar中
+hadoop jar命令用于执行jar文件，wordcount是例子的主类[?]，input是输入文件所在目录，output是输出文件所在目录。output目录不能事先存在。
+hadoop jar /opt/hadoop-2.9.2/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.9.2.jar wordcount input output 可以看到map和reduce操作是并行进行的
+查看输出结果 查看HDFS中的output文件夹
+hadoop fs -ls output 当运行成功后会在该文件下生成一个_SUCCESS文件，该文件长度为0，仅预示着成功输出了结果，其实际结果 存放在part-r-xxxxx文件中...</p></section><footer class=entry-footer><span title="2022-03-15 00:00:00 +0800 CST">March 15, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 运行官方示例WordCount" href=https://blog.fifcom.cn/posts/hadoop-wordcount-example/></a>
+</article><article class=post-entry>
+<header class=entry-header>
+<h2>Hadoop 常用命令
+</h2></header><section class=entry-content>
+<p>Hadoop常用命令 版本号 hadoop version 创建文件夹 hdfs dfs -mkdir /dir1 # 根目录下创建 列出文件和文件夹 展示根目录下所有文件和文件夹，及其信息
+hdfs dfs -ls / 递归展示子文件夹中的内容
+hdfs dfs -ls -R / 复制本地文件至HDFS put或copyFromLocal命令, 使用-f强制覆盖HDFS中已存在的文件
+touch aaa.txt hdfs dfs -put aaa.txt /dir1 # hdfs dfs -copyFromLocal aaa.txt /dir1 hdfs dfs -ls -R / 获取HDFS中的文件 get / copyToLocal: 将单个文件复制至本地 # rm aaa.txt hdfs dfs -get /dir1/aaa.txt ~ # hdfs dfs -copyToLocal /dir1/aaa.txt ~ ls -al getmerge: 将多个文件存入本地的同一个文件中 touch a....</p></section><footer class=entry-footer><span title="2022-03-10 00:00:00 +0800 CST">March 10, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 常用命令" href=https://blog.fifcom.cn/posts/hadoop-commands/></a>
+</article><article class=post-entry>
+<header class=entry-header>
 <h2>Hadoop 完全分布式安装
 </h2></header><section class=entry-content>
 <p>基本环境准备 配置Java环境 解压JDK安装包
@@ -170,15 +219,10 @@ apt-get purge openjdk* 再配置一下源
 更新apt sudo apt-get update 下载并安装 AdoptOpenJDK 16 sudo apt install adoptopenjdk-16-openj9 完成！
 参考 AdoptOpenJDK 镜像使用帮助
 </p></section><footer class=entry-footer><span title="2021-07-06 00:00:00 +0800 CST">July 6, 2021</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to 在Debian10上安装AdoptOpenJDK16" href=https://blog.fifcom.cn/posts/linux-install-jdk16-at-debian10/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>友情链接
-</h2></header><section class=entry-content>
-<p>淅筱TUEP的博客
-粉身若叶のBlog</p></section><footer class=entry-footer><span title="2020-01-01 00:00:00 +0800 CST">January 1, 2020</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to 友情链接" href=https://blog.fifcom.cn/posts/friends-link/></a>
 </article><footer class=page-footer>
 <nav class=pagination>
 <a class=prev href=https://blog.fifcom.cn/posts/>« Prev Page</a>
+<a class=next href=https://blog.fifcom.cn/posts/page/3/>Next Page »</a>
 </nav></footer></main><footer class=footer>
 <span>&copy; 2022 <a href=https://blog.fifcom.cn/>FIFCOM实验室</a></span>
 <span>

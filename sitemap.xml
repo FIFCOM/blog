@@ -3,19 +3,31 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://blog.fifcom.cn/</loc>
-    <lastmod>2022-04-20T00:00:00+08:00</lastmod>
+    <lastmod>2022-04-26T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/tags/hadoop/</loc>
-    <lastmod>2022-04-20T00:00:00+08:00</lastmod>
+    <lastmod>2022-04-26T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/tags/hive/</loc>
-    <lastmod>2022-04-20T00:00:00+08:00</lastmod>
+    <lastmod>2022-04-26T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/hive-import-export/</loc>
+    <lastmod>2022-04-26T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/posts/</loc>
-    <lastmod>2022-04-20T00:00:00+08:00</lastmod>
+    <lastmod>2022-04-26T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/tags/</loc>
-    <lastmod>2022-04-20T00:00:00+08:00</lastmod>
+    <lastmod>2022-04-26T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/hive-bucket-table-ops/</loc>
+    <lastmod>2022-04-25T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/hive-partition-table-ops/</loc>
+    <lastmod>2022-04-24T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/hive-internal-external-table-ops/</loc>
+    <lastmod>2022-04-22T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/posts/hive-install/</loc>
     <lastmod>2022-04-20T00:00:00+08:00</lastmod>
