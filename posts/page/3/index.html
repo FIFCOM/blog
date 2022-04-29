@@ -58,6 +58,17 @@
 </li></ul></nav></header><main class=main>
 <header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a></div><h1>Posts</h1></header><article class=post-entry>
 <header class=entry-header>
+<h2>在Debian10上安装AdoptOpenJDK16
+</h2></header><section class=entry-content>
+<p>首先卸载掉自带的openjdk
+apt-get remove openjdk*
+apt-get purge openjdk* 再配置一下源
+信任GnuPG公钥 wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add - 在/etc/apt/sources.list.d/AdoptOpenJDK.list里添加以下内容： deb http://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/deb buster main (编辑器可以用vim : vi /etc/apt/sources.list.d/AdoptOpenJDK.list ,添加完成后输入 :wq! 退出)
+更新apt sudo apt-get update 下载并安装 AdoptOpenJDK 16 sudo apt install adoptopenjdk-16-openj9 完成！
+参考 AdoptOpenJDK 镜像使用帮助
+</p></section><footer class=entry-footer><span title="2021-07-06 00:00:00 +0800 CST">July 6, 2021</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to 在Debian10上安装AdoptOpenJDK16" href=https://blog.fifcom.cn/posts/linux-install-jdk16-at-debian10/></a>
+</article><article class=post-entry>
+<header class=entry-header>
 <h2>友情链接
 </h2></header><section class=entry-content>
 <p>淅筱TUEP的博客

@@ -9,19 +9,35 @@
       <link>https://fifcom.cn/avatar/?transparent=1</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 26 Apr 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 28 Apr 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Hive数据导入导出</title>
-      <link>https://blog.fifcom.cn/posts/hive-import-export/</link>
+      <title>Hive函数</title>
+      <link>https://blog.fifcom.cn/posts/hive-udf/</link>
+      <pubDate>Thu, 28 Apr 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/hive-udf/</guid>
+      <description>Hive中内置了许多常用函数，此外，用户也可以自行编写函数
+内置函数 查看系统自带函数
+show functions; 显示自带函数的用法与描述
+desc function upper; # 查看描述 desc function extended upper; # 查看描述+查看示例 自定义函数 UDF 总体编程步骤：
+ 创建maven项目 导入hive-exec和hadoop-client，并使用spring的镜像源 继承org.apache.hadoop.hive.ql.UDF 实现evaluate()，必须有返回值，如果实在没有，返回null。 导出项目为jar文件 将jar文件导入Hive 创建Hive UDF（临时或永久）  创建Maven项目 首先需要在自己的机器上安装Maven，可以参考这里，并配置环境变量。配置好后可以在终端中测试:mvn -version 接着在idea中新建项目，设置构建系统为Maven，JDK为1.8 项目的文件结构像这样:
+ HiveUDF/  src/  main/  java/ resources/   test/  java/   pom.xml      导入依赖 pom.xml包含了项目的基本信息, 编辑它
+在project标签中添加依赖
+&amp;lt;dependencies&amp;gt;  &amp;lt;dependency&amp;gt;  &amp;lt;groupId&amp;gt;org.apache.hadoop&amp;lt;/groupId&amp;gt;  &amp;lt;artifactId&amp;gt;hadoop-client&amp;lt;/artifactId&amp;gt;  &amp;lt;version&amp;gt;2.9.2&amp;lt;/version&amp;gt; &amp;lt;!</description>
+    </item>
+    
+    <item>
+      <title>Hive数据操作</title>
+      <link>https://blog.fifcom.cn/posts/hive-data-ops/</link>
       <pubDate>Tue, 26 Apr 2022 00:00:00 +0800</pubDate>
       
-      <guid>https://blog.fifcom.cn/posts/hive-import-export/</guid>
-      <description>导出表至HDFS export table tmp to &amp;#39;/user/hive/exp/tmp&amp;#39;; 从HDFS导入表 导入的表不能事先存在
-import table ipt from &amp;#39;/user/hive/exp/tmp&amp;#39;; # import external table exipt from &amp;#39;/user/hive/exp/tmp&amp;#39;; # 导入进外部表 select * from ipt; 从HDFS导入分区 导出分区表
-export table part to &amp;#39;/user/hive/exp/part&amp;#39;; 导入分区
-import table part1 partition(dt=&amp;#39;2022-05-01&amp;#39;) from &amp;#39;/user/hive/exp/part&amp;#39;;  import table part2 partition(dt=&amp;#39;2022-05-02&amp;#39;) from &amp;#39;/user/hive/exp/part&amp;#39;; 导出查询结果 将查询结果导出至本地
-insert overwrite local directory &amp;#39;/root/exp&amp;#39; row format delimited fields terminated by &amp;#39;\t&amp;#39; select * from tmp; 将查询结果导出至HDFS（没有local）
-insert overwrite directory &amp;#39;/user/hive/exp.txt&amp;#39; row format delimited fields terminated by &amp;#39;\t&amp;#39; select * from tmp; 将Hive Shell的查询结果保存到本地</description>
+      <guid>https://blog.fifcom.cn/posts/hive-data-ops/</guid>
+      <description>student表
+   id name     1 zhangsan   2 lisi   3 wangwu      teacher表
+   id name     1 teacher_zhaoliu   2 teacher_wangqi      基本查询 全表查询
+select * from student; select * from teacher; 特定列查询
+select id from student; select name from teacher; 列别名
+select id as a, name as b from student; 算数运算符：可以对结果集合进行算数运算以及位运算</description>
     </item>
     
     <item>
