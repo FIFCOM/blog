@@ -57,6 +57,13 @@
 </li></ul></nav></header><main class=main>
 <header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a>&nbsp;»&nbsp;<a href=https://blog.fifcom.cn/tags/>Tags</a></div><h1>hive</h1></header><article class="post-entry tag-entry">
 <header class=entry-header>
+<h2>Hive Java API 数据操作
+</h2></header><section class=entry-content>
+<p>Hive默认不支持数据的修改和删除，需编辑配置文件hive-site.xml以允许
+&lt;property> &lt;name>hive.support.concurrency&lt;/name> &lt;value>true&lt;/value> &lt;/property> &lt;property> &lt;name>hive.enforce.bucketing&lt;/name> &lt;value>true&lt;/value> &lt;/property> &lt;property> &lt;name>hive.exec.dynamic.partition.mode&lt;/name> &lt;value>nonstrict&lt;/value> &lt;/property> &lt;property> &lt;name>hive.txn.manager&lt;/name> &lt;value>org.apache.hadoop.hive.ql.lockmgr.DbTxnManager&lt;/value> &lt;/property> &lt;property> &lt;name>hive.compactor.initiator.on&lt;/name> &lt;value>true&lt;/value> &lt;/property> &lt;property> &lt;name>hive.compactor.worker.threads&lt;/name> &lt;value>1&lt;/value> &lt;/property> 并配置thrift的账号(root)密码(root)
+&lt;property> &lt;name>hive.server2.thrift.client.user&lt;/name> &lt;value>root&lt;/value> &lt;/property> &lt;property> &lt;name>hive.server2.thrift.client.password&lt;/name> &lt;value>root&lt;/value> &lt;/property> &lt;property> &lt;name>hive.server2.authentication&lt;/name> &lt;value>NONE&lt;/value> &lt;/property> 环境准备 启动Hadoop ./opt/hadoop/sbin/start-all.sh 启动HiveServer2 cd /opt/hive/bin/ ./hive --service hiveserver2 & 连接到HiveServer2 创建一个Maven项目，添加依赖项目...</p></section><footer class=entry-footer><span title="2022-05-01 00:00:00 +0800 CST">May 1, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hive Java API 数据操作" href=https://blog.fifcom.cn/posts/hive-java-api-data-ops/></a>
+</article><article class="post-entry tag-entry">
+<header class=entry-header>
 <h2>Hive函数
 </h2></header><section class=entry-content>
 <p>Hive中内置了许多常用函数，此外，用户也可以自行编写函数
