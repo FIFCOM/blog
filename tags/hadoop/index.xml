@@ -9,7 +9,34 @@
       <link>https://fifcom.cn/avatar/?transparent=1</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 01 May 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/hadoop/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 11 May 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://blog.fifcom.cn/tags/hadoop/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Flume 常用Source</title>
+      <link>https://blog.fifcom.cn/posts/flume-common-source/</link>
+      <pubDate>Wed, 11 May 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/flume-common-source/</guid>
+      <description>首先应确定master和slave上都安装了Flume，如果slave上没有，可以将master上的传过去
+scp -r /opt/flume/ root@slave1:/opt/ 配置一级Flume 在master上创建netcat-avro.conf，意思是一级flume从444端口收集信息，再从555端口以avro格式发到二级flume
+cd /opt/flume/conf vi netcat-avro.conf =&amp;gt; a1.sources = r1 a1.channels = c1 a1.sinks = k1  a1.sources.r1.type = netcat a1.sources.r1.bind = master a1.sources.r1.port = 444  a1.sinks.k1.type = avro a1.sinks.k1.channel = c1 a1.sinks.k1.hostname=slave1 a1.sinks.k1.port = 555  a1.channels.c1.type = memory a1.channels.c1.capacity = 100 a1.channels.c1.transactionCapacity = 100  a1.sources.r1.channels = c1 a1.sinks.k1.channel = c1 &amp;lt;= 配置二级Flume 在slave上创建avro-logger.conf，意思是二级flume从555端口收集信息
+cd /opt/flume/conf vi avro-logger.conf =&amp;gt; a1.sources = r1 a1.</description>
+    </item>
+    
+    <item>
+      <title>安装Flume</title>
+      <link>https://blog.fifcom.cn/posts/flume-install/</link>
+      <pubDate>Tue, 10 May 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://blog.fifcom.cn/posts/flume-install/</guid>
+      <description>Flume用于收集、聚合和传输大量数据，如日志文件、事件等。
+下载Flume安装包到master节点
+wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/apache-flume-1.8.0-bin.tar.gz 安装Flume 解压Flume
+tar -zxvf apache-flume-1.8.0-bin.tar.gz -C /opt/ mv /opt/apache-flume-1.8.0-bin/ /opt/flume/ 进入Flume的配置文件目录，并从模板复制配置文件
+cd /opt/flume/conf cp flume-env.sh.template flume-env.sh 编辑环境配置文件中的JAVA_HOME
+vi flume-env.sh =&amp;gt; export JAVA_HOME=/opt/jdk8u282-b08 &amp;lt;= 在当前目录创建netcat-logger.conf文件，用于配置一个简单的数据采集方案
+vi netcat-logger.conf =&amp;gt; a1.sources = r1 a1.sinks = k1 a1.channels = c1  a1.sources.r1.type = netcat a1.sources.r1.bind = master a1.sources.r1.port = 444  a1.sinks.k1.type = logger  a1.channels.c1.type = memory a1.channels.c1.capacity = 1000 a1.channels.c1.transactionCapacity = 100  a1.sources.r1.channels = c1 a1.sinks.k1.channel = c1 &amp;lt;= 测试Flume 首先回到Flume根目录，并使用命令启用Flume</description>
+    </item>
+    
     <item>
       <title>Hive Java API 数据操作</title>
       <link>https://blog.fifcom.cn/posts/hive-java-api-data-ops/</link>

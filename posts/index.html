@@ -58,6 +58,25 @@
 </li></ul></nav></header><main class=main>
 <header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a></div><h1>Posts</h1></header><article class=post-entry>
 <header class=entry-header>
+<h2>Flume 常用Source
+</h2></header><section class=entry-content>
+<p>首先应确定master和slave上都安装了Flume，如果slave上没有，可以将master上的传过去
+scp -r /opt/flume/ root@slave1:/opt/ 配置一级Flume 在master上创建netcat-avro.conf，意思是一级flume从444端口收集信息，再从555端口以avro格式发到二级flume
+cd /opt/flume/conf vi netcat-avro.conf => a1.sources = r1 a1.channels = c1 a1.sinks = k1 a1.sources.r1.type = netcat a1.sources.r1.bind = master a1.sources.r1.port = 444 a1.sinks.k1.type = avro a1.sinks.k1.channel = c1 a1.sinks.k1.hostname=slave1 a1.sinks.k1.port = 555 a1.channels.c1.type = memory a1.channels.c1.capacity = 100 a1.channels.c1.transactionCapacity = 100 a1.sources.r1.channels = c1 a1.sinks.k1.channel = c1 &lt;= 配置二级Flume 在slave上创建avro-logger.conf，意思是二级flume从555端口收集信息
+cd /opt/flume/conf vi avro-logger.conf => a1.sources = r1 a1....</p></section><footer class=entry-footer><span title="2022-05-11 00:00:00 +0800 CST">May 11, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Flume 常用Source" href=https://blog.fifcom.cn/posts/flume-common-source/></a>
+</article><article class=post-entry>
+<header class=entry-header>
+<h2>安装Flume
+</h2></header><section class=entry-content>
+<p>Flume用于收集、聚合和传输大量数据，如日志文件、事件等。
+下载Flume安装包到master节点
+wget --no-check-certificate https://od.fifcom.cn/misc/hadoop/apache-flume-1.8.0-bin.tar.gz 安装Flume 解压Flume
+tar -zxvf apache-flume-1.8.0-bin.tar.gz -C /opt/ mv /opt/apache-flume-1.8.0-bin/ /opt/flume/ 进入Flume的配置文件目录，并从模板复制配置文件
+cd /opt/flume/conf cp flume-env.sh.template flume-env.sh 编辑环境配置文件中的JAVA_HOME
+vi flume-env.sh => export JAVA_HOME=/opt/jdk8u282-b08 &lt;= 在当前目录创建netcat-logger.conf文件，用于配置一个简单的数据采集方案
+vi netcat-logger.conf => a1.sources = r1 a1.sinks = k1 a1.channels = c1 a1.sources.r1.type = netcat a1.sources.r1.bind = master a1.sources.r1.port = 444 a1.sinks.k1.type = logger a1.channels.c1.type = memory a1.channels.c1.capacity = 1000 a1.channels.c1.transactionCapacity = 100 a1.sources.r1.channels = c1 a1.sinks.k1.channel = c1 &lt;= 测试Flume 首先回到Flume根目录，并使用命令启用Flume...</p></section><footer class=entry-footer><span title="2022-05-10 00:00:00 +0800 CST">May 10, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to 安装Flume" href=https://blog.fifcom.cn/posts/flume-install/></a>
+</article><article class=post-entry>
+<header class=entry-header>
 <h2>Hive Java API 数据操作
 </h2></header><section class=entry-content>
 <p>Hive默认不支持数据的修改和删除，需编辑配置文件hive-site.xml以允许
@@ -150,27 +169,6 @@ mysql -u root -p08d*****X49q 登录后修改root密码和设置可远程登录
 <p>Phoenix JavaAPI可以在java中使用sql对HBase进行操作
 配置项目环境 下载master节点中phoenix安装目录下的两个包到本地项目/phoenix中 phoenix-5.0.0-HBase-2.0-client.jar phoenix-core-5.0.0-HBase-2.0.jar 将这两个文件添加进模块依赖中 尝试建表代码，注意: JRE版本建议为1.8 建表 建表语法为 create table tablename(column1,column2,column3)，使用stmt.execute()执行
 package demo; import java.sql.*; class PhoenixAPI { Connection conn = null; Statement stmt = null; PhoenixAPI() { try { Class.forName("org.apache.phoenix.jdbc.PhoenixDriver"); conn = DriverManager.getConnection("jdbc:phoenix:master:2181/hbase","",""); stmt = conn.createStatement(); } catch (ClassNotFoundException | SQLException e) { e.printStackTrace(); } } public void create(String tb) { // 注意：在Phoenix中，整数不能简写为int，而是要写为INTEGER String sql = "create table " + tb + " (id integer primary key, name varchar, age integer)"; try { stmt....</p></section><footer class=entry-footer><span title="2022-04-18 00:00:00 +0800 CST">April 18, 2022</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to PhoenixAPI 表操作和数据操作" href=https://blog.fifcom.cn/posts/hbase-phoenix-java-api-ops/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>Phoenix操作HBase
-</h2></header><section class=entry-content>
-<p>Phoenix可以使用标准SQL来操作HBase
-安装前建议关闭HBase、Zookeeper、Hadoop服务
-下载Phoenix 首先应下载Phoenix: Apache Phoenix ，下载apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz，并将其上传至master节点
-安装Phoenix 解压到opt目录
-tar -zxvf apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz -C /opt/ cd /opt mv apache-phoenix-5.0.0-HBase-2.0-bin/ phoenix/ 复制phoenix目录下的两个jar文件到hbase/lib下
-cd /opt/phoenix cp phoenix-5.0.0-HBase-2.0-client.jar /opt/hbase/lib/ cp phoenix-core-5.0.0-HBase-2.0.jar /opt/hbase/lib/ 并将其分发到所有子节点上
-scp phoenix-5.0.0-HBase-2.0-client.jar slave1:/opt/hbase/lib/ scp phoenix-core-5.0.0-HBase-2.0.jar slave1:/opt/hbase/lib/ 配置Phoenix 将Hadoop的和HBase的配置文件复制到Phoenix/bin下
-cp /opt/hadoop/etc/hadoop/core-site.xml /opt/phoenix/bin/ cp /opt/hadoop/etc/hadoop/hdfs-site.xml /opt/phoenix/bin/ cp /opt/hbase/conf/hbase-site.xml /opt/phoenix/bin/ 在master上配置环境变量
-vi /etc/profile => # 最后添加 export PHOENIX_HOME=/opt/phoenix export PHOENIX_CLASSPATH=$PHOENIX_HOME export PATH=$PATH:$PHOENIX_HOME/bin &lt;= # :wq source /etc/profile 设置脚本为可执行
-cd /opt/phoenix/bin chmod +x psql.py chmod +x sqlline....</p></section><footer class=entry-footer><span title="2022-04-11 00:00:00 +0800 CST">April 11, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Phoenix操作HBase" href=https://blog.fifcom.cn/posts/hbase-phoenix/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>HBase JavaAPI 数据操作
-</h2></header><section class=entry-content>
-<p>环境准备：在HBase shell中创建一个新表curd， 包含两个列族cfa和cfb:
-create 'curd', 'cfa', 'cfb' 为行键修改/添加列族和值 使用put操作进行添加或修改数据
-package demo; import java.io.IOException; import org.apache.hadoop.conf.Configuration; import org.apache.hadoop.hbase.HBaseConfiguration; import org.apache.hadoop.hbase.TableName; import org.apache.hadoop.hbase.client.*; import org.apache.hadoop.hbase.util.Bytes; class HBaseAPI { private final Connection conn; private final Admin admin; public HBaseAPI() throws IOException { Configuration conf = HBaseConfiguration.create(); conf.addResource("hbase-site.xml"); conn = ConnectionFactory.createConnection(conf); admin = conn.getAdmin(); } public void put(String tb, String row, String[][] cols) throws IOException { // 获取表的实例 Table table = conn....</p></section><footer class=entry-footer><span title="2022-04-09 00:00:00 +0800 CST">April 9, 2022</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase JavaAPI 数据操作" href=https://blog.fifcom.cn/posts/hadoop-hbase-java-api-data-ops/></a>
 </article><footer class=page-footer>
 <nav class=pagination>
 <a class=next href=https://blog.fifcom.cn/posts/page/2/>Next Page »</a>

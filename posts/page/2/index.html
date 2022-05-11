@@ -58,6 +58,27 @@
 </li></ul></nav></header><main class=main>
 <header class=page-header><div class=breadcrumbs><a href=https://blog.fifcom.cn/>Home</a></div><h1>Posts</h1></header><article class=post-entry>
 <header class=entry-header>
+<h2>Phoenix操作HBase
+</h2></header><section class=entry-content>
+<p>Phoenix可以使用标准SQL来操作HBase
+安装前建议关闭HBase、Zookeeper、Hadoop服务
+下载Phoenix 首先应下载Phoenix: Apache Phoenix ，下载apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz，并将其上传至master节点
+安装Phoenix 解压到opt目录
+tar -zxvf apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz -C /opt/ cd /opt mv apache-phoenix-5.0.0-HBase-2.0-bin/ phoenix/ 复制phoenix目录下的两个jar文件到hbase/lib下
+cd /opt/phoenix cp phoenix-5.0.0-HBase-2.0-client.jar /opt/hbase/lib/ cp phoenix-core-5.0.0-HBase-2.0.jar /opt/hbase/lib/ 并将其分发到所有子节点上
+scp phoenix-5.0.0-HBase-2.0-client.jar slave1:/opt/hbase/lib/ scp phoenix-core-5.0.0-HBase-2.0.jar slave1:/opt/hbase/lib/ 配置Phoenix 将Hadoop的和HBase的配置文件复制到Phoenix/bin下
+cp /opt/hadoop/etc/hadoop/core-site.xml /opt/phoenix/bin/ cp /opt/hadoop/etc/hadoop/hdfs-site.xml /opt/phoenix/bin/ cp /opt/hbase/conf/hbase-site.xml /opt/phoenix/bin/ 在master上配置环境变量
+vi /etc/profile => # 最后添加 export PHOENIX_HOME=/opt/phoenix export PHOENIX_CLASSPATH=$PHOENIX_HOME export PATH=$PATH:$PHOENIX_HOME/bin &lt;= # :wq source /etc/profile 设置脚本为可执行
+cd /opt/phoenix/bin chmod +x psql.py chmod +x sqlline....</p></section><footer class=entry-footer><span title="2022-04-11 00:00:00 +0800 CST">April 11, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Phoenix操作HBase" href=https://blog.fifcom.cn/posts/hbase-phoenix/></a>
+</article><article class=post-entry>
+<header class=entry-header>
+<h2>HBase JavaAPI 数据操作
+</h2></header><section class=entry-content>
+<p>环境准备：在HBase shell中创建一个新表curd， 包含两个列族cfa和cfb:
+create 'curd', 'cfa', 'cfb' 为行键修改/添加列族和值 使用put操作进行添加或修改数据
+package demo; import java.io.IOException; import org.apache.hadoop.conf.Configuration; import org.apache.hadoop.hbase.HBaseConfiguration; import org.apache.hadoop.hbase.TableName; import org.apache.hadoop.hbase.client.*; import org.apache.hadoop.hbase.util.Bytes; class HBaseAPI { private final Connection conn; private final Admin admin; public HBaseAPI() throws IOException { Configuration conf = HBaseConfiguration.create(); conf.addResource("hbase-site.xml"); conn = ConnectionFactory.createConnection(conf); admin = conn.getAdmin(); } public void put(String tb, String row, String[][] cols) throws IOException { // 获取表的实例 Table table = conn....</p></section><footer class=entry-footer><span title="2022-04-09 00:00:00 +0800 CST">April 9, 2022</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase JavaAPI 数据操作" href=https://blog.fifcom.cn/posts/hadoop-hbase-java-api-data-ops/></a>
+</article><article class=post-entry>
+<header class=entry-header>
 <h2>HBase JavaAPI 表操作
 </h2></header><section class=entry-content>
 <p>连接到HBase 创建配置对象并从本地载入配置文件 使用配置对象作为参数创建连接对象conn conn.getAdmin()返回管理HBase集群的Admin对象 此时已连接到HBase 可以调用Admin对象中的listTableNames()返回TableName[]，包含HBase中的所有表 package demo; import org.apache.hadoop.conf.Configuration; import org.apache.hadoop.hbase.HBaseConfiguration; import org.apache.hadoop.hbase.TableName; import org.apache.hadoop.hbase.client.Admin; import org.apache.hadoop.hbase.client.Connection; import org.apache.hadoop.hbase.client.ConnectionFactory; import java.io.IOException; public class Main { public static void main(String[] args) throws IOException { // load configuration and connect to HBase Configuration config = HBaseConfiguration.create(); config.addResource("/hbase-site.xml"); Connection conn = ConnectionFactory.createConnection(config); Admin admin = conn.getAdmin(); // print all tables for (TableName tableName : admin....</p></section><footer class=entry-footer><span title="2022-04-07 00:00:00 +0800 CST">April 7, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to HBase JavaAPI 表操作" href=https://blog.fifcom.cn/posts/hadoop-hbase-java-api-table-ops/></a>
@@ -145,51 +166,6 @@ cd ~/.ssh cat id_rsa.pub >> authorized_keys cat id_rsa.pub.slave1 >> authorized_
 cd /opt/hadoop-2.9.2/etc/hadoop vi hadoop-env.sh # 找到`# The java implementation to use. ...`， 编辑下面的为 export JAVA_HOME=/opt/jdk8u282-b08 继续编辑当前目录下的core-site.xml文件，指定HDFS的 NameNode的地址，value值是主机名加端口号，主机使用master节点的ip地址
 vi core-site.xml 在configuration标签内添加：
 &lt;property> &lt;name>fs.default.name&lt;/name> &lt;value>hdfs://master_ip_here:9000&lt;/value> &lt;/property> &lt;property> &lt;name>fs....</p></section><footer class=entry-footer><span title="2022-03-01 00:00:00 +0800 CST">March 1, 2022</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Hadoop 伪分布式安装" href=https://blog.fifcom.cn/posts/hadoop-pseudo-distributed-install/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>Linux Shell 语法(上)
-</h2></header><section class=entry-content>
-<p>Hello World! #! /bin/bash
-echo "Hello World!" 第一行是注释，声明用bash作为此脚本的解释器。注释分为两种:
-# 单行注释
-:&lt;&lt;EOF
-多行
-注释
-EOF
-# 其中EOF可以替换为任意字符串 第二行的echo用于在控制台上输出内容并自动换行。准确的说，echo会输出传递给它的所有参数，以空格分隔。 "Hello World!" 是字符串，后面会详细介绍。
-保存后可以使用bash filename.sh运行，或者:
-chmod +x filename.sh # 赋予可执行权限
-./hw.sh # 作为可执行文件执行 变量 定义可变变量 v1=123
-v2=123.4
-v3=fifcom
-v4="fifcom"
-v5='fifcom'
-declare v6=fifcom
-# 变量默认为字符串，在使用时会根据需求自动转换类型
-# 注意：定义变量时等号的左右两边不可以有空格
-# 否则可能被解析器作为系统命令来执行 定义只读变量 readonly v1="immut" # 定义只读变量
-v2="mut"
-readonly v2 # 转换为只读变量
-declare -r v3="immut" # 定义只读变量 使用变量 使用变量需要加上$或${}符号。 ${} 可以帮助解释器识别变量名
-v1=fifcom
-echo $v1 # 输出fifcom
-echo ${v1} # 输出fifcom
-echo ${v1}v1 # 输出fifcomv1 删除变量 用unset删除变量。只读变量不可删除。...</p></section><footer class=entry-footer><span title="2022-01-03 00:00:00 +0800 CST">January 3, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to Linux Shell 语法(上)" href=https://blog.fifcom.cn/posts/linux-shell-manual-1/></a>
-</article><article class=post-entry>
-<header class=entry-header>
-<h2>CF/YJS CDN下使用PHP获取客户端真实IP地址
-</h2></header><section class=entry-content>
-<p>打印一下$_SERVER
-&lt;?php
-echo json_encode($_SERVER, JSON_UNESCAPED_UNICODE);
-?> 有这几项值得注意
-"HTTP_X_FORWARDED_FOR":"[YOUR_IP]",
-"HTTP_CF_IPCOUNTRY":"[YOUR_COUNTRY]",
-"HTTP_CF_CONNECTING_IP":"[YOUR_IP]",
-"HTTP_CDN_LOOP":"cloudflare", 即 `$_SERVER["HTTP_X_FORWARDED_FOR"]` 就是客户端的真实IP地址
-另外不支持IPv6的服务器也可以通过 $_SERVER["HTTP_X_FORWARDED_FOR"] 来获取客户端的IPv6地址
-自动根据情况获取IP:
-$ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != "" ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']; </p></section><footer class=entry-footer><span title="2021-11-27 00:00:00 +0800 CST">November 27, 2021</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;FIFCOM</footer><a class=entry-link aria-label="post link to CF/YJS CDN下使用PHP获取客户端真实IP地址" href=https://blog.fifcom.cn/posts/cloud-cf-yjs-cdn-get-remote-addr/></a>
 </article><footer class=page-footer>
 <nav class=pagination>
 <a class=prev href=https://blog.fifcom.cn/posts/>« Prev Page</a>

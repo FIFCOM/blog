@@ -3,21 +3,30 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://blog.fifcom.cn/</loc>
-    <lastmod>2022-05-01T00:00:00+08:00</lastmod>
+    <lastmod>2022-05-11T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/tags/flume/</loc>
+    <lastmod>2022-05-11T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/flume-common-source/</loc>
+    <lastmod>2022-05-11T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/tags/hadoop/</loc>
-    <lastmod>2022-05-01T00:00:00+08:00</lastmod>
+    <lastmod>2022-05-11T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/</loc>
+    <lastmod>2022-05-11T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/tags/</loc>
+    <lastmod>2022-05-11T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.fifcom.cn/posts/flume-install/</loc>
+    <lastmod>2022-05-10T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/tags/hive/</loc>
     <lastmod>2022-05-01T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/posts/hive-java-api-data-ops/</loc>
-    <lastmod>2022-05-01T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://blog.fifcom.cn/posts/</loc>
-    <lastmod>2022-05-01T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://blog.fifcom.cn/tags/</loc>
     <lastmod>2022-05-01T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://blog.fifcom.cn/posts/hive-udf/</loc>
